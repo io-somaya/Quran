@@ -1,6 +1,6 @@
 /**
- * تطبيق «قرءاني» — المنطق التفاعلي الرئيسي
- * Qur'ani Main Interactive Application Controller
+ * تطبيق «قرءاني» — المنطق التفاعلي الرئيسي (الوضع النهاري الفاخر)
+ * Qur'ani Main Interactive Application Controller (Luxury Light Theme)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
       soundEnabled: true,
       vibrateEnabled: true
     },
-    theme: localStorage.getItem('qurani_theme') || 'dark',
     fontScale: 1
   };
 
@@ -50,10 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- عناصر DOM الرئيسية ---
   const elements = {
-    themeToggleBtn: document.getElementById('themeToggleBtn'),
     userDropdownBtn: document.getElementById('activeUserDropdownBtn'),
     userDropdownMenu: document.getElementById('userDropdownMenu'),
-    userAvatarBadge: document.getElementById('userAvatarBadge'),
+    navUserName: document.getElementById('navUserName'),
+    navUserAvatar: document.getElementById('navUserAvatar'),
     
     // عناصر الشاشة الرئيسية
     greetingName: document.getElementById('homeGreetingName'),
@@ -88,43 +87,28 @@ document.addEventListener('DOMContentLoaded', () => {
     btnDecreaseFont: document.getElementById('btnDecreaseFont'),
 
     // عناصر الأذكار والسبحة
-    adhkarTabs: document.querySelectorAll('.adhkar-nav-btn'),
+    adhkarTabs: document.querySelectorAll('.adhkar-tab-btn'),
     adhkarContainer: document.getElementById('adhkarContainer'),
     tasbeehCounterDisplay: document.getElementById('tasbeehCounterDisplay'),
     tasbeehTotalDisplay: document.getElementById('tasbeehTotalDisplay'),
     tasbeehLapDisplay: document.getElementById('tasbeehLapDisplay'),
-    tasbeehRingBead: document.getElementById('tasbeehRingBead'),
     btnTasbeehTap: document.getElementById('btnTasbeehTap'),
     btnTasbeehReset: document.getElementById('btnTasbeehReset'),
     tasbeehPhraseSelect: document.getElementById('tasbeehPhraseSelect'),
 
     // عناصر إدارة الأعضاء والخطط
     familyMembersGrid: document.getElementById('familyMembersGrid'),
-    btnAddNewMember: document.getElementById('btnAddNewMember'),
     plansContainer: document.getElementById('plansGridContainer'),
     customCalcInput: document.getElementById('customCalcPages'),
     customCalcResult: document.getElementById('customCalcResult'),
 
     // عناصر الواتساب
-    whatsappModal: document.getElementById('whatsappModal'),
     whatsappRecipientSelect: document.getElementById('whatsappRecipientSelect'),
     whatsappTemplateSelect: document.getElementById('whatsappTemplateSelect'),
     whatsappPreviewBubble: document.getElementById('whatsappPreviewBubble'),
     btnSendWhatsAppDirect: document.getElementById('btnSendWhatsAppDirect'),
     btnCopyWhatsAppText: document.getElementById('btnCopyWhatsAppText')
   };
-
-  // --- تهيئة الثيم (Theme Controller) ---
-  function applyTheme(theme) {
-    state.theme = theme;
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('qurani_theme', theme);
-    if (elements.themeToggleBtn) {
-      elements.themeToggleBtn.innerHTML = theme === 'dark' 
-        ? '<i class="bi bi-sun-fill text-warning me-1"></i> <span>الوضع النهاري</span>'
-        : '<i class="bi bi-moon-stars-fill text-primary me-1"></i> <span>الوضع الليلي</span>';
-    }
-  }
 
   // --- التنقل بين التبويبات (Tab Navigation) ---
   function switchTab(tabId) {
@@ -144,9 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-nav-target]').forEach(btn => {
       const active = btn.getAttribute('data-nav-target') === tabId;
       btn.classList.toggle('active', active);
-      if (btn.classList.contains('nav-link')) {
-        btn.classList.toggle('active', active);
-      }
     });
 
     if (tabId === 'mushaf') {
@@ -157,6 +138,13 @@ document.addEventListener('DOMContentLoaded', () => {
       renderFamilyMembers();
     } else if (tabId === 'plans') {
       renderPlans();
+    }
+
+    // إغلاق القائمة المنسدلة في الجوال إن كانت مفتوحة
+    const navbarCollapse = document.getElementById('navbarContent');
+    if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+      const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+      if (bsCollapse) bsCollapse.hide();
     }
   }
 
@@ -169,14 +157,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const progress = window.QuraniWirdEngine.calculateProgress(user);
     const plan = window.QuraniWirdEngine.plans[user.planId] || window.QuraniWirdEngine.plans['safa'];
 
-    // اسم المستخدم والتحية
+    // اسم المستخدم في التحية والناف بار
     if (elements.greetingName) elements.greetingName.textContent = user.name;
-    if (elements.userDropdownBtn) {
-      elements.userDropdownBtn.innerHTML = `
-        <span class="user-avatar-circle me-2">${user.avatar || '👤'}</span>
-        <span class="fw-bold">${user.name}</span>
-      `;
-    }
+    if (elements.navUserName) elements.navUserName.textContent = user.name;
+    if (elements.navUserAvatar) elements.navUserAvatar.textContent = user.avatar || '👤';
 
     // بيانات الورد اليومي
     if (elements.wirdTodayPages) {
@@ -197,17 +181,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const isCompleted = wird.isCompletedToday;
     if (elements.wirdStatusBadge) {
       elements.wirdStatusBadge.innerHTML = isCompleted
-        ? '<span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill"><i class="bi bi-check-circle-fill me-1"></i> تم إتمام ورد اليوم بحمد الله</span>'
-        : '<span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2 rounded-pill"><i class="bi bi-clock-history me-1"></i> بانتظار تلاوة الورد اليومي</span>';
+        ? '<span class="badge bg-success text-white px-3 py-1 rounded-pill fw-bold"><i class="bi bi-check-circle-fill me-1"></i> تم إتمام ورد اليوم بحمد الله</span>'
+        : '<span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold"><i class="bi bi-clock-history me-1"></i> بانتظار تلاوة الورد اليومي</span>';
     }
 
     if (elements.btnMarkWirdDone) {
       if (isCompleted) {
-        elements.btnMarkWirdDone.innerHTML = '<i class="bi bi-check2-all me-1"></i> تم إتمام الورد اليوم (انقر لإعادة القراءة)';
-        elements.btnMarkWirdDone.classList.replace('btn-gold-gradient', 'btn-outline-gold');
+        elements.btnMarkWirdDone.innerHTML = '<i class="bi bi-check2-all me-1"></i> تم الإتمام بحمد الله (انقر لإعادة القراءة)';
       } else {
-        elements.btnMarkWirdDone.innerHTML = '<i class="bi bi-patch-check-fill me-2"></i> تمت قراءة الورد اليوم بحمد الله ✨';
-        elements.btnMarkWirdDone.classList.replace('btn-outline-gold', 'btn-gold-gradient');
+        elements.btnMarkWirdDone.innerHTML = '<i class="bi bi-patch-check-fill fs-5 me-2"></i> تمت القراءة بحمد الله ✨';
       }
     }
 
@@ -215,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const todayPct = isCompleted ? 100 : 0;
     if (elements.wirdProgressPercent) elements.wirdProgressPercent.textContent = `${todayPct}%`;
     if (elements.wirdProgressCircle) {
-      const radius = 45;
+      const radius = 42;
       const circumference = 2 * Math.PI * radius;
       elements.wirdProgressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
       elements.wirdProgressCircle.style.strokeDashoffset = isCompleted ? 0 : circumference;
@@ -240,9 +222,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeUser = window.QuraniWirdEngine.getActiveUser();
 
     let html = `
-      <div class="px-3 py-2 border-bottom border-light-subtle">
-        <small class="text-muted d-block">الحساب النشط حالياً:</small>
-        <div class="fw-bold text-emerald">${activeUser.name} (${activeUser.planId ? window.QuraniWirdEngine.plans[activeUser.planId]?.name : 'خطة الصفا'})</div>
+      <div class="px-3 py-2 border-bottom border-light mb-1">
+        <small class="text-muted d-block fw-bold">الحساب النشط حالياً:</small>
+        <div class="fw-bold text-emerald fs-6">${activeUser.name} (${activeUser.planId ? window.QuraniWirdEngine.plans[activeUser.planId]?.name : 'خطة الصفا'})</div>
       </div>
     `;
 
@@ -250,26 +232,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const isCurrent = u.id === activeUser.id;
       html += `
         <li>
-          <a class="dropdown-item d-flex align-items-center justify-content-between py-2 ${isCurrent ? 'bg-light-subtle fw-bold' : ''}" 
+          <a class="dropdown-item d-flex align-items-center justify-content-between py-2 rounded-3 ${isCurrent ? 'bg-emerald-subtle fw-bold' : ''}" 
              href="javascript:void(0)" onclick="window.switchUserAccount('${u.id}')">
             <div class="d-flex align-items-center">
               <span class="user-avatar-circle me-2">${u.avatar || '👤'}</span>
               <div>
-                <div>${u.name}</div>
+                <div class="text-dark">${u.name}</div>
                 <small class="text-muted">${u.relation || ''} • ص ${u.currentPage}</small>
               </div>
             </div>
-            ${isCurrent ? '<i class="bi bi-check-circle-fill text-gold"></i>' : ''}
+            ${isCurrent ? '<i class="bi bi-check-circle-fill text-emerald"></i>' : ''}
           </a>
         </li>
       `;
     });
 
     html += `
-      <li><hr class="dropdown-divider"></li>
+      <li><hr class="dropdown-divider my-2"></li>
       <li>
-        <a class="dropdown-item text-gold fw-bold py-2" href="javascript:void(0)" onclick="window.openAddMemberModal()">
-          <i class="bi bi-person-plus-fill me-2"></i> إضافة حساب جديد للأهل أو الأصدقاء
+        <a class="dropdown-item text-gold fw-bold py-2 rounded-3" href="javascript:void(0)" onclick="window.openAddMemberModal()">
+          <i class="bi bi-person-plus-fill me-2"></i> إضافة حساب جديد للأهل والأصدقاء
         </a>
       </li>
     `;
@@ -279,11 +261,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- تفعيل تأثير الاحتفال عند إتمام الورد ---
   function triggerCelebration() {
-    // تفعيل اهتزاز بالجوال إن وجد
     if (navigator.vibrate) navigator.vibrate([100, 50, 200]);
     playClickTone(880, 0.2);
 
-    // بطاقة تنبيه Toast خفيفة
     const toastElem = document.getElementById('quraniToast');
     if (toastElem) {
       toastElem.classList.remove('d-none');
@@ -329,16 +309,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!elements.surahsGridList) return;
     elements.surahsGridList.innerHTML = surahsList.map(s => `
       <div class="col-6 col-md-4 col-lg-3">
-        <div class="surah-grid-card p-3 rounded-4 border border-light-subtle h-100 cursor-pointer" onclick="window.selectSurah(${s.number})">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <span class="surah-num-badge">${s.number}</span>
-            <span class="badge ${s.revelationType === 'مكية' ? 'badge-makki' : 'badge-madani'}">${s.revelationType}</span>
+        <div class="surah-item-card d-flex align-items-center justify-content-between" onclick="window.selectSurah(${s.number})">
+          <div class="d-flex align-items-center">
+            <span class="surah-number-badge me-2">${s.number}</span>
+            <div>
+              <div class="fw-bold text-dark fs-6">${s.name}</div>
+              <small class="text-muted">${s.ayahsCount} آية • ص ${s.startPage}</small>
+            </div>
           </div>
-          <h5 class="surah-arabic-title mb-1">${s.name}</h5>
-          <div class="d-flex justify-content-between text-muted small">
-            <span>${s.ayahsCount} آية</span>
-            <span>ص ${s.startPage}</span>
-          </div>
+          <span class="badge ${s.revelationType === 'مكية' ? 'bg-gold-subtle' : 'bg-emerald-subtle'}">${s.revelationType}</span>
         </div>
       </div>
     `).join('');
@@ -357,8 +336,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // إظهار مؤشر التحميل
     elements.mushafContentBox.innerHTML = `
       <div class="text-center py-5">
-        <div class="spinner-border text-gold mb-3" role="status"></div>
-        <p class="text-muted">جارٍ تحميل الآيات العطرة...</p>
+        <div class="spinner-border text-emerald mb-3" role="status"></div>
+        <p class="text-muted fw-bold">جارٍ تحميل الآيات العطرة...</p>
       </div>
     `;
 
@@ -368,30 +347,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // بناء النص القرآني
     let html = '';
 
-    // ترويسة السورة الملكية
+    // ترويسة السورة
     html += `
-      <div class="surah-header-card text-center my-3 p-4 rounded-4 position-relative overflow-hidden">
-        <div class="surah-frame-corner corner-top-right"></div>
-        <div class="surah-frame-corner corner-top-left"></div>
-        <div class="surah-frame-corner corner-bottom-right"></div>
-        <div class="surah-frame-corner corner-bottom-left"></div>
-        <div class="badge bg-gold-subtle text-gold px-3 py-1 mb-2 rounded-pill">${surah.revelationType} • ${surah.ayahsCount} آية • ترتيبها ${surah.number}</div>
-        <h2 class="surah-header-title text-gold mb-1">سُورَةُ ${surah.name}</h2>
-        <div class="text-muted small">الصفحات من ${surah.startPage} إلى ${surah.endPage}</div>
+      <div class="surah-header-card">
+        <div class="badge bg-gold-subtle px-3 py-1 mb-2 rounded-pill fw-bold">${surah.revelationType} • ${surah.ayahsCount} آية • ترتيبها ${surah.number}</div>
+        <h2 class="surah-header-title">سُورَةُ ${surah.name}</h2>
+        <div class="text-muted small fw-semibold">الصفحات من ${surah.startPage} إلى ${surah.endPage}</div>
       </div>
     `;
 
     // البسملة لغير سورة التوبة (رقم 9) وسورة الفاتحة (تعتبر البسملة آية رقم 1)
     if (surah.number !== 9 && surah.number !== 1) {
       html += `
-        <div class="bismillah-banner text-center my-4">
+        <div class="bismillah-banner">
           <span class="bismillah-text">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
         </div>
       `;
     }
 
     // عرض الآيات متصلة كالمصحف الشريف
-    html += `<div class="quran-page-verses p-3 p-md-4 text-center lh-lg">`;
+    html += `<div class="quran-page-verses p-2 p-md-3">`;
     ayahs.forEach(ayah => {
       html += `
         <span class="ayah-segment" id="ayah-${ayah.numberInSurah}" onclick="window.showAyahTafseer(${surah.number}, ${ayah.numberInSurah})">
@@ -414,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
     state.activeAdhkarCategory = categoryKey;
 
     // تحديث أزرار التنقل بين فئات الأذكار
-    elements.adhkarTabs.forEach(btn => {
+    document.querySelectorAll('.adhkar-tab-btn').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-category') === categoryKey);
     });
 
@@ -431,25 +406,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
       return `
         <div class="col-12 col-md-6 mb-3">
-          <div class="adhkar-card p-4 rounded-4 h-100 ${isDone ? 'adhkar-completed' : ''}" id="adhkar-card-${itemKey}">
+          <div class="adhkar-card p-4 h-100 ${isDone ? 'adhkar-completed' : ''}" id="adhkar-card-${itemKey}">
             <div class="d-flex align-items-center justify-content-between mb-3">
-              <span class="badge ${isDone ? 'bg-success' : 'bg-gold-subtle text-gold'} px-3 py-1 rounded-pill">
-                ${isDone ? '<i class="bi bi-check2 me-1"></i> تم' : `التكرار المطلوب: ${item.count}`}
+              <span class="badge ${isDone ? 'bg-success text-white' : 'bg-gold-subtle'} px-3 py-1 rounded-pill fw-bold">
+                ${isDone ? '<i class="bi bi-check2 me-1"></i> أتممت الذكر' : `التكرار المطلوب: ${item.count}`}
               </span>
-              <span class="text-muted small">${item.reference || ''}</span>
+              <span class="text-muted small fw-semibold">${item.reference || ''}</span>
             </div>
             
             <p class="adhkar-arabic-text mb-3">${item.text}</p>
             
-            ${item.virtue ? `<div class="adhkar-virtue-box p-2 mb-3 rounded-3"><i class="bi bi-stars text-gold me-1"></i> <small>${item.virtue}</small></div>` : ''}
+            ${item.virtue ? `<div class="adhkar-virtue-box p-2 mb-3"><i class="bi bi-stars text-gold me-1"></i> <small class="fw-semibold">${item.virtue}</small></div>` : ''}
 
-            <div class="d-flex align-items-center justify-content-between mt-auto pt-2 border-top border-light-subtle">
-              <button class="btn ${isDone ? 'btn-outline-success' : 'btn-gold-gradient'} px-4 py-2 rounded-pill" 
+            <div class="d-flex align-items-center justify-content-between mt-auto pt-3 border-top border-light">
+              <button class="btn ${isDone ? 'btn-outline-success' : 'btn-emerald-action'} px-4 py-2 rounded-pill fw-bold" 
                       onclick="window.tapDhikrItem('${categoryKey}', ${item.id}, ${item.count})" ${isDone ? 'disabled' : ''}>
                 <i class="bi bi-hand-index-thumb me-1"></i>
-                ${isDone ? 'أتممت الذكر' : `المتبقي: ${remaining}`}
+                ${isDone ? 'تم بحمد الله' : `المتبقي: ${remaining}`}
               </button>
-              <button class="btn btn-sm btn-link text-muted" onclick="window.resetDhikrItem('${categoryKey}', ${item.id}, ${item.count})">
+              <button class="btn btn-sm btn-link text-muted fw-bold text-decoration-none" onclick="window.resetDhikrItem('${categoryKey}', ${item.id}, ${item.count})">
                 <i class="bi bi-arrow-counterclockwise"></i> إعادة
               </button>
             </div>
@@ -464,11 +439,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elements.tasbeehCounterDisplay) elements.tasbeehCounterDisplay.textContent = state.tasbeeh.count;
     if (elements.tasbeehTotalDisplay) elements.tasbeehTotalDisplay.textContent = state.tasbeeh.totalCount;
     if (elements.tasbeehLapDisplay) elements.tasbeehLapDisplay.textContent = state.tasbeeh.lap;
-
-    if (elements.tasbeehRingBead) {
-      const rot = (state.tasbeeh.count / state.tasbeeh.target) * 360;
-      elements.tasbeehRingBead.style.transform = `rotate(${rot}deg)`;
-    }
   }
 
   function tapTasbeeh() {
@@ -481,7 +451,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (state.tasbeeh.count >= state.tasbeeh.target) {
-      // إتمام الدورة (33 أو 100)
       playClickTone(880, 0.2);
       if (state.tasbeeh.vibrateEnabled && navigator.vibrate) {
         navigator.vibrate([100, 50, 100]);
@@ -508,45 +477,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
       return `
         <div class="col-12 col-md-6 col-lg-4 mb-4">
-          <div class="member-card p-4 rounded-4 h-100 position-relative ${isCurrent ? 'border-gold-glow' : 'border-light-subtle'}">
-            ${isCurrent ? '<span class="badge bg-gold text-dark position-absolute top-0 end-0 m-3 px-3 py-1 rounded-pill fw-bold">الحساب الحالي</span>' : ''}
+          <div class="member-card p-4 h-100 position-relative ${isCurrent ? 'is-active-user' : ''}">
+            ${isCurrent ? '<span class="badge bg-emerald-deep text-white position-absolute top-0 end-0 m-3 px-3 py-1 rounded-pill fw-bold">الحساب الحالي</span>' : ''}
             
             <div class="d-flex align-items-center mb-3">
               <span class="user-avatar-lg me-3">${u.avatar || '👤'}</span>
               <div>
-                <h5 class="fw-bold mb-0">${u.name}</h5>
-                <small class="text-muted">${u.relation || 'مشترك'} • ${u.phone || 'بدون هاتف'}</small>
+                <h5 class="fw-bold mb-0 text-dark">${u.name}</h5>
+                <small class="text-muted fw-semibold">${u.relation || 'مشترك'} • ${u.phone || 'بدون هاتف'}</small>
               </div>
             </div>
 
-            <div class="member-plan-box p-3 rounded-3 mb-3">
-              <div class="d-flex justify-content-between small text-muted mb-1">
-                <span>الخطة:</span>
+            <div class="p-3 rounded-3 mb-3 border border-light" style="background-color: #fafbfc;">
+              <div class="d-flex justify-content-between small mb-1">
+                <span class="text-muted fw-semibold">الخطة:</span>
                 <span class="fw-bold text-emerald">${plan.name}</span>
               </div>
-              <div class="d-flex justify-content-between small text-muted mb-1">
-                <span>الورد اليومي:</span>
-                <span class="fw-bold">ص ${wird.startPage} - ${wird.endPage}</span>
+              <div class="d-flex justify-content-between small mb-1">
+                <span class="text-muted fw-semibold">الورد اليومي:</span>
+                <span class="fw-bold text-dark">ص ${wird.startPage} - ${wird.endPage}</span>
               </div>
-              <div class="d-flex justify-content-between small text-muted">
-                <span>السورة:</span>
-                <span class="fw-bold">سورة ${wird.surahName}</span>
+              <div class="d-flex justify-content-between small">
+                <span class="text-muted fw-semibold">السورة:</span>
+                <span class="fw-bold text-dark">سورة ${wird.surahName}</span>
               </div>
             </div>
 
             <div class="d-flex align-items-center justify-content-between mb-3">
-              <span class="small text-muted">حالة تلاوة اليوم:</span>
-              <span class="badge ${isCompleted ? 'bg-success' : 'bg-warning text-dark'} px-3 py-1 rounded-pill">
+              <span class="small text-muted fw-bold">حالة تلاوة اليوم:</span>
+              <span class="badge ${isCompleted ? 'bg-success text-white' : 'bg-warning text-dark'} px-3 py-1 rounded-pill fw-bold">
                 ${isCompleted ? '<i class="bi bi-check-circle-fill me-1"></i> أتم القراءة' : '<i class="bi bi-hourglass-split me-1"></i> بانتظار القراءة'}
               </span>
             </div>
 
             <div class="d-flex gap-2">
-              <button class="btn btn-whatsapp flex-grow-1 rounded-pill" onclick="window.openWhatsAppForMember('${u.id}')">
-                <i class="bi bi-whatsapp me-1"></i> تذكير بالواتساب
+              <button class="btn btn-whatsapp flex-grow-1" onclick="window.openWhatsAppForMember('${u.id}')">
+                <i class="bi bi-whatsapp"></i> تذكير بالواتساب
               </button>
               ${!isCurrent ? `
-                <button class="btn btn-outline-emerald rounded-pill px-3" title="التبديل لهذا الحساب" onclick="window.switchUserAccount('${u.id}')">
+                <button class="btn btn-outline-secondary rounded-pill px-3" title="التبديل لهذا الحساب" onclick="window.switchUserAccount('${u.id}')">
                   <i class="bi bi-person-check"></i>
                 </button>
               ` : ''}
@@ -567,25 +536,25 @@ document.addEventListener('DOMContentLoaded', () => {
       const isSelected = activeUser.planId === p.id;
       return `
         <div class="col-12 col-md-6 col-lg-4 mb-4">
-          <div class="plan-card p-4 rounded-4 h-100 position-relative ${isSelected ? 'plan-card-active' : ''}">
-            ${p.badge ? `<div class="plan-ribbon">${p.badge}</div>` : ''}
+          <div class="plan-card p-4 h-100 position-relative ${isSelected ? 'plan-active' : ''}">
+            ${p.badge ? `<span class="badge bg-gold-subtle position-absolute top-0 end-0 m-3 px-3 py-1 rounded-pill fw-bold">${p.badge}</span>` : ''}
             <div class="d-flex align-items-center mb-3">
-              <span class="plan-icon-box me-3">${p.icon || '📖'}</span>
+              <span class="plan-icon-container me-3">${p.icon || '📖'}</span>
               <div>
-                <h4 class="fw-bold mb-0">${p.name}</h4>
-                <small class="text-muted">${p.duration}</small>
+                <h4 class="fw-bold mb-0 text-dark">${p.name}</h4>
+                <small class="text-gold fw-bold">${p.duration}</small>
               </div>
             </div>
             
-            <p class="text-muted small mb-3">${p.description}</p>
+            <p class="text-muted small mb-3 fw-semibold">${p.description}</p>
             
-            <ul class="list-unstyled small mb-4">
-              <li class="mb-2"><i class="bi bi-check-circle-fill text-gold me-2"></i> ${p.dailyTarget}</li>
-              <li class="mb-2"><i class="bi bi-check-circle-fill text-gold me-2"></i> الختمة خلال: ${p.duration}</li>
-              <li class="mb-2"><i class="bi bi-check-circle-fill text-gold me-2"></i> مناسب لـ: ${p.targetAudience || 'الجميع'}</li>
+            <ul class="list-unstyled small mb-4 fw-semibold">
+              <li class="mb-2"><i class="bi bi-check-circle-fill text-emerald me-2"></i> ${p.dailyTarget}</li>
+              <li class="mb-2"><i class="bi bi-check-circle-fill text-emerald me-2"></i> مدة الختمة: ${p.duration}</li>
+              <li class="mb-2"><i class="bi bi-check-circle-fill text-emerald me-2"></i> مناسب لـ: ${p.targetAudience || 'الجميع'}</li>
             </ul>
 
-            <button class="btn ${isSelected ? 'btn-success' : 'btn-gold-gradient'} w-100 rounded-pill py-2" 
+            <button class="btn ${isSelected ? 'btn-success text-white' : 'btn-emerald-action'} w-100 rounded-pill py-2 fw-bold" 
                     onclick="window.selectPlanForActiveUser('${p.id}')">
               ${isSelected ? '<i class="bi bi-check2-circle me-1"></i> خطتك الحالية' : 'اختيار هذه الخطة'}
             </button>
@@ -679,7 +648,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const surah = window.QuraniData.getSurahByNumber(surahNum);
     titleElem.textContent = `تفسير الآية (${ayahNum}) من سورة ${surah.name}`;
-    contentElem.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-gold"></div></div>`;
+    contentElem.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-emerald"></div></div>`;
 
     const bsModal = new bootstrap.Modal(modalElem);
     bsModal.show();
@@ -714,13 +683,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // --- مستمعو الأحداث (Event Listeners) ---
-  if (elements.themeToggleBtn) {
-    elements.themeToggleBtn.addEventListener('click', () => {
-      applyTheme(state.theme === 'dark' ? 'light' : 'dark');
-    });
-  }
-
-  // أزرار التنقل السفلية والعلوية
   document.querySelectorAll('[data-nav-target]').forEach(btn => {
     btn.addEventListener('click', () => {
       switchTab(btn.getAttribute('data-nav-target'));
@@ -818,7 +780,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // تبويبات الأذكار
-  elements.adhkarTabs.forEach(btn => {
+  document.querySelectorAll('.adhkar-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       renderAdhkarCategory(btn.getAttribute('data-category'));
     });
@@ -885,7 +847,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const days = Math.ceil(604 / pages);
       const months = (days / 30).toFixed(1);
       elements.customCalcResult.innerHTML = `
-        <span class="text-gold fw-bold">ختمة كاملة خلال ${days} يوماً</span> (حوالي ${months} شهر)
+        <span class="text-gold-light fw-bold">ختمة كاملة خلال ${days} يوماً</span> (حوالي ${months} شهر)
       `;
     });
   }
@@ -909,7 +871,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- تشغيل التطبيق الأولي ---
-  applyTheme(state.theme);
   initMushafSelectors();
   updateDashboardUI();
   updateTasbeehUI();
@@ -925,5 +886,5 @@ document.addEventListener('DOMContentLoaded', () => {
     updateWhatsAppPreview();
   }
 
-  console.log('✨ تم تشغيل منصة «قرءاني» بنجاح — تقبل الله طاعتكم');
+  console.log('✨ تم تشغيل منصة «قرءاني» بنجاح بالوضع الفاخر المضيء — تقبل الله طاعتكم');
 });
