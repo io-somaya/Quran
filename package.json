@@ -1,0 +1,22 @@
+{
+  "name": "qurani",
+  "version": "1.0.0",
+  "description": "منصة قرءاني لمتابعة الأوراد القرآنية والأذكار وخطط التلاوة مع التذكير عبر واتساب",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "quran",
+    "wird",
+    "adhkar",
+    "islamic",
+    "whatsapp"
+  ],
+  "author": "Qur'ani Team",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

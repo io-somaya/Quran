@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="48" viewBox="0 0 360 48" fill="none">
+  <defs>
+    <linearGradient id="goldGBis" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#aa820a" stop-opacity="0"/>
+      <stop offset="20%" stop-color="#d4af37" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#f5d77f"/>
+      <stop offset="80%" stop-color="#d4af37" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#aa820a" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Decorative Wings -->
+  <path d="M10 24 H120 M240 24 H350" stroke="url(#goldGBis)" stroke-width="1.2"/>
+  <circle cx="120" cy="24" r="3" fill="#d4af37"/>
+  <circle cx="240" cy="24" r="3" fill="#d4af37"/>
+  <polygon points="128,24 133,21 138,24 133,27" fill="#d4af37"/>
+  <polygon points="232,24 227,21 222,24 227,27" fill="#d4af37"/>
+  <!-- Central subtle flourish -->
+  <path d="M140 24 Q 180 12, 220 24 Q 180 36, 140 24 Z" stroke="#d4af37" stroke-width="0.75" fill="none" stroke-opacity="0.4"/>
+</svg>

@@ -1,0 +1,46 @@
+/**
+ * تهيئة خطوط المصحف الشريف والزخارف القرآنية — «قرءاني»
+ * Quranic Typography & Calligraphic Glyphs Setup
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=Scheherazade+New:wght@400;600;700&display=swap');
+
+/* خصائص عرض النص القرآني بأعلى درجات التشكيل الدقيق */
+.quran-text,
+.font-mushaf {
+  font-family: 'Amiri Quran', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
+  font-feature-settings: "cv01" on, "cv02" on, "cv03" on, "ss01" on;
+  -webkit-font-feature-settings: "cv01" on, "cv02" on, "cv03" on, "ss01" on;
+  text-rendering: optimizeLegibility;
+  font-display: swap;
+  direction: rtl;
+}
+
+/* علامات الوقف القرآنية (ج، صلي، قلي، لا، مـ، ∴) */
+.quran-waqf-mark {
+  font-family: 'Amiri Quran', serif;
+  font-size: 0.85em;
+  color: var(--qur-gold-dark, #9f7d23);
+  margin: 0 0.25rem;
+  vertical-align: super;
+  user-select: none;
+}
+
+/* رموز الأحزاب والأرباع وأرقام الأجزاء */
+.hizb-rub-symbol {
+  font-family: 'Amiri Quran', serif;
+  color: var(--qur-gold-primary, #d4af37);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0.5rem;
+  font-size: 1.25em;
+}
+
+/* علامة السجدة القرآنية ۩ */
+.sajdah-mark {
+  color: var(--qur-gold-primary, #d4af37);
+  font-weight: bold;
+  padding: 0 0.3rem;
+  border-bottom: 2px solid var(--qur-gold-primary, #d4af37);
+}

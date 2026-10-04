@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+  <g stroke="#d4af37" stroke-width="0.75" stroke-opacity="0.35">
+    <!-- 8-pointed star Islamic rosette pattern -->
+    <path d="M40 0 L48 24 L72 16 L64 40 L80 48 L56 56 L64 80 L40 64 L24 80 L32 56 L0 48 L24 40 L16 16 L40 24 Z" />
+    <circle cx="40" cy="40" r="14" stroke-dasharray="2 2" />
+    <circle cx="40" cy="40" r="6" />
+    <path d="M0 0 L80 80 M80 0 L0 80" stroke-opacity="0.15" />
+    <rect x="28" y="28" width="24" height="24" transform="rotate(45 40 40)" stroke-opacity="0.25" />
+    <!-- Outer corner accents -->
+    <circle cx="0" cy="0" r="10" stroke-opacity="0.2" />
+    <circle cx="80" cy="0" r="10" stroke-opacity="0.2" />
+    <circle cx="0" cy="80" r="10" stroke-opacity="0.2" />
+    <circle cx="80" cy="80" r="10" stroke-opacity="0.2" />
+  </g>
+</svg>
