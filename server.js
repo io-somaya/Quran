@@ -17,7 +17,13 @@ function loadWaqfPages() {
       return [];
     }
     const data = fs.readFileSync(DATA_FILE, 'utf8');
-    return JSON.parse(data || '[]');
+    let pages = JSON.parse(data || '[]');
+    // تنظيف فوري لأي صفحة تالفة أو تحتوي علامات استفهام
+    const cleaned = pages.filter(p => p && p.name && !p.name.includes('???') && String(p.id) !== '110892');
+    if (cleaned.length !== pages.length) {
+      saveWaqfPages(cleaned);
+    }
+    return cleaned;
   } catch (err) {
     console.error('خطأ في قراءة ملف صفحات الوقف:', err);
     return [];
@@ -41,7 +47,7 @@ function saveWaqfPages(pages) {
 
 // Health check endpoint for Railway
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', name: 'قرءاني', timestamp: new Date().toISOString() });
+  res.json({ status: 'ok', name: 'الأنس بالقرآن', timestamp: new Date().toISOString() });
 });
 
 // API: جلب كل صفحات الوقف مع البحث والترتيب
@@ -178,6 +184,19 @@ app.post('/api/waqf/:id/report', (req, res) => {
   });
 });
 
+// API: حذف صفحة وقف
+app.delete('/api/waqf/:id', (req, res) => {
+  const { id } = req.params;
+  let pages = loadWaqfPages();
+  const initLen = pages.length;
+  pages = pages.filter(p => String(p.id) !== String(id));
+  if (pages.length !== initLen) {
+    saveWaqfPages(pages);
+    return res.json({ status: 'success', message: 'تم حذف صفحة الوقف بنجاح' });
+  }
+  res.status(404).json({ status: 'error', message: 'صفحة الوقف غير موجودة' });
+});
+
 // مسارات العرض المباشر لصفحات الوقف
 // 1. مسار /waqf/:id
 app.get('/waqf/:id', (req, res) => {
@@ -205,7 +224,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✨ خادم قرءاني يعمل بنجاح على المنفذ: ${PORT}`);
+  console.log(`✨ خادم «الأنس بالقرآن» يعمل بنجاح على المنفذ: ${PORT}`);
   console.log(`🌐 الرابط المحلي: http://localhost:${PORT}`);
   console.log(`🌿 صفحة الوقف التجريبية: http://localhost:${PORT}/waqf/110887`);
 });

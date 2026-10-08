@@ -35,9 +35,10 @@
       if (res.ok) {
         const data = await res.json();
         if (data.status === 'success' && Array.isArray(data.pages)) {
-          waqfState.pages = data.pages;
-          localStorage.setItem('qurani_waqf_pages', JSON.stringify(data.pages));
-          return data.pages;
+          // استبعاد أي صفحة تالفة أو تحتوي علامات استفهام
+          waqfState.pages = data.pages.filter(p => p && p.name && !p.name.includes('???') && String(p.id) !== '110892');
+          localStorage.setItem('qurani_waqf_pages', JSON.stringify(waqfState.pages));
+          return waqfState.pages;
         }
       }
     } catch (err) {
@@ -48,7 +49,9 @@
     const local = localStorage.getItem('qurani_waqf_pages');
     if (local) {
       try {
-        waqfState.pages = JSON.parse(local);
+        const parsed = JSON.parse(local);
+        waqfState.pages = parsed.filter(p => p && p.name && !p.name.includes('???') && String(p.id) !== '110892');
+        localStorage.setItem('qurani_waqf_pages', JSON.stringify(waqfState.pages));
         return waqfState.pages;
       } catch (e) {}
     }
