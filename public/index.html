@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" data-bs-theme="light">
+<html lang="ar" dir="rtl" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>قرءاني — منصة متابعة الأوراد القرآنية والأذكار</title>
+  <title>قرءاني — منصة متابعة الأوراد القرآنية والأذكار وخطط التلاوة</title>
   
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
   
-  <!-- Google Fonts: Cairo, Amiri, Amiri Quran, Scheherazade New -->
+  <!-- Google Fonts: Alexandria, Cairo, Amiri, Amiri Quran, Scheherazade New -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700;800;900&family=Scheherazade+New:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800;900&family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700;800;900&family=Scheherazade+New:wght@400;600;700&display=swap" rel="stylesheet">
   
   <!-- Bootstrap 5.3 RTL CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
@@ -19,15 +19,21 @@
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   
-  <!-- Custom Luxury Light Design CSS -->
+  <!-- Quran Typography & Glyphs CSS -->
+  <link rel="stylesheet" href="css/quran-font.css">
+
+  <!-- Custom Modern Luxury Design CSS -->
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Canvas Confetti for Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
-  <!-- ==================== الناف بار الملكي الفاخر (Luxury Navbar) ==================== -->
+  <!-- ==================== الناف بار الملكي الفاخر (Modern Luxury Navbar) ==================== -->
   <header class="navbar navbar-expand-lg navbar-clean-luxury sticky-top">
     <div class="container-fluid px-3 px-lg-5">
-      <!-- الشعار والهوية -->
+      <!-- الشعار والهوية البصرية -->
       <a class="navbar-brand-wrapper me-lg-4" href="javascript:void(0)" onclick="window.switchTab('home')">
         <div class="brand-icon me-2 me-sm-3">
           <i class="bi bi-book-half text-white fs-4"></i>
@@ -76,14 +82,42 @@
               <span>المشتركون والعائلة</span>
             </button>
           </li>
+          <li class="nav-item">
+            <button class="nav-link-custom" data-nav-target="waqf">
+              <i class="bi bi-gift-fill text-gold"></i>
+              <span>وقف وصدقة جارية</span>
+            </button>
+          </li>
         </ul>
 
-        <!-- أدوات يسار الناف بار: المشترك والتاريخ -->
-        <div class="d-flex align-items-center gap-2 pt-2 pt-lg-0 border-top border-lg-0">
+        <!-- أدوات يسار الناف بار: الثيمات، التاريخ، الحساب -->
+        <div class="d-flex align-items-center gap-2 pt-2 pt-lg-0 border-top border-lg-0 flex-wrap">
+          <!-- محول أنماط المظهر (Theme Selector: Light / Parchment / Dark) -->
+          <div class="theme-selector-group me-1" id="themeSelectorGroup">
+            <button class="theme-btn-chip active" data-set-theme="light" title="المظهر النهاري النقي">
+              <i class="bi bi-sun-fill text-warning"></i>
+              <span class="d-none d-xxl-inline">نهاري</span>
+            </button>
+            <button class="theme-btn-chip" data-set-theme="parchment" title="مصحف المدينة الورقي الدافئ">
+              <i class="bi bi-journal-bookmark text-gold"></i>
+              <span class="d-none d-xxl-inline">ورقي</span>
+            </button>
+            <button class="theme-btn-chip" data-set-theme="dark" title="الوضع الليلي الزمردي الهادئ">
+              <i class="bi bi-moon-stars-fill text-info"></i>
+              <span class="d-none d-xxl-inline">ليلي</span>
+            </button>
+          </div>
+
+          <!-- شارة العلامة المرجعية السريعة (تظهر عند وجود علامة محفوظة) -->
+          <button class="bookmark-saved-chip d-none" id="navBookmarkBtn" onclick="window.resumeFromBookmark()" title="متابعة من مكان وقوفك الأخير">
+            <i class="bi bi-bookmark-star-fill text-gold"></i>
+            <span id="navBookmarkText">ص 1</span>
+          </button>
+
           <!-- التاريخ الهجري -->
           <div class="d-none d-xl-flex align-items-center bg-gold-subtle px-3 py-2 rounded-pill">
             <i class="bi bi-moon-stars text-gold me-2"></i>
-            <span class="small fw-bold">ربيع الآخر ١٤٤٨ هـ</span>
+            <span class="small fw-bold" id="hijriDateDisplay">ربيع الآخر ١٤٤٨ هـ</span>
           </div>
 
           <!-- قائمة تبديل المشترك النشط -->
@@ -92,7 +126,7 @@
               <span class="user-avatar-circle" id="navUserAvatar">👤</span>
               <span class="fw-bold" id="navUserName">أحمد</span>
             </button>
-            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 p-2" id="userDropdownMenu" style="min-width: 260px;">
+            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 p-2" id="userDropdownMenu" style="min-width: 270px;">
               <!-- يُملأ بالجافاسكريبت -->
             </ul>
           </div>
@@ -116,25 +150,39 @@
               <i class="bi bi-calendar-event me-1"></i> الورد القرآني لليوم
             </span>
             <span class="badge bg-gold-subtle px-3 py-1 rounded-pill fw-bold">
-              <i class="bi bi-fire text-warning me-1"></i> <span id="wirdStreakDays">12 يوماً</span> من الالتزام
+              <i class="bi bi-fire text-warning me-1"></i> <span id="wirdStreakDays">12 يوماً</span> من الالتزام المبارك
             </span>
           </div>
           <h1 class="h2 fw-bold mb-1 text-emerald">
             السلام عليكم ورحمة الله، يا <span class="text-gold" id="homeGreetingName">أحمد</span> 🌸
           </h1>
-          <p class="text-muted mb-0">"أَحَبُّ الأَعْمَالِ إِلَى اللهِ أَدْوَمُهَا وَإِنْ قَلَّ" — مبارك حرصك على وردك اليومي.</p>
+          <p class="text-muted mb-0">"أَحَبُّ الأَعْمَالِ إِلَى اللهِ أَدْوَمُهَا وَإِنْ قَلَّ" — مبارك حرصك على وردك اليومي ونور قلبك.</p>
         </div>
-        <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
+        <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end flex-wrap">
           <button class="btn btn-whatsapp rounded-pill px-4 py-2" onclick="window.switchTab('members')">
-            <i class="bi bi-whatsapp me-2"></i> إرسال الورد للأهل بالواتساب
+            <i class="bi bi-whatsapp me-2"></i> تذكير الأهل بالواتساب
           </button>
         </div>
+      </div>
+
+      <!-- تنبيه العلامة المرجعية المحفوظة إن وجدت -->
+      <div id="homeBookmarkBanner" class="alert bg-gold-subtle border-gold rounded-4 p-3 mb-4 d-none d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-bookmark-star-fill text-gold fs-4 me-3"></i>
+          <div>
+            <strong class="text-dark d-block">لديك علامة توقف محفوظة في المصحف 📖</strong>
+            <small class="text-muted" id="homeBookmarkDetail">سورة البقرة — صفحة 12</small>
+          </div>
+        </div>
+        <button class="btn btn-gold-action btn-sm rounded-pill px-4" onclick="window.resumeFromBookmark()">
+          متابعة القراءة الآن <i class="bi bi-arrow-left ms-1"></i>
+        </button>
       </div>
 
       <!-- بطاقة الورد اليومي الملكية (Hero Card) -->
       <div class="row g-4 mb-5">
         <div class="col-12 col-lg-8">
-          <div class="hero-wird-card p-4 p-md-5">
+          <div class="hero-wird-card">
             <div class="hero-islamic-pattern"></div>
             <div class="row align-items-center position-relative z-1">
               <!-- معلومات الورد والصفحات -->
@@ -148,19 +196,19 @@
                   </div>
                 </div>
 
-                <div class="text-gold-light small fw-bold mb-1">وردك المحدد لليوم المبارك:</div>
+                <div class="text-gold-light small fw-bold mb-1">وردك القرآني المحدد لليوم المبارك:</div>
                 <h2 class="display-6 fw-bold text-white mb-1" id="wirdTodayPages">من صفحة 12 إلى 13</h2>
                 <h3 class="h4 text-gold-light mb-3" id="wirdTodaySurah">سورة البقرة</h3>
                 <p class="text-white-80 small mb-4" id="currentPlanDesc">
-                  تلاوة هادئة متأنية بتدبر.. دقائق معدودة تصنع بركة يومك ونور قبرك.
+                  تلاوة هادئة متأنية بتدبر.. دقائق معدودة تصنع بركة يومك، وتشرح صدرك، ونور في قبرك.
                 </p>
 
                 <!-- أزرار الإجراء السريع بتباين عالي -->
                 <div class="d-flex flex-wrap gap-3">
-                  <button class="btn btn-gold-action d-flex align-items-center" id="btnStartWirdReading">
+                  <button class="btn btn-gold-action" id="btnStartWirdReading">
                     <i class="bi bi-book-half fs-5 me-2"></i> اقرأ ورد اليوم الآن
                   </button>
-                  <button class="btn btn-white-action d-flex align-items-center" id="btnMarkWirdDone">
+                  <button class="btn btn-white-action" id="btnMarkWirdDone">
                     <i class="bi bi-patch-check-fill fs-5 me-2"></i> تمت القراءة بحمد الله ✨
                   </button>
                 </div>
@@ -180,7 +228,7 @@
                 </div>
                 <div class="mt-3">
                   <span class="streak-pill">
-                    <i class="bi bi-stars"></i> يتجدد الورد تلقائياً كل فجر
+                    <i class="bi bi-stars text-warning"></i> يتجدد الورد تلقائياً كل فجر
                   </span>
                 </div>
               </div>
@@ -188,7 +236,7 @@
           </div>
         </div>
 
-        <!-- بطاقة متابعة الختمة الكلية والإحصائيات -->
+        <!-- بطاقة متابعة الختمة الكلية ومحطات القرآن الكريم -->
         <div class="col-12 col-lg-4">
           <div class="card-luxury p-4 h-100 d-flex flex-column justify-content-between">
             <div>
@@ -199,16 +247,37 @@
                 <span class="badge bg-emerald-subtle px-3 py-1 rounded-pill fw-bold" id="khatmahPercentText">4%</span>
               </div>
               
-              <div class="progress mb-2" style="height: 10px; background-color: #e2e8f0; border-radius: 50rem;">
+              <!-- شريط التقدم الكلي -->
+              <div class="progress mb-2" style="height: 10px; background-color: var(--bg-card-subtle); border-radius: 50rem;">
                 <div class="progress-bar" id="khatmahProgressBar" role="progressbar" style="width: 4%; background: var(--qur-emerald-gradient); border-radius: 50rem;"></div>
               </div>
 
-              <div class="d-flex justify-content-between small text-muted mb-4 fw-bold">
+              <div class="d-flex justify-content-between small text-muted mb-3 fw-bold">
                 <span id="khatmahCurrentPage">صفحة 24 من 604</span>
-                <span>باقي 580 صفحة</span>
+                <span id="khatmahRemainingPages">باقي 580 صفحة</span>
               </div>
 
-              <div class="p-3 rounded-4 mb-3 border border-light" style="background-color: #fafbfc;">
+              <!-- محطات الختمة الأربعة المضيئة -->
+              <div class="khatmah-stepper">
+                <div class="stepper-node" id="stepNode1">
+                  <div class="stepper-circle">¼</div>
+                  <span class="stepper-label">الربع</span>
+                </div>
+                <div class="stepper-node" id="stepNode2">
+                  <div class="stepper-circle">½</div>
+                  <span class="stepper-label">النصف</span>
+                </div>
+                <div class="stepper-node" id="stepNode3">
+                  <div class="stepper-circle">¾</div>
+                  <span class="stepper-label">الثلاثة أرباع</span>
+                </div>
+                <div class="stepper-node" id="stepNode4">
+                  <div class="stepper-circle"><i class="bi bi-trophy-fill text-gold"></i></div>
+                  <span class="stepper-label">الختمة</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-4 mb-3 border border-light" style="background-color: var(--bg-card-subtle);">
                 <div class="d-flex align-items-center">
                   <div class="feature-box-icon bg-gold-subtle text-gold me-3">
                     <i class="bi bi-calendar-check"></i>
@@ -220,13 +289,13 @@
                 </div>
               </div>
 
-              <div class="p-3 rounded-4 border border-light" style="background-color: #fafbfc;">
+              <div class="p-3 rounded-4 border border-light" style="background-color: var(--bg-card-subtle);">
                 <div class="d-flex align-items-center">
                   <div class="feature-box-icon bg-emerald-subtle text-emerald me-3">
                     <i class="bi bi-alarm-fill"></i>
                   </div>
                   <div>
-                    <small class="text-muted d-block fw-semibold">وقت التذكير اليومي المفضل</small>
+                    <small class="text-muted d-block fw-semibold">أفضل وقت موصى به للتلاوة</small>
                     <span class="fw-bold text-dark fs-6">بعد صلاة الفجر (5:30 ص)</span>
                   </div>
                 </div>
@@ -235,9 +304,25 @@
 
             <div class="pt-3 border-top border-light mt-3">
               <button class="btn btn-outline-gold w-100" onclick="window.switchTab('plans')">
-                <i class="bi bi-sliders me-1"></i> تغيير خطة الورد الحالية
+                <i class="bi bi-sliders me-1"></i> تغيير أو تخصيص خطة الورد
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- بطاقة قبس وتدبر اليوم الإيمانية -->
+      <div class="daily-reflection-box mb-5">
+        <div class="d-flex align-items-center gap-3">
+          <div class="feature-box-icon bg-emerald-subtle text-emerald">
+            <i class="bi bi-stars"></i>
+          </div>
+          <div>
+            <span class="badge bg-gold-subtle px-3 py-1 rounded-pill fw-bold mb-1">قبس وتدبر قرآني لليوم</span>
+            <p class="mb-0 fw-bold fs-6" style="font-family: var(--font-quran); color: var(--qur-emerald);">
+              ﴿ أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ ﴾ [الرعد: 28]
+            </p>
+            <small class="text-muted">استشعر في وردك اليوم السكينة وانشراح الصدر ونور الهداية في قلبك وحياتك.</small>
           </div>
         </div>
       </div>
@@ -245,7 +330,7 @@
       <!-- بطاقات الخدمات السريعة الثلاث -->
       <div class="row g-4">
         <div class="col-12 col-md-4">
-          <div class="card-luxury p-4 cursor-pointer h-100" onclick="window.switchTab('adhkar')">
+          <div class="card-luxury p-4 cursor-pointer h-100" onclick="window.openAdhkarCategoryFromHome('morning')">
             <div class="d-flex align-items-center mb-3">
               <div class="feature-box-icon bg-gold-subtle text-gold me-3">
                 <i class="bi bi-brightness-high-fill"></i>
@@ -255,12 +340,12 @@
                 <small class="text-muted">حصنك وبركة نهارك</small>
               </div>
             </div>
-            <p class="text-muted small mb-0">تلاوة أذكار الصباح المأثورة مع عداد التكرار التفاعلي المريح وتتبع الإنجاز.</p>
+            <p class="text-muted small mb-0">تلاوة أذكار الصباح المأثورة مع عداد التكرار التفاعلي المريح وتتبع الإنجاز خطوة بخطوة.</p>
           </div>
         </div>
 
         <div class="col-12 col-md-4">
-          <div class="card-luxury p-4 cursor-pointer h-100" onclick="window.switchTab('adhkar')">
+          <div class="card-luxury p-4 cursor-pointer h-100" onclick="window.openAdhkarCategoryFromHome('evening')">
             <div class="d-flex align-items-center mb-3">
               <div class="feature-box-icon bg-emerald-subtle text-emerald me-3">
                 <i class="bi bi-moon-stars-fill"></i>
@@ -270,7 +355,7 @@
                 <small class="text-muted">سكينة الروح وحفظ الليل</small>
               </div>
             </div>
-            <p class="text-muted small mb-0">أذكار المساء الثابتة عن النبي ﷺ مع بيان الفضل والأثر المبارك وحفظ النفس.</p>
+            <p class="text-muted small mb-0">أذكار المساء الثابتة عن النبي ﷺ مع بيان الفضل والأثر المبارك وحفظ النفس والأهل.</p>
           </div>
         </div>
 
@@ -281,11 +366,11 @@
                 <i class="bi bi-circle-square"></i>
               </div>
               <div>
-                <h5 class="fw-bold mb-0">السبحة الإلكترونية</h5>
+                <h5 class="fw-bold mb-0">السبحة الإلكترونية 3D</h5>
                 <small class="text-muted">تسبيح واستغفار ميسر</small>
               </div>
             </div>
-            <p class="text-muted small mb-0">سبحة رقمية عصرية تدعم الاهتزاز والنبض الصوتي وعداد الدورات (33 / 100).</p>
+            <p class="text-muted small mb-0">سبحة رقمية عصرية بتأثيرات نبض ثلاثية الأبعاد تدعم الاهتزاز والنبض الصوتي وعداد الدورات.</p>
           </div>
         </div>
       </div>
@@ -295,55 +380,84 @@
     <!-- القسم 2: المصحف الشريف التفاعلي (Interactive Quran) -->
     <!-- ---------------------------------------------------- -->
     <section id="section-mushaf" class="app-section d-none">
-      <!-- شريط أدوات المصحف الشريف المضيء -->
+      <!-- شريط أدوات المصحف الشريف المضيء المطور -->
       <div class="card-luxury p-3 mb-4">
         <div class="row g-3 align-items-center">
           <!-- اختيار السورة -->
           <div class="col-12 col-md-4 col-lg-3">
-            <label class="form-label small fw-bold text-dark mb-1">السورة الشريفة:</label>
+            <label class="form-label small fw-bold mb-1">السورة الشريفة:</label>
             <select class="form-select form-select-luxury" id="surahSelectDropdown">
               <!-- يُملأ آلياً -->
             </select>
           </div>
 
           <!-- اختيار الصفحة -->
-          <div class="col-6 col-md-3 col-lg-2">
-            <label class="form-label small fw-bold text-dark mb-1">الصفحة (1 - 604):</label>
+          <div class="col-6 col-md-2 col-lg-2">
+            <label class="form-label small fw-bold mb-1">الصفحة (1 - 604):</label>
             <select class="form-select form-select-luxury" id="pageSelectDropdown">
               <!-- يُملأ آلياً -->
             </select>
           </div>
 
+          <!-- اختيار الجزء -->
+          <div class="col-6 col-md-2 col-lg-2">
+            <label class="form-label small fw-bold mb-1">الجزء (1 - 30):</label>
+            <select class="form-select form-select-luxury" id="juzSelectDropdown">
+              <!-- يُملأ بالجافاسكريبت -->
+            </select>
+          </div>
+
           <!-- اختيار القارئ للتلاوة -->
-          <div class="col-6 col-md-5 col-lg-3">
-            <label class="form-label small fw-bold text-dark mb-1">القارئ العطر:</label>
+          <div class="col-12 col-md-4 col-lg-2">
+            <label class="form-label small fw-bold mb-1">القارئ العطر:</label>
             <select class="form-select form-select-luxury" id="reciterSelectDropdown">
               <!-- يُملأ آلياً -->
             </select>
           </div>
 
-          <!-- أدوات التحكم بحجم الخط والاستماع -->
-          <div class="col-12 col-lg-4 text-lg-end d-flex align-items-center justify-content-lg-end gap-2 pt-2 pt-lg-0">
+          <!-- أدوات التحكم بحجم الخط والعلامة والاستماع -->
+          <div class="col-12 col-lg-3 text-lg-end d-flex align-items-center justify-content-lg-end gap-2 pt-2 pt-lg-0 flex-wrap">
             <div class="btn-group" role="group">
               <button class="btn btn-outline-secondary btn-sm" id="btnIncreaseFont" title="تكبير خط الآيات">
-                <i class="bi bi-zoom-in"></i> خط أكبر
+                <i class="bi bi-zoom-in"></i>
               </button>
               <button class="btn btn-outline-secondary btn-sm" id="btnDecreaseFont" title="تصغير خط الآيات">
-                <i class="bi bi-zoom-out"></i> خط أصغر
+                <i class="bi bi-zoom-out"></i>
               </button>
             </div>
 
-            <button class="btn btn-emerald-action btn-sm px-3 rounded-pill" onclick="window.QuraniAudioPlayer.togglePlay()">
-              <i class="bi bi-play-fill audio-play-icon fs-5"></i> استماع للسورة
+            <!-- زر حفظ علامة التوقف المرجعية -->
+            <button class="btn btn-outline-gold btn-sm rounded-pill" id="btnBookmarkPage" title="حفظ علامة وقوفك هنا">
+              <i class="bi bi-bookmark-star-fill text-gold me-1"></i> حفظ العلامة
             </button>
+
+            <!-- زر الاستماع للتلاوة العطرة -->
+            <button class="btn btn-emerald-action btn-sm px-3 rounded-pill" onclick="window.QuraniAudioPlayer.togglePlay()">
+              <i class="bi bi-play-fill audio-play-icon fs-5"></i> استماع
+            </button>
+          </div>
+        </div>
+
+        <!-- شريط التمرير السريع للصفحات -->
+        <div class="mt-3 pt-3 border-top border-light">
+          <div class="page-slider-container">
+            <span class="small fw-bold text-muted text-nowrap"><i class="bi bi-book me-1"></i> تنقل سريع:</span>
+            <input type="range" class="form-range form-range-luxury flex-grow-1" min="1" max="604" id="mushafPageSlider" value="1">
+            <span class="badge bg-emerald-subtle text-emerald fw-bold px-3 py-1 rounded-pill" id="sliderPageIndicator">ص 1</span>
           </div>
         </div>
       </div>
 
-      <!-- إطار صفحة المصحف الملكية (Madinah Mushaf Page Viewer) -->
+      <!-- إطار صفحة المصحف الملكية الأصيل (Authentic Madinah Mushaf Page Viewer) -->
       <div class="mushaf-reader-wrapper">
+        <!-- الزخارف الأربعة لأركان المصحف الشريف -->
+        <div class="mushaf-corner-motif top-right"></div>
+        <div class="mushaf-corner-motif top-left"></div>
+        <div class="mushaf-corner-motif bottom-right"></div>
+        <div class="mushaf-corner-motif bottom-left"></div>
+
         <div class="mushaf-inner-border">
-          <!-- ترويسة الصفحة (اسم السورة ورقم الجزء) -->
+          <!-- ترويسة الصفحة (اسم السورة ورقم الجزء والصفحة) -->
           <div class="mushaf-header-ribbon">
             <span class="mushaf-meta-badge" id="mushafJuzNumber">الجزء الأول</span>
             <span class="mushaf-surah-title-badge" id="mushafSurahName">سورة الفاتحة</span>
@@ -352,11 +466,11 @@
 
           <!-- مربع نص الآيات الشريفة -->
           <div id="mushafContentBox" class="min-vh-50">
-            <!-- تُحمّل الآيات هنا بالجافاسكريبت -->
+            <!-- تُحمّل الآيات هنا بالجافاسكريبت برسم المصحف العثماني -->
           </div>
 
-          <!-- تذييل الصفحة وأزرار التقليب -->
-          <div class="d-flex justify-content-between align-items-center pt-4 mt-4 border-top border-light">
+          <!-- تذييل الصفحة وأزرار التقليب والتفسير -->
+          <div class="d-flex justify-content-between align-items-center pt-4 mt-4 border-top border-light flex-wrap gap-2">
             <button class="btn btn-outline-emerald rounded-pill px-4" id="btnPrevPage">
               <i class="bi bi-chevron-right me-1"></i> الصفحة السابقة
             </button>
@@ -395,7 +509,7 @@
       <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
           <h3 class="fw-bold text-emerald mb-1">الأذكار النبوية المأثورة والسبحة الذكية 📿</h3>
-          <p class="text-muted mb-0">أذكار مشكولة ومحققة مع عداد التكرار التفاعلي والسبحة الإلكترونية.</p>
+          <p class="text-muted mb-0">أذكار مشكولة ومحققة مع عداد التكرار التفاعلي، ميزة النسخ السريع، والسبحة الإلكترونية.</p>
         </div>
       </div>
 
@@ -427,14 +541,24 @@
           </div>
         </div>
 
-        <!-- قسم السبحة الإلكترونية الذكية -->
+        <!-- قسم السبحة الإلكترونية الذكية ثلاثية الأبعاد -->
         <div class="col-12 col-lg-4">
           <div class="card-luxury p-4 text-center sticky-top" style="top: 100px;">
-            <span class="badge bg-gold-subtle px-3 py-1 rounded-pill mb-3 fw-bold">السبحة الإلكترونية الحديثة</span>
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <span class="badge bg-gold-subtle px-3 py-1 rounded-pill fw-bold">السبحة الإلكترونية 3D</span>
+              <div class="d-flex gap-1">
+                <button class="btn btn-sm btn-outline-secondary rounded-circle" id="btnToggleSound" title="تشغيل / كتم الصوت">
+                  <i class="bi bi-volume-up-fill" id="soundIcon"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary rounded-circle" id="btnToggleVibrate" title="تشغيل / إيقاف الاهتزاز">
+                  <i class="bi bi-phone-vibrate-fill" id="vibrateIcon"></i>
+                </button>
+              </div>
+            </div>
             
             <!-- صيغة الذكر الحالية -->
             <div class="mb-3">
-              <label class="form-label small text-muted mb-1 fw-bold">اختر صيغة الذكر:</label>
+              <label class="form-label small text-muted mb-1 fw-bold">اختر صيغة الذكر المبارك:</label>
               <select class="form-select form-select-luxury text-center fw-bold" id="tasbeehPhraseSelect">
                 <option value="subhanallah">سُبْحَانَ اللَّهِ (33 مرة)</option>
                 <option value="alhamdulillah">الْحَمْدُ لِلَّهِ (33 مرة)</option>
@@ -442,25 +566,26 @@
                 <option value="laillahaillallah">لا إِلَهَ إِلا اللَّهُ (100 مرة)</option>
                 <option value="istighfar">أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ (100 مرة)</option>
                 <option value="salawat">اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَآلِهِ (100 مرة)</option>
+                <option value="free">تسبيح حر مفتوح (بدون حد)</option>
               </select>
             </div>
 
-            <!-- قرص زر السبحة التفاعلي المريح -->
-            <button class="tasbeeh-circle-btn" id="btnTasbeehTap">
+            <!-- قرص زر السبحة التفاعلي الفاخر ثلاثي الأبعاد -->
+            <button class="tasbeeh-circle-btn" id="btnTasbeehTap" title="انقر هنا للتسبيح">
               <span class="tasbeeh-count-big" id="tasbeehCounterDisplay">0</span>
-              <span class="tasbeeh-click-hint">انقر للتسبيح</span>
+              <span class="tasbeeh-click-hint">انقر للتسبيح 📿</span>
             </button>
 
             <!-- إحصائيات الدورة والمجموع -->
             <div class="row g-2 text-center mt-3 pt-3 border-top border-light">
               <div class="col-6">
-                <div class="p-2 rounded-3 bg-light">
+                <div class="p-2 rounded-3" style="background: var(--bg-card-subtle);">
                   <small class="text-muted d-block fw-semibold">الدورات المكتملة</small>
                   <span class="fw-bold fs-5 text-gold" id="tasbeehLapDisplay">1</span>
                 </div>
               </div>
               <div class="col-6">
-                <div class="p-2 rounded-3 bg-light">
+                <div class="p-2 rounded-3" style="background: var(--bg-card-subtle);">
                   <small class="text-muted d-block fw-semibold">إجمالي التسبيحات</small>
                   <span class="fw-bold fs-5 text-emerald" id="tasbeehTotalDisplay">0</span>
                 </div>
@@ -481,11 +606,11 @@
     <!-- القسم 4: خطط الورد وتخصيصها (Plans & Goals) -->
     <!-- ---------------------------------------------------- -->
     <section id="section-plans" class="app-section d-none">
-      <div class="text-center mx-auto mb-5" style="max-width: 650px;">
-        <span class="badge bg-gold-subtle px-3 py-1 rounded-pill mb-2 fw-bold">خطط التلاوة والختمات المباركة</span>
+      <div class="text-center mx-auto mb-5" style="max-width: 680px;">
+        <span class="badge bg-gold-subtle px-3 py-1 rounded-pill mb-2 fw-bold">خطط التلاوة والختمات القرآنية المباركة</span>
         <h3 class="fw-bold text-emerald mb-2">اختر الخطة المناسبة لوقتك ويومك 📖</h3>
         <p class="text-muted">
-          سواء كنت تريد ختمة ميسرة في 10 أشهر بصفحتين فقط يومياً، أو ختمة شهرية سريعة بجزء كامل، نوفر لك كافة الخيارات المناسبة.
+          سواء كنت تريد ختمة ميسرة في 10 أشهر بصفحتين فقط يومياً، أو ختمة معتدلة خلال 5 أشهر، أو ختمة شهرية سريعة بجزء كامل، نوفر لك كافة الخيارات المناسبة.
         </p>
       </div>
 
@@ -498,20 +623,22 @@
       <div class="card-luxury p-4 p-md-5 mt-5 border border-gold">
         <div class="row align-items-center">
           <div class="col-12 col-md-6 mb-4 mb-md-0">
+            <span class="badge bg-gold-subtle px-3 py-1 rounded-pill mb-2 fw-bold">حاسبة تفاعلية</span>
             <h4 class="fw-bold text-emerald mb-2">حاسبة الخطة المخصصة الذكية 💡</h4>
             <p class="text-muted mb-3">
-              حدد عدد الصفحات التي ترغب بقراءتها يومياً وسيقوم النظام باحتساب تاريخ الختمة فوراً وموعد الانتهاء المتوقع.
+              اسحب الشريط أو حدد عدد الصفحات التي ترغب بقراءتها يومياً وسيقوم النظام باحتساب تاريخ الختمة فوراً وموعد الانتهاء المتوقع.
             </p>
-            <div class="d-flex align-items-center gap-3">
-              <input type="number" class="form-control form-control-luxury w-50" id="customCalcPages" placeholder="عدد الصفحات" value="3" min="1" max="100">
-              <span class="text-dark fw-bold">صفحة يومياً</span>
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <input type="number" class="form-control form-control-luxury w-50" id="customCalcPages" placeholder="عدد الصفحات" value="4" min="1" max="100">
+              <span class="fw-bold">صفحة يومياً</span>
             </div>
+            <input type="range" class="form-range form-range-luxury" min="1" max="60" value="4" id="customCalcSlider">
           </div>
           <div class="col-12 col-md-6 text-md-center">
-            <div class="p-4 rounded-4 bg-emerald-deep text-white">
+            <div class="p-4 rounded-4 bg-emerald-deep text-white shadow-lg">
               <small class="text-white-80 d-block mb-1">النتيجة المتوقعة:</small>
               <h4 class="fw-bold text-white mb-0" id="customCalcResult">
-                <span class="text-gold-light fw-bold">ختمة كاملة خلال 202 يوماً</span> (حوالي 6.7 شهر)
+                <span class="text-gold-light fw-bold">ختمة كاملة خلال 151 يوماً</span> (حوالي 5 أشهر)
               </h4>
             </div>
           </div>
@@ -539,34 +666,240 @@
       </div>
     </section>
 
+    <!-- ---------------------------------------------------- -->
+    <!-- قسم صفحات الوقف والصدقة الجارية (Waqf & Sadaqah Hub) -->
+    <!-- ---------------------------------------------------- -->
+    <section id="section-waqf" class="app-section d-none">
+      
+      <!-- البانر التعريفي الفاخر مع الإحصائيات -->
+      <div class="waqf-hero-banner mb-5">
+        <div class="hero-islamic-pattern"></div>
+        <div class="row align-items-center g-4 position-relative" style="z-index: 2;">
+          <div class="col-lg-8">
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-white bg-opacity-10 text-gold-light mb-3">
+              <i class="bi bi-gift-fill"></i>
+              <span class="small fw-bold">صدقة جارية وتلاوة مستمرة 24 ساعة</span>
+            </div>
+            <h2 class="display-6 fw-bold mb-3">أَوْقَافٌ وَصَدَقَاتٌ جَارِيَةٌ لِمَنْ تُحِبّ 🌿</h2>
+            <p class="lead text-white-80 mb-4" style="max-width: 680px; line-height: 1.8;">
+              اجعل لك ولوالديك ولأحبابك من الأحياء والأموات صفحة قرآنية خاصة مدى الحياة، يُتلى فيها القرآن العظيم على مدار الساعة، وشارك رابطها ليصل أجرها وتدوم بركتها.
+            </p>
+            <div class="d-flex flex-wrap gap-3">
+              <button class="btn btn-gold-action" onclick="window.switchWaqfSubTab('create')">
+                <i class="bi bi-plus-circle-fill me-2"></i> أنشئ صفحة وقف جديدة الآن
+              </button>
+              <button class="btn btn-white-action" onclick="window.switchWaqfSubTab('directory')">
+                <i class="bi bi-grid-3x3-gap-fill me-2"></i> تصفح دليل صفحات الوقف
+              </button>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="card-luxury p-3 text-dark bg-white border-gold shadow-lg rounded-4 text-center">
+              <div class="row g-2">
+                <div class="col-6">
+                  <div class="p-3 bg-light rounded-3">
+                    <div class="fs-3 fw-bold text-emerald" id="waqfStatTotalPages">1,280+</div>
+                    <div class="small text-muted">صفحة وقف مسجلة</div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="p-3 bg-light rounded-3">
+                    <div class="fs-3 fw-bold text-gold" id="waqfStatTotalVisits">52,400+</div>
+                    <div class="small text-muted">استماع وزيارة</div>
+                  </div>
+                </div>
+                <div class="col-12 mt-2">
+                  <div class="p-2 rounded-pill bg-emerald-subtle text-emerald small fw-bold">
+                    <i class="bi bi-broadcast text-danger animate-pulse me-1"></i> تلاوة متواصلة آناء الليل وأطراف النهار
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- تبويبات القسم: مجمع الصفحات / إنشاء صفحة جديدة -->
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4 border-bottom pb-3">
+        <div class="d-flex gap-2">
+          <button class="waqf-chip active" id="tabBtnWaqfDirectory" onclick="window.switchWaqfSubTab('directory')">
+            <i class="bi bi-collection-play-fill me-1"></i> مجمع ودليل صفحات الوقف
+          </button>
+          <button class="waqf-chip" id="tabBtnWaqfCreate" onclick="window.switchWaqfSubTab('create')">
+            <i class="bi bi-plus-lg me-1"></i> إنشاء صفحة وقف قرآنية
+          </button>
+        </div>
+      </div>
+
+      <!-- محتوى التبويب 1: مجمع ودليل صفحات الوقف -->
+      <div id="waqfSubTabDirectory">
+        <!-- شريط البحث والتصنيفات -->
+        <div class="card-luxury p-3 mb-4">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-6 col-lg-5">
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0 text-muted">
+                  <i class="bi bi-search"></i>
+                </span>
+                <input type="text" id="waqfSearchInput" class="form-control border-start-0 ps-0" placeholder="ابحث باسم صاحب الوقف أو الدعاء..." oninput="window.handleWaqfSearch(this.value)">
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-7">
+              <div class="d-flex gap-2 flex-wrap justify-content-md-end">
+                <button class="btn btn-sm btn-outline-emerald rounded-pill active" data-waqf-filter="all" onclick="window.filterWaqfCategory('all', this)">الكل</button>
+                <button class="btn btn-sm btn-outline-emerald rounded-pill" data-waqf-filter="visits" onclick="window.filterWaqfCategory('visits', this)">الأكثر استماعاً 🔥</button>
+                <button class="btn btn-sm btn-outline-emerald rounded-pill" data-waqf-filter="deceased" onclick="window.filterWaqfCategory('deceased', this)">عن الأموات (رحمهم الله)</button>
+                <button class="btn btn-sm btn-outline-emerald rounded-pill" data-waqf-filter="living" onclick="window.filterWaqfCategory('living', this)">عن الأحياء (حفظهم الله)</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- شبكة كروت الوقف -->
+        <div class="row g-4" id="waqfCardsGrid">
+          <!-- يتم ملؤها ديناميكياً بواسطة الجافاسكريبت -->
+        </div>
+      </div>
+
+      <!-- محتوى التبويب 2: استوديو إنشاء صفحة وقف جديدة -->
+      <div id="waqfSubTabCreate" class="d-none">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="card-luxury p-4 p-md-5">
+              <div class="text-center mb-4">
+                <div class="user-avatar-lg mx-auto mb-3 bg-emerald-subtle text-emerald">
+                  <i class="bi bi-gift-fill fs-2"></i>
+                </div>
+                <h3 class="fw-bold text-emerald">إنشاء صفحة وقف وصدقة جارية</h3>
+                <p class="text-muted">أدخل بيانات المهدى له وسيتم إنشاء صفحة قرآنية كاملة برابط خاص فوري لمشاركتها مع الأحباب والأهل.</p>
+              </div>
+
+              <form id="createWaqfForm" onsubmit="window.handleCreateWaqfSubmit(event)">
+                <div class="mb-4">
+                  <label class="form-label fw-bold">اسم صاحب الوقف / المهدى له <span class="text-danger">*</span></label>
+                  <input type="text" id="waqfFormName" class="form-control form-control-lg rounded-3" placeholder="مثال: الحميدي عبدالله النهار / الوالد محمد بن فلان" required>
+                  <div class="form-text">سيظهر الاسم بخط واضح في صدر صفحة الوقف.</div>
+                </div>
+
+                <div class="mb-4">
+                  <label class="form-label fw-bold">صيغة الدعاء المرافقة <span class="text-danger">*</span></label>
+                  <div class="d-flex flex-wrap gap-2 mb-2">
+                    <button type="button" class="waqf-prayer-pill selected" onclick="window.selectWaqfPrayer('رحمه الله تعالى', this)">رحمه الله تعالى</button>
+                    <button type="button" class="waqf-prayer-pill" onclick="window.selectWaqfPrayer('رحمها الله تعالى', this)">رحمها الله تعالى</button>
+                    <button type="button" class="waqf-prayer-pill" onclick="window.selectWaqfPrayer('رحمهم الله تعالى', this)">رحمهم الله تعالى</button>
+                    <button type="button" class="waqf-prayer-pill" onclick="window.selectWaqfPrayer('حفظه الله تعالى ورعاه', this)">حفظه الله تعالى ورعاه</button>
+                    <button type="button" class="waqf-prayer-pill" onclick="window.selectWaqfPrayer('حفظها الله تعالى وبارك فيها', this)">حفظها الله تعالى وبارك فيها</button>
+                    <button type="button" class="waqf-prayer-pill" onclick="window.selectWaqfPrayer('شفاه الله وعافاه طهوراً', this)">شفاه الله وعافاه طهوراً</button>
+                  </div>
+                  <input type="text" id="waqfFormPrayer" class="form-control rounded-3" value="رحمه الله تعالى" placeholder="أو اكتب دعاءً مخصصاً...">
+                </div>
+
+                <div class="row g-3 mb-4">
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">القارئ المفضل للبدء بتلاوته</label>
+                    <select id="waqfFormReciter" class="form-select rounded-3">
+                      <option value="ar.alafasy">الشيخ مشاري راشد العفاسي</option>
+                      <option value="ar.abdulbasitmurattal">الشيخ عبد الباسط عبد الصمد</option>
+                      <option value="ar.minshawi">الشيخ محمد صديق المنشاوي</option>
+                      <option value="ar.husary">الشيخ محمود خليل الحصري</option>
+                      <option value="ar.ghamadi">الشيخ سعد الغامدي</option>
+                      <option value="ar.maher">الشيخ ماهر المعيقلي</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">سورة البداية</label>
+                    <select id="waqfFormSurah" class="form-select rounded-3">
+                      <!-- يُملأ بالجافاسكريبت -->
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">الدولة</label>
+                    <select id="waqfFormCountry" class="form-select rounded-3">
+                      <option value="السعودية">المملكة العربية السعودية</option>
+                      <option value="مصر">مصر</option>
+                      <option value="الإمارات">الإمارات العربية المتحدة</option>
+                      <option value="الكويت">الكويت</option>
+                      <option value="قطر">قطر</option>
+                      <option value="عمان">سلطنة عمان</option>
+                      <option value="البحرين">البحرين</option>
+                      <option value="الأردن">الأردن</option>
+                      <option value="العراق">العراق</option>
+                      <option value="فلسطين">فلسطين</option>
+                      <option value="المغرب">المغرب</option>
+                      <option value="الجزائر">الجزائر</option>
+                      <option value="تونس">تونس</option>
+                      <option value="أخرى">دولة أخرى</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">اسم صاحب الإهداء (اسمك الكريم)</label>
+                    <input type="text" id="waqfFormCreator" class="form-control rounded-3" placeholder="مثال: فاعل خير / ابنه البار">
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <label class="form-label fw-bold">رقم الجوال أو الواتساب (اختياري)</label>
+                  <input type="tel" id="waqfFormPhone" class="form-control rounded-3" placeholder="مثال: 0501234567 (لحفظ نسختك وإرسال الرابط)">
+                </div>
+
+                <button type="submit" class="btn btn-emerald-action w-100 py-3 rounded-pill fw-bold fs-5 shadow-lg">
+                  <i class="bi bi-gift-fill me-2"></i> إنشاء وتدشين صفحة الوقف الآن 🌿
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
   </main>
 
-  <!-- ==================== المشغل الصوتي العائم (Sticky Audio Bar) ==================== -->
+  <!-- ==================== المشغل الصوتي العائم المطور (Sticky Floating Audio Dock) ==================== -->
   <div id="quranAudioPlayerBar" class="audio-floating-bar d-none">
-    <div class="container-fluid px-lg-5">
+    <div class="container-fluid px-0">
       <div class="row align-items-center g-2">
         <div class="col-6 col-md-3 d-flex align-items-center">
-          <div class="feature-box-icon bg-emerald-subtle text-emerald me-2" style="width: 40px; height: 40px; font-size: 1.1rem;">
+          <div class="feature-box-icon bg-emerald-subtle text-emerald me-2" style="width: 42px; height: 42px; font-size: 1.15rem;">
             <i class="bi bi-soundwave"></i>
           </div>
           <div class="text-truncate">
-            <div class="fw-bold text-dark text-truncate" id="audioSurahName">سورة الفاتحة</div>
+            <div class="fw-bold text-dark text-truncate d-flex align-items-center gap-2" id="audioSurahNameWrap">
+              <span id="audioSurahName">سورة الفاتحة</span>
+              <!-- أعمدة التردد الصوتي -->
+              <div class="soundwave-box" id="audioSoundwaveBox">
+                <div class="soundwave-bar"></div>
+                <div class="soundwave-bar"></div>
+                <div class="soundwave-bar"></div>
+                <div class="soundwave-bar"></div>
+              </div>
+            </div>
             <small class="text-muted text-truncate d-block" id="audioReciterName">الشيخ مشاري راشد العفاسي</small>
           </div>
         </div>
 
         <div class="col-12 col-md-6 order-3 order-md-2">
           <div class="d-flex align-items-center justify-content-center gap-3 mb-1">
-            <button class="btn btn-sm btn-link text-dark" onclick="window.QuraniAudioPlayer.seek(0)">
+            <button class="btn btn-sm btn-link text-muted" onclick="window.seekRelative(-10)" title="تأخير 10 ثوانٍ">
+              <i class="bi bi-arrow-counterclockwise fs-5"></i>
+            </button>
+            <button class="btn btn-sm btn-link text-muted" onclick="window.QuraniAudioPlayer.seek(0)" title="إعادة من البداية">
               <i class="bi bi-arrow-repeat fs-5"></i>
             </button>
-            <button class="btn btn-emerald-action rounded-circle p-2" onclick="window.QuraniAudioPlayer.togglePlay()">
-              <i class="bi bi-play-fill audio-play-icon fs-5"></i>
+            <button class="btn btn-emerald-action rounded-circle p-2" style="width: 42px; height: 42px;" onclick="window.QuraniAudioPlayer.togglePlay()">
+              <i class="bi bi-play-fill audio-play-icon fs-4"></i>
+            </button>
+            <button class="btn btn-sm btn-link text-muted" onclick="window.seekRelative(10)" title="تقديم 10 ثوانٍ">
+              <i class="bi bi-arrow-clockwise fs-5"></i>
             </button>
           </div>
           <div class="d-flex align-items-center gap-2">
             <span class="small text-muted" id="audioCurrentTime">00:00</span>
-            <div class="progress flex-grow-1" style="height: 6px; cursor: pointer;" onclick="const r=this.getBoundingClientRect(); window.QuraniAudioPlayer.seek(((event.clientX-r.left)/r.width)*100)">
+            <div class="progress flex-grow-1" style="height: 6px; cursor: pointer; border-radius: 10px;" onclick="const r=this.getBoundingClientRect(); window.QuraniAudioPlayer.seek(((event.clientX-r.left)/r.width)*100)">
               <div class="progress-bar bg-emerald" id="audioProgressBar" style="width: 0%; background-color: var(--qur-emerald);"></div>
             </div>
             <span class="small text-muted" id="audioDuration">00:00</span>
@@ -582,7 +915,7 @@
     </div>
   </div>
 
-  <!-- ==================== شريط التنقل السفلي للهاتف (Mobile Bottom Bar) ==================== -->
+  <!-- ==================== شريط التنقل السفلي للهاتف (Mobile Bottom Floating Bar) ==================== -->
   <nav class="mobile-bottom-nav d-lg-none">
     <button class="mobile-nav-btn active" data-nav-target="home">
       <i class="bi bi-house-door-fill"></i>
@@ -614,11 +947,11 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
         </div>
         <div class="modal-body p-4">
-          <div class="alert bg-gold-subtle border-0 p-3 rounded-3 mb-3">
+          <div class="alert bg-gold-subtle border-0 p-3 rounded-4 mb-3">
             <span class="text-gold fw-bold d-block mb-1">الآية الكريمة:</span>
             <p class="mb-0 fs-5" id="tafseerAyahText" style="font-family: var(--font-quran);">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
           </div>
-          <h6 class="fw-bold text-dark mb-2">المعنى والتفسير الميسر:</h6>
+          <h6 class="fw-bold text-dark mb-2">المعنى والتفسير الميسر المعتمد:</h6>
           <div class="text-muted leading-relaxed" id="tafseerContentBody">
             جارٍ جلب التفسير...
           </div>
@@ -638,7 +971,7 @@
           <div class="d-flex align-items-center">
             <i class="bi bi-whatsapp text-success fs-3 me-2"></i>
             <div>
-              <h5 class="modal-title fw-bold mb-0 text-dark">إرسال الورد والتذكير عبر واتساب</h5>
+              <h5 class="modal-title fw-bold mb-0">إرسال الورد والتذكير عبر واتساب</h5>
               <small class="text-muted">صياغة عربية منسقة بضغطة زر واحدة</small>
             </div>
           </div>
@@ -647,13 +980,13 @@
         <div class="modal-body p-4">
           <div class="row g-3 mb-4">
             <div class="col-12 col-md-6">
-              <label class="form-label small fw-bold text-dark">اختر المشترك / المستلم:</label>
+              <label class="form-label small fw-bold">اختر المشترك / المستلم:</label>
               <select class="form-select form-select-luxury" id="whatsappRecipientSelect">
                 <!-- يُملأ بالجافاسكريبت -->
               </select>
             </div>
             <div class="col-12 col-md-6">
-              <label class="form-label small fw-bold text-dark">نوع الرسالة والتذكير:</label>
+              <label class="form-label small fw-bold">نوع الرسالة والتذكير:</label>
               <select class="form-select form-select-luxury" id="whatsappTemplateSelect">
                 <option value="daily_wird">📖 تذكير بالورد القرآني لليوم</option>
                 <option value="wird_congrats">🎉 تهنئة بإتمام ورد اليوم</option>
@@ -664,7 +997,7 @@
             </div>
           </div>
 
-          <!-- معاينة حية لفقاعة الواتساب -->
+          <!-- معاينة حية لفقاعة الواتساب بتصميم واتساب الحقيقي -->
           <div class="p-4 rounded-4 mb-4" style="background-color: #efeae2;">
             <div class="small text-muted mb-2 fw-bold">معاينة الرسالة داخل واتساب:</div>
             <div class="whatsapp-chat-bubble" id="whatsappPreviewBubble">
@@ -696,23 +1029,23 @@
         <form id="addMemberForm">
           <div class="modal-body p-4">
             <div class="mb-3">
-              <label class="form-label small fw-bold text-dark">الاسم الكريم:</label>
+              <label class="form-label small fw-bold">الاسم الكريم:</label>
               <input type="text" class="form-control form-control-luxury" id="newMemberName" placeholder="مثلاً: الوالد، فاطمة، محمد" required>
             </div>
             <div class="mb-3">
-              <label class="form-label small fw-bold text-dark">رقم الهاتف (لإرسال الواتساب):</label>
+              <label class="form-label small fw-bold">رقم الهاتف (لإرسال الواتساب):</label>
               <input type="tel" class="form-control form-control-luxury" id="newMemberPhone" placeholder="مثلاً: 201001234567" dir="ltr">
               <small class="text-muted">يفضل كتابة الرقم بالمفتاح الدولي (مثل: 20 أو 966) لتسهيل فتح الواتساب تلقائياً.</small>
             </div>
             <div class="mb-3">
-              <label class="form-label small fw-bold text-dark">صلة القرابة / الوصف:</label>
+              <label class="form-label small fw-bold">صلة القرابة / الوصف:</label>
               <input type="text" class="form-control form-control-luxury" id="newMemberRelation" placeholder="مثلاً: الوالد، الأخت، الصديق">
             </div>
             <div class="mb-3">
-              <label class="form-label small fw-bold text-dark">خطة الورد المناسبة له:</label>
+              <label class="form-label small fw-bold">خطة الورد المناسبة له:</label>
               <select class="form-select form-select-luxury" id="newMemberPlan">
                 <option value="safa">خطة الصفا (صفحتان يومياً - ختمة في ~10 أشهر)</option>
-                <option value="nour">خطة النور (ربع حزب / 4 صفحات يومياً - ختمة في 5 أشهر)</option>
+                <option value="noor">خطة النور (ربع حزب / 4 صفحات يومياً - ختمة في 5 أشهر)</option>
                 <option value="furqan">خطة الفرقان (نصف حزب / 10 صفحات يومياً - ختمة في شهرين)</option>
                 <option value="hidayah">خطة الهداية (جزء كامل / 20 صفحة يومياً - ختمة شهرية)</option>
               </select>
@@ -727,14 +1060,56 @@
     </div>
   </div>
 
-  <!-- تنبيه منبثق للاحتفال بإتمام الورد -->
+  <!-- ==================== نافذة التهنئة بإنشاء صفحة الوقف (Waqf Success Modal) ==================== -->
+  <div class="modal fade" id="waqfSuccessModal" tabindex="-1" aria-labelledby="waqfSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-gold shadow-lg">
+        <div class="modal-header border-0 pb-0 justify-content-end">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+        <div class="modal-body text-center p-4 pt-0">
+          <div class="user-avatar-lg mx-auto mb-3 bg-emerald text-white shadow-glow" style="width: 70px; height: 70px; border-radius: 50%;">
+            <i class="bi bi-patch-check-fill fs-1 text-gold-light"></i>
+          </div>
+          <h4 class="fw-bold text-emerald mb-2">تم إنشاء صفحة الوقف بنجاح! ✨</h4>
+          <p class="text-muted small mb-4">
+            تقبل الله طاعتكم وجعلها صدقة جارية تفيض بالأجر والمثوبة إلى يوم القيامة. تم تخصيص صفحة قرآنية خاصة تعمل على مدار الساعة.
+          </p>
+
+          <div class="p-3 bg-light rounded-3 mb-4 text-start">
+            <label class="small fw-bold text-muted mb-1 d-block">رابط صفحة الوقف المباشر:</label>
+            <div class="input-group">
+              <input type="text" id="waqfCreatedUrlInput" class="form-control form-control-sm bg-white" readonly>
+              <button class="btn btn-emerald-action btn-sm" onclick="window.copyCreatedWaqfUrl()">
+                <i class="bi bi-copy me-1"></i> نسخ الرابط
+              </button>
+            </div>
+          </div>
+
+          <div class="d-flex flex-column gap-2">
+            <a href="#" id="waqfDirectViewBtn" target="_blank" class="btn btn-emerald-action rounded-pill py-2 fw-bold">
+              <i class="bi bi-box-arrow-up-right me-2"></i> زيارة واستماع صفحة الوقف الآن 🎧
+            </a>
+            <a href="#" id="waqfShareWhatsappBtn" target="_blank" class="btn btn-whatsapp rounded-pill py-2 fw-bold">
+              <i class="bi bi-whatsapp me-2"></i> مشاركة الصفحة عبر واتساب
+            </a>
+            <button type="button" class="btn btn-outline-secondary rounded-pill py-2" data-bs-dismiss="modal">
+              إغلاق ومتابعة التصفح
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- تنبيه منبثق للاحتفال بإتمام الورد أو حفظ العلامة -->
   <div class="position-fixed bottom-0 start-50 translate-middle-x mb-5 p-3 d-none z-3" id="quraniToast">
-    <div class="toast show p-3 rounded-4 shadow-lg bg-emerald-deep text-white border-0" role="alert">
+    <div class="toast show p-3 rounded-4 shadow-lg text-white border-0" role="alert">
       <div class="d-flex align-items-center">
-        <i class="bi bi-patch-check-fill fs-3 text-gold-light me-3"></i>
+        <i class="bi bi-patch-check-fill fs-3 text-gold-light me-3" id="toastIcon"></i>
         <div>
-          <h6 class="fw-bold mb-0 text-white">هنيئاً لك! تقبل الله طاعتكم 🌸</h6>
-          <small class="text-white-80">تم تسجيل إتمام وردك القرآني لليوم وزيادة أيام الالتزام.</small>
+          <h6 class="fw-bold mb-0 text-white" id="toastTitle">هنيئاً لك! تقبل الله طاعتكم 🌸</h6>
+          <small class="text-white-80" id="toastMessage">تم تسجيل إتمام وردك القرآني لليوم وزيادة أيام الالتزام.</small>
         </div>
       </div>
     </div>
@@ -749,6 +1124,7 @@
   <script src="js/wird-engine.js"></script>
   <script src="js/whatsapp-engine.js"></script>
   <script src="js/audio-player.js"></script>
+  <script src="js/waqf-engine.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

@@ -96,6 +96,7 @@
       targetAudience: 'كل من يرغب في مسار قراءة خاص'
     }
   };
+  PLANS.nour = PLANS.noor;
 
   /**
    * توليد تاريخ اليوم بصيغة YYYY-MM-DD
@@ -622,10 +623,12 @@
 
   return {
     PLANS,
+    plans: PLANS,
     TOTAL_MUSHAF_PAGES,
     getTodayString,
     getYesterdayString,
     getUsers,
+    getAllUsers: getUsers,
     saveUsers,
     getActiveUser,
     setActiveUser,
@@ -634,12 +637,38 @@
     updateUser,
     deleteUser,
     calculateProgressPercentage,
+    calculateProgress: function(user) {
+      const p = calculateProgressPercentage(user ? user.currentPage : 1);
+      const plan = PLANS[user?.planId] || PLANS.safa;
+      const est = calculateEstimatedKhatmahDate(user ? user.currentPage : 1, plan.pagesPerDay || 2);
+      return {
+        progressPercent: p,
+        progressPercentage: p,
+        expectedEndDate: est.dateFormatted
+      };
+    },
     calculateEstimatedKhatmahDate,
     calculateCustomPlanByDays,
     calculateTodayWird,
+    calculateWirdForUser: function(user) {
+      const w = calculateTodayWird(user);
+      if (w) {
+        w.surahName = w.surahsNames;
+        w.isCompletedToday = w.completedToday;
+      }
+      return w;
+    },
     markTodayCompleted,
+    markTodayWirdCompleted: function() {
+      const active = getActiveUser();
+      if (active) return markTodayCompleted(active.id);
+    },
     undoTodayCompleted,
     changeUserPlan,
+    changeActiveUserPlan: function(planId, customPages) {
+      const active = getActiveUser();
+      if (active) return changeUserPlan(active.id, planId, customPages);
+    },
     resetUserKhatmah
   };
 }));

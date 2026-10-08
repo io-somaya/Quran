@@ -96,6 +96,12 @@
       }
     }
 
+    seekRelative(seconds) {
+      if (this.audio.duration) {
+        this.audio.currentTime = Math.max(0, Math.min(this.audio.duration, this.audio.currentTime + seconds));
+      }
+    }
+
     onTimeUpdate() {
       const progressBar = document.getElementById('audioProgressBar');
       const timeCurrent = document.getElementById('audioCurrentTime');
@@ -135,9 +141,14 @@
       const playBtnIcons = document.querySelectorAll('.audio-play-icon');
       const surahNameElem = document.getElementById('audioSurahName');
       const reciterNameElem = document.getElementById('audioReciterName');
+      const soundwaveBox = document.getElementById('audioSoundwaveBox');
 
       if (playerBar) {
         playerBar.classList.toggle('d-none', !this.audio.src);
+      }
+
+      if (soundwaveBox) {
+        soundwaveBox.classList.toggle('soundwave-playing', this.isPlaying);
       }
 
       playBtnIcons.forEach(icon => {
@@ -160,4 +171,5 @@
   }
 
   window.QuraniAudioPlayer = new QuranAudioPlayer();
+  window.seekRelative = (sec) => window.QuraniAudioPlayer.seekRelative(sec);
 })(window);

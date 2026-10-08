@@ -518,9 +518,13 @@
   // تصدير الكائن النهائي بكل محتوياته ودواله
   return {
     SURAHS,
+    surahs: SURAHS,
     JUZ_METADATA,
+    juzMetadata: JUZ_METADATA,
     RECITERS,
+    reciters: RECITERS,
     SAMPLE_AYAHS,
+    sampleTafseer: SAMPLE_AYAHS,
     getSurahByNumber,
     getSurahsByJuz,
     getSurahsByPageRange,
