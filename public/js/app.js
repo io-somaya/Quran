@@ -58,6 +58,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- عناصر DOM الرئيسية ---
   const elements = {
+    ownerProfileBtn: document.getElementById('ownerProfileBtn'),
+    navUserStreak: document.getElementById('navUserStreak'),
+    ownerSettingsModal: document.getElementById('ownerSettingsModal'),
+    ownerSettingsForm: document.getElementById('ownerSettingsForm'),
+    ownerSettingsName: document.getElementById('ownerSettingsName'),
+    ownerSettingsPhone: document.getElementById('ownerSettingsPhone'),
+    ownerSettingsPlan: document.getElementById('ownerSettingsPlan'),
+    ownerSettingsCustomPages: document.getElementById('ownerSettingsCustomPages'),
+    ownerSettingsCustomPagesBox: document.getElementById('ownerSettingsCustomPagesBox'),
+    ownerSettingsPage: document.getElementById('ownerSettingsPage'),
+    btnShareOwnerWird: document.getElementById('btnShareOwnerWird'),
     userDropdownBtn: document.getElementById('activeUserDropdownBtn'),
     userDropdownMenu: document.getElementById('userDropdownMenu'),
     navUserName: document.getElementById('navUserName'),
@@ -109,24 +120,63 @@ document.addEventListener('DOMContentLoaded', () => {
     btnTasbeehTap: document.getElementById('btnTasbeehTap'),
     btnTasbeehReset: document.getElementById('btnTasbeehReset'),
     tasbeehPhraseSelect: document.getElementById('tasbeehPhraseSelect'),
+    tasbeehCurrentPhraseText: document.getElementById('tasbeehCurrentPhraseText'),
+    tasbeehTargetBadge: document.getElementById('tasbeehTargetBadge'),
+    tasbeehProgressText: document.getElementById('tasbeehProgressText'),
+    tasbeehCycleProgressBar: document.getElementById('tasbeehCycleProgressBar'),
     btnToggleSound: document.getElementById('btnToggleSound'),
     btnToggleVibrate: document.getElementById('btnToggleVibrate'),
     soundIcon: document.getElementById('soundIcon'),
     vibrateIcon: document.getElementById('vibrateIcon'),
 
-    // عناصر إدارة الأعضاء والخطط
+    // عناصر إدارة المقرأة المصغرة (الأهل والأصدقاء) والخطط
     familyMembersGrid: document.getElementById('familyMembersGrid'),
+    friendsMembersGrid: document.getElementById('friendsMembersGrid'),
+    statFamilyCount: document.getElementById('statFamilyCount'),
+    statFamilyCompleted: document.getElementById('statFamilyCompleted'),
+    statFamilyTotal: document.getElementById('statFamilyTotal'),
+    statFamilyRate: document.getElementById('statFamilyRate'),
+    familyProgressBar: document.getElementById('familyProgressBar'),
+    statFriendsCount: document.getElementById('statFriendsCount'),
+    statFriendsCompleted: document.getElementById('statFriendsCompleted'),
+    statFriendsTotal: document.getElementById('statFriendsTotal'),
+    statFriendsRate: document.getElementById('statFriendsRate'),
+    friendsProgressBar: document.getElementById('friendsProgressBar'),
+    badgeAllCount: document.getElementById('badgeAllCount'),
+    badgeFamilyCount: document.getElementById('badgeFamilyCount'),
+    badgeFriendsCount: document.getElementById('badgeFriendsCount'),
+    familyBadgeText: document.getElementById('familyBadgeText'),
+    friendsBadgeText: document.getElementById('friendsBadgeText'),
+    maqraaFamilyBlock: document.getElementById('maqraaFamilyBlock'),
+    maqraaFriendsBlock: document.getElementById('maqraaFriendsBlock'),
     plansContainer: document.getElementById('plansGridContainer'),
     customCalcInput: document.getElementById('customCalcPages'),
     customCalcSlider: document.getElementById('customCalcSlider'),
     customCalcResult: document.getElementById('customCalcResult'),
 
-    // عناصر الواتساب
+    // عناصر الواتساب والقروبات
     whatsappRecipientSelect: document.getElementById('whatsappRecipientSelect'),
     whatsappTemplateSelect: document.getElementById('whatsappTemplateSelect'),
     whatsappPreviewBubble: document.getElementById('whatsappPreviewBubble'),
     btnSendWhatsAppDirect: document.getElementById('btnSendWhatsAppDirect'),
-    btnCopyWhatsAppText: document.getElementById('btnCopyWhatsAppText')
+    btnSendWhatsAppText: document.getElementById('btnSendWhatsAppText'),
+    btnCopyWhatsAppText: document.getElementById('btnCopyWhatsAppText'),
+    btnOpenGroupDirect: document.getElementById('btnOpenGroupDirect'),
+    whatsappGroupInfoBanner: document.getElementById('whatsappGroupInfoBanner'),
+    whatsappGroupBannerTitle: document.getElementById('whatsappGroupBannerTitle'),
+    whatsappGroupBannerLink: document.getElementById('whatsappGroupBannerLink'),
+    btnEditCurrentGroupLink: document.getElementById('btnEditCurrentGroupLink'),
+    badgeGroupsCount: document.getElementById('badgeGroupsCount'),
+    maqraaGroupsBlock: document.getElementById('maqraaGroupsBlock'),
+    whatsappGroupsGrid: document.getElementById('whatsappGroupsGrid'),
+    groupForm: document.getElementById('groupForm'),
+    groupFormId: document.getElementById('groupFormId'),
+    groupFormName: document.getElementById('groupFormName'),
+    groupFormLink: document.getElementById('groupFormLink'),
+    groupFormCategory: document.getElementById('groupFormCategory'),
+    groupFormDesc: document.getElementById('groupFormDesc'),
+    groupModalTitle: document.getElementById('groupModalTitle'),
+    btnDeleteGroup: document.getElementById('btnDeleteGroup')
   };
 
   // --- نظام الثيمات المتقدم (Light / Parchment / Dark) ---
@@ -355,52 +405,20 @@ document.addEventListener('DOMContentLoaded', () => {
       node4.classList.toggle('active', curr >= 453 && curr < 604);
     }
 
-    // تحديث قائمة المنسدلة للمستخدمين
-    renderUserDropdownList();
+    // تحديث شارة حساب المالك
+    updateOwnerProfileBadge();
     updateBookmarkUI();
   }
 
-  function renderUserDropdownList() {
-    if (!elements.userDropdownMenu) return;
-    const users = window.QuraniWirdEngine.getAllUsers();
-    const activeUser = window.QuraniWirdEngine.getActiveUser();
-
-    let html = `
-      <div class="px-3 py-2 border-bottom border-light mb-1">
-        <small class="text-muted d-block fw-bold">الحساب النشط حالياً:</small>
-        <div class="fw-bold text-emerald fs-6">${activeUser.name} (${activeUser.planId ? window.QuraniWirdEngine.plans[activeUser.planId]?.name : 'خطة الصفا'})</div>
-      </div>
-    `;
-
-    users.forEach(u => {
-      const isCurrent = u.id === activeUser.id;
-      html += `
-        <li>
-          <a class="dropdown-item d-flex align-items-center justify-content-between py-2 rounded-3 ${isCurrent ? 'bg-emerald-subtle fw-bold' : ''}" 
-             href="javascript:void(0)" onclick="window.switchUserAccount('${u.id}')">
-            <div class="d-flex align-items-center">
-              <span class="user-avatar-circle me-2">${u.avatar || '👤'}</span>
-              <div>
-                <div class="text-dark">${u.name}</div>
-                <small class="text-muted">${u.relation || ''} • ص ${u.currentPage}</small>
-              </div>
-            </div>
-            ${isCurrent ? '<i class="bi bi-check-circle-fill text-emerald"></i>' : ''}
-          </a>
-        </li>
-      `;
-    });
-
-    html += `
-      <li><hr class="dropdown-divider my-2"></li>
-      <li>
-        <a class="dropdown-item text-gold fw-bold py-2 rounded-3" href="javascript:void(0)" onclick="window.openAddMemberModal()">
-          <i class="bi bi-person-plus-fill me-2"></i> إضافة حساب جديد للأهل والأصدقاء
-        </a>
-      </li>
-    `;
-
-    elements.userDropdownMenu.innerHTML = html;
+  function updateOwnerProfileBadge() {
+    if (!window.QuraniWirdEngine) return;
+    const owner = window.QuraniWirdEngine.getOwner();
+    if (!owner) return;
+    if (elements.navUserName) elements.navUserName.textContent = owner.name;
+    if (elements.navUserAvatar) elements.navUserAvatar.textContent = owner.avatar || '🧔';
+    if (elements.navUserStreak) {
+      elements.navUserStreak.innerHTML = `<i class="bi bi-fire text-warning"></i> ${owner.streak || 1} يوماً`;
+    }
   }
 
   // --- تفعيل تأثير الاحتفال بالكونفيتي عند إتمام الورد ---
@@ -499,59 +517,92 @@ document.addEventListener('DOMContentLoaded', () => {
   async function renderMushafView() {
     if (!elements.mushafContentBox || !window.QuraniData) return;
 
-    const surah = window.QuraniData.getSurahByNumber(state.currentSurah);
-    if (!surah) return;
+    const pageNum = Math.max(1, Math.min(604, parseInt(state.currentPage, 10) || 1));
+    state.currentPage = pageNum;
+
+    const pageInfo = window.QuraniData.getPageInfo(pageNum);
+    const surah = (pageInfo && pageInfo.primarySurah)
+      ? pageInfo.primarySurah
+      : (window.QuraniData.getSurahByNumber(state.currentSurah) || window.QuraniData.surahs[0]);
+
+    state.currentSurah = surah.id;
+
+    if (elements.surahSelect) elements.surahSelect.value = state.currentSurah;
+    if (elements.pageSelect) elements.pageSelect.value = pageNum;
+    if (elements.mushafPageSlider) elements.mushafPageSlider.value = pageNum;
+    if (elements.sliderPageIndicator) elements.sliderPageIndicator.textContent = `ص ${pageNum}`;
 
     if (elements.mushafSurahName) elements.mushafSurahName.textContent = surah.nameSimple || surah.name;
-    if (elements.mushafPageNumber) elements.mushafPageNumber.textContent = `صفحة ${state.currentPage}`;
-    if (elements.mushafJuzNumber) elements.mushafJuzNumber.textContent = `الجزء ${surah.juz || 1}`;
-
-    if (elements.mushafPageSlider) elements.mushafPageSlider.value = state.currentPage;
-    if (elements.sliderPageIndicator) elements.sliderPageIndicator.textContent = `ص ${state.currentPage}`;
+    if (elements.mushafPageNumber) elements.mushafPageNumber.textContent = `صفحة ${pageNum}`;
+    if (elements.mushafJuzNumber) elements.mushafJuzNumber.textContent = `الجزء ${pageInfo ? pageInfo.juz : (surah.juz || 1)}`;
 
     // مؤشر التحميل الأنيق
     elements.mushafContentBox.innerHTML = `
       <div class="text-center py-5">
         <div class="spinner-border text-emerald mb-3" role="status"></div>
-        <p class="text-muted fw-bold">جارٍ تحميل الآيات العطرة برسم المصحف الشريف...</p>
+        <p class="text-muted fw-bold">جارٍ تحميل آيات الصفحة ${pageNum} برسم المصحف الشريف...</p>
       </div>
     `;
 
-    // جلب آيات السورة
-    const ayahs = await window.QuraniData.fetchSurahAyahs(state.currentSurah);
+    // جلب آيات الصفحة المحددة برسم المصحف
+    const ayahs = await window.QuraniData.fetchPageAyahs(pageNum);
 
     // بناء النص القرآني الملكي
     let html = '';
+    let currentSurahId = null;
+    let openVersesWrapper = false;
 
-    // ترويسة السورة العثمانية الفاخرة
-    const revType = surah.revelationType || surah.type;
-    html += `
-      <div class="surah-header-card">
-        <div class="badge bg-gold-subtle px-3 py-1 mb-2 rounded-pill fw-bold">${revType} • ${surah.ayahsCount} آية • ترتيبها ${surah.number || surah.id}</div>
-        <h2 class="surah-header-title">${surah.name || 'سورة ' + surah.nameSimple}</h2>
-        <div class="text-muted small fw-semibold">الصفحات من ${surah.startPage} إلى ${surah.endPage} • الجزء ${surah.juz}</div>
-      </div>
-    `;
-
-    // بانر البسملة الفاخر (لغير سورة التوبة رقم 9 وسورة الفاتحة)
-    const sNum = surah.number || surah.id;
-    if (sNum !== 9 && sNum !== 1) {
-      html += `
-        <div class="bismillah-banner">
-          <div class="mb-2">
-            <img src="assets/patterns/bismillah-cartouche.svg" alt="زخرفة البسملة" style="max-width: 320px; width: 100%; height: auto; opacity: 0.85;" />
-          </div>
-          <span class="bismillah-text">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
-        </div>
-      `;
-    }
-
-    // عرض الآيات متصلة كالمصحف الشريف
-    html += `<div class="quran-page-verses p-2 p-md-3">`;
-    ayahs.forEach(ayah => {
+    ayahs.forEach((ayah) => {
+      const sId = ayah.surahNumber || (ayah.surah ? ayah.surah.number : state.currentSurah);
+      const sMeta = window.QuraniData.getSurahByNumber(sId) || surah;
       const ayahNum = ayah.numberInSurah || ayah.number;
+
+      if (sId !== currentSurahId) {
+        if (openVersesWrapper) {
+          html += `</div>`;
+          openVersesWrapper = false;
+        }
+        currentSurahId = sId;
+
+        // إذا بدأت سورة جديدة في هذه الصفحة (الآية 1)
+        if (ayahNum === 1) {
+          const revType = sMeta.revelationType || sMeta.type;
+          html += `
+            <div class="surah-header-card my-3">
+              <div class="badge bg-gold-subtle px-3 py-1 mb-2 rounded-pill fw-bold">${revType} • ${sMeta.ayahsCount} آية • ترتيبها ${sMeta.number || sMeta.id}</div>
+              <h2 class="surah-header-title">${sMeta.name || 'سورة ' + sMeta.nameSimple}</h2>
+              <div class="text-muted small fw-semibold">الصفحات من ${sMeta.startPage} إلى ${sMeta.endPage} • الجزء ${sMeta.juz}</div>
+            </div>
+          `;
+
+          // بانر البسملة الفاخر (لغير سورة التوبة رقم 9 وسورة الفاتحة 1)
+          if (sId !== 9 && sId !== 1) {
+            html += `
+              <div class="bismillah-banner my-2">
+                <div class="mb-2">
+                  <img src="assets/patterns/bismillah-cartouche.svg" alt="زخرفة البسملة" style="max-width: 320px; width: 100%; height: auto; opacity: 0.85;" />
+                </div>
+                <span class="bismillah-text">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
+              </div>
+            `;
+          }
+        } else {
+          // السورة مستمرة من صفحات سابقة، نظهر شارة أنيقة باسم السورة
+          html += `
+            <div class="text-center py-2 mb-2">
+              <span class="badge bg-gold-subtle text-dark px-3 py-1 rounded-pill fw-bold">
+                <i class="bi bi-book-half me-1 text-gold"></i> تلاوة سورة ${sMeta.nameSimple || sMeta.name} — الصفحة ${pageNum}
+              </span>
+            </div>
+          `;
+        }
+
+        html += `<div class="quran-page-verses p-2 p-md-3">`;
+        openVersesWrapper = true;
+      }
+
       html += `
-        <span class="ayah-segment" id="ayah-${ayahNum}" onclick="window.showAyahTafseer(${sNum}, ${ayahNum})" title="انقر لعرض التفسير">
+        <span class="ayah-segment" id="ayah-${ayah.globalNumber || ayahNum}" onclick="window.showAyahTafseer(${sId}, ${ayahNum})" title="انقر لعرض التفسير">
           <span class="ayah-text">${ayah.text}</span>
           <span class="ayah-number-badge" title="آية ${ayahNum}">
             <span class="ayah-glyph">۝</span>
@@ -560,7 +611,10 @@ document.addEventListener('DOMContentLoaded', () => {
         </span>
       `;
     });
-    html += `</div>`;
+
+    if (openVersesWrapper) {
+      html += `</div>`;
+    }
 
     elements.mushafContentBox.innerHTML = html;
   }
@@ -615,14 +669,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <div class="d-flex align-items-center justify-content-between mt-auto pt-3 border-top border-light gap-2 flex-wrap">
               <button class="btn ${isDone ? 'btn-outline-success' : 'btn-emerald-action'} px-4 py-2 rounded-pill fw-bold flex-grow-1" 
-                      onclick="window.tapDhikrItem('${categoryKey}', ${item.id}, ${item.count})" ${isDone ? 'disabled' : ''}>
+                      onclick="window.tapDhikrItem('${categoryKey}', '${item.id}', ${item.count})" ${isDone ? 'disabled' : ''}>
                 <i class="bi bi-hand-index-thumb me-1"></i>
                 ${isDone ? 'تم بحمد الله ✨' : `المتبقي: ${remaining}`}
               </button>
               <button class="btn btn-outline-secondary rounded-pill px-3 py-2 btn-sm" onclick="window.copyDhikrText('${item.id}', this)" title="نسخ نص الذكر">
                 <i class="bi bi-copy"></i>
               </button>
-              <button class="btn btn-sm btn-link text-muted fw-bold text-decoration-none" onclick="window.resetDhikrItem('${categoryKey}', ${item.id}, ${item.count})" title="إعادة تعيين العداد">
+              <button class="btn btn-sm btn-link text-muted fw-bold text-decoration-none" onclick="window.resetDhikrItem('${categoryKey}', '${item.id}', ${item.count})" title="إعادة تعيين العداد">
                 <i class="bi bi-arrow-counterclockwise"></i>
               </button>
             </div>
@@ -632,11 +686,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
+  const TASBEEH_PHRASE_LABELS = {
+    subhanallah: 'سُبْحَانَ اللَّهِ',
+    alhamdulillah: 'الْحَمْدُ لِلَّهِ',
+    allahuakbar: 'اللَّهُ أَكْبَرُ',
+    laillahaillallah: 'لا إِلَهَ إِلا اللَّهُ',
+    istighfar: 'أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ',
+    salawat: 'اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَآلِهِ',
+    free: 'تسبيح وذكر حر'
+  };
+
   // منطق السبحة الإلكترونية ثلاثية الأبعاد
   function updateTasbeehUI() {
-    if (elements.tasbeehCounterDisplay) elements.tasbeehCounterDisplay.textContent = state.tasbeeh.count;
+    if (elements.tasbeehCounterDisplay) {
+      elements.tasbeehCounterDisplay.textContent = state.tasbeeh.count;
+      elements.tasbeehCounterDisplay.classList.remove('tasbeeh-count-pop');
+      void elements.tasbeehCounterDisplay.offsetWidth;
+      elements.tasbeehCounterDisplay.classList.add('tasbeeh-count-pop');
+    }
     if (elements.tasbeehTotalDisplay) elements.tasbeehTotalDisplay.textContent = state.tasbeeh.totalCount;
     if (elements.tasbeehLapDisplay) elements.tasbeehLapDisplay.textContent = state.tasbeeh.lap;
+
+    const currentKey = elements.tasbeehPhraseSelect ? elements.tasbeehPhraseSelect.value : 'subhanallah';
+    if (elements.tasbeehCurrentPhraseText) {
+      elements.tasbeehCurrentPhraseText.textContent = TASBEEH_PHRASE_LABELS[currentKey] || 'سُبْحَانَ اللَّهِ';
+    }
+    if (elements.tasbeehTargetBadge) {
+      elements.tasbeehTargetBadge.textContent = state.tasbeeh.target > 0 ? `الهدف: ${state.tasbeeh.target} مرة` : 'تسبيح حر مفتوح';
+    }
+    if (elements.tasbeehProgressText) {
+      elements.tasbeehProgressText.textContent = state.tasbeeh.target > 0 
+        ? `${state.tasbeeh.count} / ${state.tasbeeh.target}` 
+        : `${state.tasbeeh.count} تسبيحة`;
+    }
+    if (elements.tasbeehCycleProgressBar) {
+      const pct = state.tasbeeh.target > 0 ? Math.min(100, Math.round((state.tasbeeh.count / state.tasbeeh.target) * 100)) : 100;
+      elements.tasbeehCycleProgressBar.style.width = `${pct}%`;
+    }
+
+    // تحديث أزرار الاختيار السريع للذكر
+    document.querySelectorAll('.tasbeeh-chip-btn').forEach(chip => {
+      chip.classList.toggle('active', chip.getAttribute('data-phrase') === currentKey);
+    });
 
     if (elements.soundIcon) {
       elements.soundIcon.className = state.tasbeeh.soundEnabled ? 'bi bi-volume-up-fill text-emerald' : 'bi bi-volume-mute-fill text-muted';
@@ -669,68 +760,258 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTasbeehUI();
   }
 
-  // --- عرض أعضاء العائلة والمشتركين وإدارتهم ---
+  // --- إنشاء بطاقة المشترك داخل المقرأة ---
+  function createMemberCardHtml(u) {
+    const wird = window.QuraniWirdEngine.calculateWirdForUser(u);
+    const plan = window.QuraniWirdEngine.plans[u.planId] || window.QuraniWirdEngine.plans['safa'];
+    const isCompleted = wird.isCompletedToday;
+    const isFriends = (u.groupType === 'friends');
+
+    return `
+      <div class="col-12 col-md-6 col-lg-4 mb-4">
+        <div class="member-card p-4 h-100 position-relative">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <span class="${isFriends ? 'group-badge-friends' : 'group-badge-family'}">
+              <i class="bi ${isFriends ? 'bi-people-fill text-primary' : 'bi-house-heart-fill text-danger'} me-1"></i>
+              ${isFriends ? 'مقرأة الأصدقاء' : 'مقرأة الأهل'}
+            </span>
+            <button class="btn btn-sm btn-outline-danger border-0 rounded-circle p-1" title="حذف من المقرأة" onclick="window.deleteMemberContact('${u.id}')">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+          
+          <div class="d-flex align-items-center mb-3">
+            <span class="user-avatar-lg me-3" style="background-color: ${u.color || (isFriends ? '#0284c7' : '#16a34a')}; color: #fff; font-size: 1.6rem;">${u.avatar || (isFriends ? '👥' : '👨‍👩‍👧‍👦')}</span>
+            <div class="overflow-hidden">
+              <h5 class="fw-bold mb-0 text-dark text-truncate">${u.name}</h5>
+              <small class="text-muted fw-semibold d-block text-truncate">${u.relation || (isFriends ? 'صديق' : 'من الأهل')} • ${u.phone ? u.phone : 'بدون هاتف'}</small>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-3 mb-3 border border-light" style="background-color: var(--bg-card-subtle);">
+            <div class="d-flex justify-content-between small mb-1">
+              <span class="text-muted fw-semibold">الخطة:</span>
+              <span class="fw-bold text-emerald">${plan.name}</span>
+            </div>
+            <div class="d-flex justify-content-between small mb-1">
+              <span class="text-muted fw-semibold">الورد اليومي:</span>
+              <span class="fw-bold text-dark">ص ${wird.startPage} - ${wird.endPage}</span>
+            </div>
+            <div class="d-flex justify-content-between small">
+              <span class="text-muted fw-semibold">السورة:</span>
+              <span class="fw-bold text-dark">سورة ${wird.surahName}</span>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <span class="small text-muted fw-bold">حالة تلاوة اليوم:</span>
+            <button class="btn btn-sm ${isCompleted ? 'btn-success text-white' : 'btn-outline-warning text-dark'} px-3 py-1 rounded-pill fw-bold" onclick="window.toggleContactCompleted('${u.id}')" title="انقر للتبديل بين أتم القراءة وبانتظارها">
+              ${isCompleted ? '<i class="bi bi-check-circle-fill me-1"></i> أتم القراءة (تراجع)' : '<i class="bi bi-hourglass-split me-1"></i> بانتظار (تحديد كأتم)'}
+            </button>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-between mb-3 small text-muted">
+            <span><i class="bi bi-fire text-warning me-1"></i> التزام: <strong>${u.streak || 0}</strong> يوماً</span>
+            <span><i class="bi bi-trophy text-gold me-1"></i> الختمات: <strong>${u.khatmahCount || 0}</strong></span>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button class="btn btn-whatsapp w-100 fw-bold py-2" onclick="window.openWhatsAppForMember('${u.id}')">
+              <i class="bi bi-whatsapp me-2"></i> إرسال الورد بالواتساب 💬
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // --- عرض أعضاء المقرأة المصغرة (الأهل والأصدقاء) وتحديث الإحصائيات ---
   function renderFamilyMembers() {
-    if (!elements.familyMembersGrid || !window.QuraniWirdEngine) return;
+    if (!window.QuraniWirdEngine) return;
 
-    const users = window.QuraniWirdEngine.getAllUsers();
-    const activeUser = window.QuraniWirdEngine.getActiveUser();
+    const familyUsers = window.QuraniWirdEngine.getContacts('family');
+    const friendsUsers = window.QuraniWirdEngine.getContacts('friends');
+    const allContacts = window.QuraniWirdEngine.getContacts('all');
 
-    elements.familyMembersGrid.innerHTML = users.map(u => {
-      const wird = window.QuraniWirdEngine.calculateWirdForUser(u);
-      const plan = window.QuraniWirdEngine.plans[u.planId] || window.QuraniWirdEngine.plans['safa'];
-      const isCompleted = wird.isCompletedToday;
-      const isCurrent = u.id === activeUser.id;
+    // إحصائيات الأهل
+    const familyStats = window.QuraniWirdEngine.getGroupStats ? window.QuraniWirdEngine.getGroupStats('family') : {
+      total: familyUsers.length,
+      completed: familyUsers.filter(u => u.completedToday).length,
+      rate: familyUsers.length > 0 ? Math.round((familyUsers.filter(u => u.completedToday).length / familyUsers.length) * 100) : 0
+    };
 
-      return `
-        <div class="col-12 col-md-6 col-lg-4 mb-4">
-          <div class="member-card p-4 h-100 position-relative ${isCurrent ? 'is-active-user' : ''}">
-            ${isCurrent ? '<span class="badge bg-emerald-deep text-white position-absolute top-0 end-0 m-3 px-3 py-1 rounded-pill fw-bold">الحساب النشط</span>' : ''}
-            
-            <div class="d-flex align-items-center mb-3">
-              <span class="user-avatar-lg me-3">${u.avatar || '👤'}</span>
-              <div>
-                <h5 class="fw-bold mb-0 text-dark">${u.name}</h5>
-                <small class="text-muted fw-semibold">${u.relation || 'مشترك'} • ${u.phone || 'بدون هاتف'}</small>
-              </div>
-            </div>
+    // إحصائيات الأصدقاء
+    const friendsStats = window.QuraniWirdEngine.getGroupStats ? window.QuraniWirdEngine.getGroupStats('friends') : {
+      total: friendsUsers.length,
+      completed: friendsUsers.filter(u => u.completedToday).length,
+      rate: friendsUsers.length > 0 ? Math.round((friendsUsers.filter(u => u.completedToday).length / friendsUsers.length) * 100) : 0
+    };
 
-            <div class="p-3 rounded-3 mb-3 border border-light" style="background-color: var(--bg-card-subtle);">
-              <div class="d-flex justify-content-between small mb-1">
-                <span class="text-muted fw-semibold">الخطة:</span>
-                <span class="fw-bold text-emerald">${plan.name}</span>
-              </div>
-              <div class="d-flex justify-content-between small mb-1">
-                <span class="text-muted fw-semibold">الورد اليومي:</span>
-                <span class="fw-bold text-dark">ص ${wird.startPage} - ${wird.endPage}</span>
-              </div>
-              <div class="d-flex justify-content-between small">
-                <span class="text-muted fw-semibold">السورة:</span>
-                <span class="fw-bold text-dark">سورة ${wird.surahName}</span>
-              </div>
-            </div>
+    // تحديث بطاقات إحصائيات الأهل
+    if (elements.statFamilyCount) elements.statFamilyCount.textContent = familyStats.total;
+    if (elements.statFamilyTotal) elements.statFamilyTotal.textContent = familyStats.total;
+    if (elements.statFamilyCompleted) elements.statFamilyCompleted.textContent = familyStats.completed;
+    if (elements.statFamilyRate) elements.statFamilyRate.textContent = `${familyStats.rate}% إتمام`;
+    if (elements.familyProgressBar) elements.familyProgressBar.style.width = `${familyStats.rate}%`;
+    if (elements.familyBadgeText) elements.familyBadgeText.textContent = `${familyStats.completed} من ${familyStats.total} أتموا الورد (${familyStats.rate}%)`;
+    if (elements.badgeFamilyCount) elements.badgeFamilyCount.textContent = familyStats.total;
 
-            <div class="d-flex align-items-center justify-content-between mb-3">
-              <span class="small text-muted fw-bold">حالة تلاوة اليوم:</span>
-              <span class="badge ${isCompleted ? 'bg-success text-white' : 'bg-warning text-dark'} px-3 py-1 rounded-pill fw-bold">
-                ${isCompleted ? '<i class="bi bi-check-circle-fill me-1"></i> أتم القراءة' : '<i class="bi bi-hourglass-split me-1"></i> بانتظار القراءة'}
-              </span>
-            </div>
+    // تحديث بطاقات إحصائيات الأصدقاء
+    if (elements.statFriendsCount) elements.statFriendsCount.textContent = friendsStats.total;
+    if (elements.statFriendsTotal) elements.statFriendsTotal.textContent = friendsStats.total;
+    if (elements.statFriendsCompleted) elements.statFriendsCompleted.textContent = friendsStats.completed;
+    if (elements.statFriendsRate) elements.statFriendsRate.textContent = `${friendsStats.rate}% إتمام`;
+    if (elements.friendsProgressBar) elements.friendsProgressBar.style.width = `${friendsStats.rate}%`;
+    if (elements.friendsBadgeText) elements.friendsBadgeText.textContent = `${friendsStats.completed} من ${friendsStats.total} أتموا الورد (${friendsStats.rate}%)`;
+    if (elements.badgeFriendsCount) elements.badgeFriendsCount.textContent = friendsStats.total;
 
-            <div class="d-flex gap-2">
-              <button class="btn btn-whatsapp flex-grow-1" onclick="window.openWhatsAppForMember('${u.id}')">
-                <i class="bi bi-whatsapp"></i> تذكير بالواتساب
+    if (elements.badgeAllCount) elements.badgeAllCount.textContent = allContacts.length;
+
+    // تعبئة بطاقات الأهل
+    if (elements.familyMembersGrid) {
+      if (familyUsers.length === 0) {
+        elements.familyMembersGrid.innerHTML = `
+          <div class="col-12">
+            <div class="empty-maqraa-box">
+              <i class="bi bi-house-heart fs-1 text-emerald mb-2 d-block"></i>
+              <h5 class="fw-bold text-dark">لا يوجد أفراد مسجلون في مقرأة الأهل حالياً</h5>
+              <p class="text-muted small mb-3">ابدأ بإضافة الوالدين والإخوة والأبناء لإرسال وردهم القرآني عبر واتساب وتشجيعهم.</p>
+              <button class="btn btn-emerald-action rounded-pill px-4" onclick="window.openAddMemberModal('family')">
+                <i class="bi bi-person-plus-fill me-1"></i> إضافة فرد للعائلة الآن
               </button>
-              ${!isCurrent ? `
-                <button class="btn btn-outline-secondary rounded-pill px-3" title="التبديل لهذا الحساب" onclick="window.switchUserAccount('${u.id}')">
-                  <i class="bi bi-person-check"></i>
+            </div>
+          </div>
+        `;
+      } else {
+        elements.familyMembersGrid.innerHTML = familyUsers.map(u => createMemberCardHtml(u)).join('');
+      }
+    }
+
+    // تعبئة بطاقات الأصدقاء
+    if (elements.friendsMembersGrid) {
+      if (friendsUsers.length === 0) {
+        elements.friendsMembersGrid.innerHTML = `
+          <div class="col-12">
+            <div class="empty-maqraa-box">
+              <i class="bi bi-people fs-1 text-primary mb-2 d-block"></i>
+              <h5 class="fw-bold text-dark">لا يوجد أصدقاء مسجلون في مقرأة الأصدقاء حالياً</h5>
+              <p class="text-muted small mb-3">شارك وردك القرآني وتنافس في الخيرات مع أصدقائك ورفاق المسجد والعمل عبر واتساب.</p>
+              <button class="btn btn-emerald-action rounded-pill px-4" onclick="window.openAddMemberModal('friends')">
+                <i class="bi bi-person-plus-fill me-1"></i> إضافة صديق للمقرأة الآن
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        elements.friendsMembersGrid.innerHTML = friendsUsers.map(u => createMemberCardHtml(u)).join('');
+      }
+    }
+
+    // عرض قروبات الواتساب
+    renderWhatsAppGroups();
+  }
+
+  // --- دالة توليد بطاقة قروب الواتساب ---
+  function createGroupCardHtml(g) {
+    const hasLink = Boolean(g.link && g.link.trim());
+    const categoryBadges = {
+      family: '<span class="badge bg-emerald-subtle text-emerald rounded-pill px-3 py-1 fw-bold">👨‍👩‍👧‍👦 عائلة</span>',
+      friends: '<span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1 fw-bold">👥 أصدقاء</span>',
+      halaqah: '<span class="badge bg-warning-subtle text-warning-emphasis rounded-pill px-3 py-1 fw-bold">🕌 حلقة تحفيظ</span>',
+      khatmah: '<span class="badge bg-info-subtle text-info-emphasis rounded-pill px-3 py-1 fw-bold">📖 ختمة جماعية</span>',
+      general: '<span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-1 fw-bold">💬 عام</span>'
+    };
+    const catBadge = categoryBadges[g.category] || categoryBadges.general;
+
+    return `
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card-luxury p-4 h-100 d-flex flex-column justify-content-between position-relative shadow-sm rounded-4 border-0" style="background: var(--bg-card, #ffffff); border-top: 4px solid #25d366 !important;">
+          <div>
+            <div class="d-flex align-items-start justify-content-between mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <span class="shadow-xs" style="background: rgba(37, 211, 102, 0.15); color: #128c7e; font-size: 1.4rem; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;">💬</span>
+                <div>
+                  <h6 class="fw-bold mb-0 text-dark">${g.name}</h6>
+                  <small class="text-muted">${g.description || 'قروب واتساب مبارك'}</small>
+                </div>
+              </div>
+              ${catBadge}
+            </div>
+
+            <!-- معلومات رابط القروب -->
+            <div class="p-3 rounded-3 mb-3" style="background-color: ${hasLink ? 'rgba(37, 211, 102, 0.08)' : 'rgba(0,0,0,0.03)'};">
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <span class="small fw-bold ${hasLink ? 'text-success' : 'text-muted'}">
+                  <i class="bi ${hasLink ? 'bi-link-45deg' : 'bi-exclamation-circle'} me-1"></i>
+                  ${hasLink ? 'رابط القروب مفعل' : 'لم يتم إضافة رابط'}
+                </span>
+                ${hasLink ? `
+                  <button class="btn btn-sm btn-link text-success p-0 text-decoration-none fw-bold" onclick="window.copyGroupLink('${g.id}')" title="نسخ رابط القروب">
+                    <i class="bi bi-clipboard me-1"></i> نسخ الرابط
+                  </button>
+                ` : ''}
+              </div>
+              <div class="small text-truncate ${hasLink ? 'text-dark font-monospace' : 'text-muted'}" style="font-size: 0.8rem;" dir="ltr">
+                ${hasLink ? g.link : 'اضغط على تعديل لإضافة رابط دعوة القروب'}
+              </div>
+            </div>
+          </div>
+
+          <!-- أزرار الإجراءات للقروب -->
+          <div class="pt-2 border-top">
+            <div class="d-flex gap-2 mb-2">
+              <button class="btn btn-whatsapp w-100 fw-bold py-2 rounded-pill shadow-xs" onclick="window.openWhatsAppForGroup('${g.id}')">
+                <i class="bi bi-whatsapp me-2"></i> إرسال الورد للقروب 📢
+              </button>
+            </div>
+            <div class="d-flex gap-2 justify-content-between">
+              ${hasLink ? `
+                <button class="btn btn-sm btn-outline-success rounded-pill px-3 flex-grow-1 fw-bold" onclick="window.openDirectGroupChat('${g.id}')" title="نسخ الورد وفتح شات القروب">
+                  <i class="bi bi-box-arrow-up-right me-1"></i> فتح الشات 🔗
                 </button>
-              ` : ''}
+              ` : `
+                <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 flex-grow-1" onclick="window.openEditGroupModal('${g.id}')">
+                  <i class="bi bi-link-45deg me-1"></i> إضافة الرابط
+                </button>
+              `}
+              <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="window.openEditGroupModal('${g.id}')" title="تعديل القروب">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="window.deleteGroup('${g.id}')" title="حذف القروب">
+                <i class="bi bi-trash3"></i>
+              </button>
             </div>
           </div>
         </div>
+      </div>
+    `;
+  }
+
+  // --- دالة عرض قروبات الواتساب ---
+  function renderWhatsAppGroups() {
+    if (!window.QuraniWirdEngine || !elements.whatsappGroupsGrid) return;
+    const groups = window.QuraniWirdEngine.getWhatsAppGroups ? window.QuraniWirdEngine.getWhatsAppGroups() : [];
+
+    if (elements.badgeGroupsCount) {
+      elements.badgeGroupsCount.textContent = groups.length;
+    }
+
+    if (groups.length === 0) {
+      elements.whatsappGroupsGrid.innerHTML = `
+        <div class="col-12">
+          <div class="empty-maqraa-box p-4 text-center rounded-4 border border-dashed" style="background: var(--bg-card, #ffffff);">
+            <i class="bi bi-whatsapp fs-1 text-success mb-2 d-block"></i>
+            <h5 class="fw-bold text-dark">لا توجد قروبات واتساب مسجلة حالياً</h5>
+            <p class="text-muted small mb-3">أضف قروبات العائلة والأصدقاء وحلقات القرآن لتتمكن من إرسال الأوراد فيها بنقرة زر واحدة.</p>
+            <button class="btn btn-whatsapp-action rounded-pill px-4 fw-bold" onclick="window.openAddGroupModal()">
+              <i class="bi bi-plus-circle-fill me-2"></i> إضافة أول قروب الآن 💬
+            </button>
+          </div>
+        </div>
       `;
-    }).join('');
+    } else {
+      elements.whatsappGroupsGrid.innerHTML = groups.map(g => createGroupCardHtml(g)).join('');
+    }
   }
 
   // --- عرض خطط الورد وتخصيصها ---
@@ -772,31 +1053,76 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- محرك الواتساب ونافذة التذكير ---
-  function updateWhatsAppPreview() {
+  let currentWhatsAppRequestId = 0;
+
+  async function updateWhatsAppPreview() {
     if (!elements.whatsappPreviewBubble || !window.QuraniWhatsApp || !window.QuraniWirdEngine) return;
 
-    const memberId = elements.whatsappRecipientSelect?.value;
-    const templateKey = elements.whatsappTemplateSelect?.value || 'daily_wird';
-    const user = window.QuraniWirdEngine.getAllUsers().find(u => u.id === memberId) || window.QuraniWirdEngine.getActiveUser();
+    const templateKey = elements.whatsappTemplateSelect?.value || 'wird_full_text';
+    const owner = window.QuraniWirdEngine.getOwner();
+    const person = state.currentWhatsAppUser || window.QuraniWirdEngine.getActiveUser() || owner;
 
-    let messageText = '';
-    if (templateKey === 'daily_wird') {
-      const wird = window.QuraniWirdEngine.calculateWirdForUser(user);
-      messageText = window.QuraniWhatsApp.generateDailyWirdMessage(user, wird);
-    } else if (templateKey === 'wird_congrats') {
-      const wird = window.QuraniWirdEngine.calculateWirdForUser(user);
-      messageText = window.QuraniWhatsApp.generateCongratsMessage(user, wird);
-    } else if (templateKey === 'friday_kahf') {
-      messageText = window.QuraniWhatsApp.generateFridayKahfMessage(user);
-    } else if (templateKey === 'morning_adhkar') {
-      messageText = window.QuraniWhatsApp.generateAdhkarReminderMessage(user, 'morning');
-    } else if (templateKey === 'evening_adhkar') {
-      messageText = window.QuraniWhatsApp.generateAdhkarReminderMessage(user, 'evening');
+    // إخفاء إشعارات وروابط القروب الفردية (لأن الإرسال أصبح عاماً يفتح قائمة واتساب مباشرة)
+    if (elements.whatsappGroupInfoBanner) {
+      elements.whatsappGroupInfoBanner.classList.add('d-none');
+    }
+    if (elements.btnOpenGroupDirect) {
+      elements.btnOpenGroupDirect.classList.add('d-none');
+    }
+    if (elements.btnSendWhatsAppText) {
+      elements.btnSendWhatsAppText.textContent = 'اختيار جهات الاتصال من الواتساب (أشخاص أو مجموعات)';
     }
 
-    elements.whatsappPreviewBubble.innerHTML = messageText.replace(/\n/g, '<br>');
-    elements.whatsappPreviewBubble.dataset.rawText = messageText;
-    elements.whatsappPreviewBubble.dataset.phone = user.phone || '';
+    const requestId = ++currentWhatsAppRequestId;
+    let messageText = '';
+
+    if (templateKey === 'wird_full_text') {
+      elements.whatsappPreviewBubble.innerHTML = `
+        <div class="text-center py-4">
+          <div class="spinner-border spinner-border-sm text-success me-2" role="status"></div>
+          <span class="text-muted fw-bold">جارٍ جلب وتنسيق نص آيات صفحة الورد برسم المصحف الشريف... ⏳</span>
+        </div>
+      `;
+      try {
+        const wird = window.QuraniWirdEngine.calculateWirdForUser(person);
+        messageText = await window.QuraniWhatsApp.generateFullWirdTextMessage(person, wird);
+      } catch (err) {
+        console.warn('تعذر جلب نص الآيات كاملاً، يتم التحويل لقالب التذكير البديل', err);
+        const wird = window.QuraniWirdEngine.calculateWirdForUser(person);
+        messageText = window.QuraniWhatsApp.generateDailyWirdMessage(person, wird);
+      }
+    } else if (templateKey === 'daily_wird') {
+      const wird = window.QuraniWirdEngine.calculateWirdForUser(person);
+      messageText = window.QuraniWhatsApp.generateDailyWirdMessage(person, wird);
+    } else if (templateKey === 'wird_congrats') {
+      const wird = window.QuraniWirdEngine.calculateWirdForUser(person);
+      messageText = window.QuraniWhatsApp.generateCongratsMessage(person, wird);
+    } else if (templateKey === 'owner_share') {
+      const wird = window.QuraniWirdEngine.calculateWirdForUser(owner);
+      messageText = window.QuraniWhatsApp.generateOwnerShareMessage(owner, wird);
+    } else if (templateKey === 'group_summary_family') {
+      messageText = window.QuraniWhatsApp.generateGroupSummaryMessage('family');
+    } else if (templateKey === 'group_summary_friends') {
+      messageText = window.QuraniWhatsApp.generateGroupSummaryMessage('friends');
+    } else if (templateKey === 'group_summary_custom') {
+      messageText = window.QuraniWhatsApp.generateGroupSummaryMessage('all');
+    } else if (templateKey === 'friday_kahf') {
+      messageText = window.QuraniWhatsApp.generateFridayKahfMessage(person);
+    } else if (templateKey === 'morning_adhkar') {
+      messageText = window.QuraniWhatsApp.generateAdhkarReminderMessage(person, 'morning');
+    } else if (templateKey === 'evening_adhkar') {
+      messageText = window.QuraniWhatsApp.generateAdhkarReminderMessage(person, 'evening');
+    }
+
+    if (requestId !== currentWhatsAppRequestId) {
+      return; // المستخدم غيّر الخيار أثناء جلب الآيات
+    }
+
+    elements.whatsappPreviewBubble.innerHTML = (messageText || '').replace(/\n/g, '<br>');
+    elements.whatsappPreviewBubble.dataset.rawText = messageText || '';
+    elements.whatsappPreviewBubble.dataset.phone = '';
+    elements.whatsappPreviewBubble.dataset.groupLink = '';
+    elements.whatsappPreviewBubble.dataset.groupId = '';
   }
 
   // --- دوال الربط العامة (Global Window Helpers) ---
@@ -809,12 +1135,73 @@ document.addEventListener('DOMContentLoaded', () => {
     switchTab('adhkar');
   };
 
-  window.switchUserAccount = (userId) => {
-    window.QuraniWirdEngine.setActiveUser(userId);
-    updateDashboardUI();
+  window.openOwnerSettingsModal = () => {
+    if (!window.QuraniWirdEngine) return;
+    const owner = window.QuraniWirdEngine.getOwner();
+    if (!owner) return;
+
+    if (elements.ownerSettingsName) elements.ownerSettingsName.value = owner.name || '';
+    if (elements.ownerSettingsPhone) elements.ownerSettingsPhone.value = owner.phone || '';
+    if (elements.ownerSettingsPlan) elements.ownerSettingsPlan.value = owner.planId || 'safa';
+    if (elements.ownerSettingsPage) elements.ownerSettingsPage.value = owner.currentPage || 1;
+    if (elements.ownerSettingsCustomPages) elements.ownerSettingsCustomPages.value = owner.customPagesPerDay || 5;
+
+    if (elements.ownerSettingsCustomPagesBox) {
+      elements.ownerSettingsCustomPagesBox.classList.toggle('d-none', owner.planId !== 'custom');
+    }
+
+    const modal = new bootstrap.Modal(document.getElementById('ownerSettingsModal'));
+    modal.show();
+  };
+
+  window.shareOwnerWirdWhatsApp = () => {
+    updateWhatsAppRecipientDropdown();
+    if (elements.whatsappRecipientSelect) elements.whatsappRecipientSelect.value = 'owner';
+    if (elements.whatsappTemplateSelect) elements.whatsappTemplateSelect.value = 'owner_share';
+    updateWhatsAppPreview();
+    const modal = new bootstrap.Modal(document.getElementById('whatsappModal'));
+    modal.show();
+  };
+
+  window.shareGroupSummaryWhatsApp = async (groupType = 'family') => {
+    updateWhatsAppRecipientDropdown();
+    if (elements.whatsappTemplateSelect) {
+      elements.whatsappTemplateSelect.value = (groupType === 'friends') ? 'group_summary_friends' : 'group_summary_family';
+    }
+    updateWhatsAppPreview();
+
+    // نسخ نص الورد اليومي تلقائياً إلى الحافظة
+    const rawText = elements.whatsappPreviewBubble ? elements.whatsappPreviewBubble.dataset.rawText : '';
+    if (rawText && window.QuraniWhatsApp) {
+      await window.QuraniWhatsApp.copyToClipboard(rawText);
+      showToast('تم نسخ الورد اليومي بنجاح 📋', 'تم نسخ الورد مع رابط الموقع؛ جاهز للمشاركة وإرساله عبر واتساب.');
+    }
+
+    const modal = new bootstrap.Modal(document.getElementById('whatsappModal'));
+    modal.show();
+  };
+
+  window.toggleContactCompleted = (contactId) => {
+    if (!window.QuraniWirdEngine) return;
+    const res = window.QuraniWirdEngine.toggleContactCompleted(contactId);
+    if (!res) return;
     renderFamilyMembers();
-    renderPlans();
-    showToast('تم تبديل الحساب بنجاح 👤', 'أهلاً بك في حسابك المبارك.');
+    if (res.completed) {
+      triggerCelebration();
+      showToast('تقبل الله طاعتهم 🌸', `تم تسجيل إتمام الورد لـ ${res.contact.name} وزيادة التزامه.`);
+    } else {
+      showToast('تم التعديل', `تم إلغاء حالة الإتمام لـ ${res.contact.name}.`);
+    }
+  };
+
+  window.deleteMemberContact = (contactId) => {
+    if (!window.QuraniWirdEngine) return;
+    if (confirm('هل أنت متأكد من رغبتك في حذف هذا القارئ من المقرأة؟')) {
+      window.QuraniWirdEngine.deleteContact(contactId);
+      renderFamilyMembers();
+      updateWhatsAppRecipientDropdown();
+      showToast('تم الحذف بنجاح', 'تمت إزالة القارئ من قائمة المقرأة.');
+    }
   };
 
   window.selectSurah = (surahNum) => {
@@ -900,18 +1287,175 @@ document.addEventListener('DOMContentLoaded', () => {
     contentElem.textContent = tafseer;
   };
 
+  // دالة تعبئة قائمة مستلمي الواتساب مصنفة
+  function updateWhatsAppRecipientDropdown() {
+    if (!elements.whatsappRecipientSelect || !window.QuraniWirdEngine) return;
+    const owner = window.QuraniWirdEngine.getOwner();
+    const family = window.QuraniWirdEngine.getContacts('family');
+    const friends = window.QuraniWirdEngine.getContacts('friends');
+
+    let html = `
+      <optgroup label="👤 حسابي الشخصي">
+        <option value="owner">وردي الشخصي (${owner.name}) ${owner.phone ? '- ' + owner.phone : ''}</option>
+      </optgroup>
+    `;
+
+    if (family.length > 0) {
+      html += `<optgroup label="👨‍👩‍👧‍👦 أفراد مقرأة الأهل">`;
+      html += family.map(u => `<option value="${u.id}">${u.name} (${u.relation || 'الأهل'} ${u.phone ? '- ' + u.phone : ''})</option>`).join('');
+      html += `</optgroup>`;
+    }
+    if (friends.length > 0) {
+      html += `<optgroup label="👥 أفراد مقرأة الأصدقاء">`;
+      html += friends.map(u => `<option value="${u.id}">${u.name} (${u.relation || 'صديق'} ${u.phone ? '- ' + u.phone : ''})</option>`).join('');
+      html += `</optgroup>`;
+    }
+    elements.whatsappRecipientSelect.innerHTML = html;
+  }
+
   window.openWhatsAppForMember = (userId) => {
-    if (elements.whatsappRecipientSelect) {
-      elements.whatsappRecipientSelect.value = userId;
+    if (userId && window.QuraniWirdEngine) {
+      state.currentWhatsAppUser = window.QuraniWirdEngine.getContacts('all').find(u => u.id === userId) || null;
+    } else {
+      state.currentWhatsAppUser = null;
+    }
+    updateWhatsAppRecipientDropdown();
+    updateWhatsAppPreview();
+    const modal = new bootstrap.Modal(document.getElementById('whatsappModal'));
+    modal.show();
+  };
+
+  // --- دوال قروبات الواتساب العامة ---
+  window.openWhatsAppForGroup = (groupId) => {
+    updateWhatsAppRecipientDropdown();
+    if (elements.whatsappRecipientSelect && groupId) {
+      elements.whatsappRecipientSelect.value = groupId;
+    }
+    if (elements.whatsappTemplateSelect) {
+      elements.whatsappTemplateSelect.value = 'group_summary_custom';
     }
     updateWhatsAppPreview();
     const modal = new bootstrap.Modal(document.getElementById('whatsappModal'));
     modal.show();
   };
 
-  window.openAddMemberModal = () => {
+  window.openDirectGroupChat = async (groupId) => {
+    if (!window.QuraniWirdEngine || !window.QuraniWhatsApp) return;
+    const group = window.QuraniWirdEngine.getWhatsAppGroupById(groupId);
+    if (!group) return;
+    if (!group.link) {
+      window.openEditGroupModal(groupId);
+      showToast('أضف رابط القروب 🔗', 'الرجاء وضع رابط القروب أولاً لتتمكن من فتحه مباشرة.');
+      return;
+    }
+
+    // تجهيز رسالة الورد المناسبة
+    const groupCategory = (group.category === 'friends') ? 'friends' : ((group.category === 'family') ? 'family' : 'all');
+    const msg = window.QuraniWhatsApp.generateGroupSummaryMessage(groupCategory, null, group.name);
+
+    await window.QuraniWhatsApp.openGroupWithClipboard(group.link, msg);
+    showToast('تم نسخ الورد بنجاح 📋✨', 'تم فتح شات القروب! الصق الورد في الشات واضغط إرسال.');
+  };
+
+  window.copyGroupLink = async (groupId) => {
+    if (!window.QuraniWirdEngine || !window.QuraniWhatsApp) return;
+    const group = window.QuraniWirdEngine.getWhatsAppGroupById(groupId);
+    if (!group || !group.link) return;
+    await window.QuraniWhatsApp.copyToClipboard(group.link);
+    showToast('تم نسخ رابط القروب 🔗', 'تم نسخ رابط دعوة القروب إلى الحافظة.');
+  };
+
+  window.openAddGroupModal = (category = 'general') => {
+    if (elements.groupForm) elements.groupForm.reset();
+    if (elements.groupFormId) elements.groupFormId.value = '';
+    if (elements.groupFormCategory) elements.groupFormCategory.value = category;
+    if (elements.groupModalTitle) elements.groupModalTitle.textContent = 'إضافة قروب واتساب جديد';
+    if (elements.btnDeleteGroup) elements.btnDeleteGroup.classList.add('d-none');
+
+    const modal = new bootstrap.Modal(document.getElementById('groupModal'));
+    modal.show();
+  };
+
+  window.openEditGroupModal = (groupId) => {
+    if (!window.QuraniWirdEngine) return;
+    const group = window.QuraniWirdEngine.getWhatsAppGroupById(groupId);
+    if (!group) return;
+
+    if (elements.groupFormId) elements.groupFormId.value = group.id;
+    if (elements.groupFormName) elements.groupFormName.value = group.name || '';
+    if (elements.groupFormLink) elements.groupFormLink.value = group.link || '';
+    if (elements.groupFormCategory) elements.groupFormCategory.value = group.category || 'general';
+    if (elements.groupFormDesc) elements.groupFormDesc.value = group.description || '';
+    if (elements.groupModalTitle) elements.groupModalTitle.textContent = `تعديل قروب: ${group.name}`;
+    if (elements.btnDeleteGroup) elements.btnDeleteGroup.classList.remove('d-none');
+
+    const modal = new bootstrap.Modal(document.getElementById('groupModal'));
+    modal.show();
+  };
+
+  window.deleteGroup = (groupId) => {
+    if (!window.QuraniWirdEngine) return;
+    const group = window.QuraniWirdEngine.getWhatsAppGroupById(groupId);
+    const name = group ? group.name : 'هذا القروب';
+    if (confirm(`هل أنت متأكد من حذف «${name}» من قائمة القروبات؟`)) {
+      window.QuraniWirdEngine.deleteWhatsAppGroup(groupId);
+      renderWhatsAppGroups();
+      updateWhatsAppRecipientDropdown();
+      showToast('تم حذف القروب', 'تمت إزالة القروب بنجاح.');
+    }
+  };
+
+  window.openAddMemberModal = (groupType = 'family') => {
+    const familyRadio = document.getElementById('groupTypeFamily');
+    const friendsRadio = document.getElementById('groupTypeFriends');
+    const relationInput = document.getElementById('newMemberRelation');
+
+    if (groupType === 'friends' && friendsRadio) {
+      friendsRadio.checked = true;
+      if (relationInput) relationInput.placeholder = 'مثلاً: صديق الطفولة، زميل العمل، رفيق المسجد';
+    } else if (familyRadio) {
+      familyRadio.checked = true;
+      if (relationInput) relationInput.placeholder = 'مثلاً: الوالد، الوالدة، الأخت، الابن';
+    }
+
     const modal = new bootstrap.Modal(document.getElementById('addMemberModal'));
     modal.show();
+  };
+
+  window.filterMaqraaView = (view = 'all', btn = null) => {
+    const familyBlock = document.getElementById('maqraaFamilyBlock');
+    const friendsBlock = document.getElementById('maqraaFriendsBlock');
+    const groupsBlock = document.getElementById('maqraaGroupsBlock');
+    const tabs = document.querySelectorAll('#maqraaTabsGroup .maqraa-tab-btn');
+
+    tabs.forEach(t => {
+      const tabView = t.getAttribute('data-maqraa-view');
+      if (btn && t === btn) {
+        t.classList.add('active');
+      } else if (!btn && tabView === view) {
+        t.classList.add('active');
+      } else {
+        t.classList.remove('active');
+      }
+    });
+
+    if (view === 'family') {
+      if (familyBlock) familyBlock.classList.remove('d-none');
+      if (friendsBlock) friendsBlock.classList.add('d-none');
+      if (groupsBlock) groupsBlock.classList.add('d-none');
+    } else if (view === 'friends') {
+      if (familyBlock) familyBlock.classList.add('d-none');
+      if (friendsBlock) friendsBlock.classList.remove('d-none');
+      if (groupsBlock) groupsBlock.classList.add('d-none');
+    } else if (view === 'groups') {
+      if (familyBlock) familyBlock.classList.add('d-none');
+      if (friendsBlock) friendsBlock.classList.add('d-none');
+      if (groupsBlock) groupsBlock.classList.remove('d-none');
+    } else {
+      if (familyBlock) familyBlock.classList.remove('d-none');
+      if (friendsBlock) friendsBlock.classList.remove('d-none');
+      if (groupsBlock) groupsBlock.classList.remove('d-none');
+    }
   };
 
   // --- مستمعو الأحداث (Event Listeners) ---
@@ -933,12 +1477,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // زر بدء تلاوة الورد
   if (elements.btnStartWirdReading) {
     elements.btnStartWirdReading.addEventListener('click', () => {
-      const user = window.QuraniWirdEngine.getActiveUser();
-      const wird = window.QuraniWirdEngine.calculateWirdForUser(user);
-      state.currentPage = wird.startPage;
+      const user = window.QuraniWirdEngine ? window.QuraniWirdEngine.getActiveUser() : null;
+      const wird = (user && window.QuraniWirdEngine) ? window.QuraniWirdEngine.calculateWirdForUser(user) : null;
+      const startPage = Math.max(1, Math.min(604, (wird && wird.startPage) || (user && user.currentPage) || 1));
+      state.currentPage = startPage;
+
+      const pageInfo = window.QuraniData ? window.QuraniData.getPageInfo(startPage) : null;
+      if (pageInfo && pageInfo.primarySurah) {
+        state.currentSurah = pageInfo.primarySurah.id;
+        if (elements.surahSelect) elements.surahSelect.value = state.currentSurah;
+      }
+
       if (elements.pageSelect) elements.pageSelect.value = state.currentPage;
       if (elements.mushafPageSlider) elements.mushafPageSlider.value = state.currentPage;
+      if (elements.sliderPageIndicator) elements.sliderPageIndicator.textContent = `ص ${state.currentPage}`;
+
       switchTab('mushaf');
+      renderMushafView();
     });
   }
 
@@ -1057,6 +1612,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // أزرار الاختيار السريع للذكر
+  document.querySelectorAll('.tasbeeh-chip-btn').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const phrase = chip.getAttribute('data-phrase');
+      if (elements.tasbeehPhraseSelect) {
+        elements.tasbeehPhraseSelect.value = phrase;
+        elements.tasbeehPhraseSelect.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+
   // تبديل الصوت والاهتزاز للسبحة
   if (elements.btnToggleSound) {
     elements.btnToggleSound.addEventListener('click', () => {
@@ -1090,10 +1656,33 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.whatsappTemplateSelect.addEventListener('change', updateWhatsAppPreview);
   }
   if (elements.btnSendWhatsAppDirect) {
-    elements.btnSendWhatsAppDirect.addEventListener('click', () => {
-      const phone = elements.whatsappPreviewBubble.dataset.phone;
+    elements.btnSendWhatsAppDirect.addEventListener('click', async () => {
+      const rawText = elements.whatsappPreviewBubble ? (elements.whatsappPreviewBubble.dataset.rawText || '') : '';
+      if (rawText && window.QuraniWhatsApp) {
+        await window.QuraniWhatsApp.copyToClipboard(rawText);
+      }
+      // فتح واتساب مباشرة بدون رقم محدد لتمكين المستخدم من اختيار أي جهة اتصال أو مجموعة مباشرة
+      window.QuraniWhatsApp.openWhatsApp('', rawText);
+    });
+  }
+  if (elements.btnOpenGroupDirect) {
+    elements.btnOpenGroupDirect.addEventListener('click', async () => {
+      const groupLink = elements.whatsappPreviewBubble.dataset.groupLink;
       const rawText = elements.whatsappPreviewBubble.dataset.rawText;
-      window.QuraniWhatsApp.openWhatsApp(phone, rawText);
+      if (!groupLink) {
+        showToast('تنبيه ⚠️', 'الرجاء إضافة رابط القروب أولاً.');
+        return;
+      }
+      await window.QuraniWhatsApp.openGroupWithClipboard(groupLink, rawText);
+      showToast('تم نسخ الورد بنجاح 📋✨', 'تم فتح شات القروب! الصق الورد في الشات واضغط إرسال.');
+    });
+  }
+  if (elements.btnEditCurrentGroupLink) {
+    elements.btnEditCurrentGroupLink.addEventListener('click', () => {
+      const groupId = elements.whatsappPreviewBubble.dataset.groupId;
+      if (groupId) {
+        window.openEditGroupModal(groupId);
+      }
     });
   }
   if (elements.btnCopyWhatsAppText) {
@@ -1104,31 +1693,145 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // نموذج إضافة مشترك جديد
+  // أحداث نموذج إضافة وتعديل قروب واتساب
+  if (elements.groupForm) {
+    elements.groupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!window.QuraniWirdEngine) return;
+
+      const id = elements.groupFormId ? elements.groupFormId.value : '';
+      const name = elements.groupFormName ? elements.groupFormName.value.trim() : '';
+      const link = elements.groupFormLink ? elements.groupFormLink.value.trim() : '';
+      const category = elements.groupFormCategory ? elements.groupFormCategory.value : 'general';
+      const description = elements.groupFormDesc ? elements.groupFormDesc.value.trim() : '';
+
+      if (!name) {
+        showToast('تنبيه ⚠️', 'الرجاء إدخال اسم القروب.');
+        return;
+      }
+
+      if (id) {
+        window.QuraniWirdEngine.updateWhatsAppGroup(id, { name, link, category, description });
+        showToast('تم تحديث القروب بنجاح ✨', `تم حفظ بيانات «${name}».`);
+      } else {
+        const newG = window.QuraniWirdEngine.addWhatsAppGroup({ name, link, category, description });
+        showToast('تمت إضافة القروب بنجاح 💬🎉', `تمت إضافة «${name}» إلى قائمة القروبات.`);
+        if (elements.whatsappRecipientSelect) {
+          elements.whatsappRecipientSelect.value = newG.id;
+        }
+      }
+
+      renderWhatsAppGroups();
+      updateWhatsAppRecipientDropdown();
+      updateWhatsAppPreview();
+
+      const modalElem = document.getElementById('groupModal');
+      const bsModal = bootstrap.Modal.getInstance(modalElem);
+      if (bsModal) bsModal.hide();
+    });
+  }
+
+  if (elements.btnDeleteGroup) {
+    elements.btnDeleteGroup.addEventListener('click', () => {
+      const id = elements.groupFormId ? elements.groupFormId.value : '';
+      if (id) {
+        window.deleteGroup(id);
+        const modalElem = document.getElementById('groupModal');
+        const bsModal = bootstrap.Modal.getInstance(modalElem);
+        if (bsModal) bsModal.hide();
+      }
+    });
+  }
+
+  // نموذج إضافة قارئ جديد للمقرأة المصغرة
   const addMemberForm = document.getElementById('addMemberForm');
+  const groupTypeFamilyRadio = document.getElementById('groupTypeFamily');
+  const groupTypeFriendsRadio = document.getElementById('groupTypeFriends');
+  const memberRelationInput = document.getElementById('newMemberRelation');
+
+  if (groupTypeFamilyRadio && memberRelationInput) {
+    groupTypeFamilyRadio.addEventListener('change', () => {
+      if (groupTypeFamilyRadio.checked) memberRelationInput.placeholder = 'مثلاً: الوالد، الوالدة، الأخت، الابن';
+    });
+  }
+  if (groupTypeFriendsRadio && memberRelationInput) {
+    groupTypeFriendsRadio.addEventListener('change', () => {
+      if (groupTypeFriendsRadio.checked) memberRelationInput.placeholder = 'مثلاً: صديق الطفولة، زميل العمل، رفيق المسجد';
+    });
+  }
+
   if (addMemberForm) {
     addMemberForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = document.getElementById('newMemberName').value.trim();
-      const phone = document.getElementById('newMemberPhone').value.trim();
-      const planId = document.getElementById('newMemberPlan').value;
-      const relation = document.getElementById('newMemberRelation').value.trim();
+      const name = document.getElementById('newMemberName')?.value.trim();
+      const phone = document.getElementById('newMemberPhone')?.value.trim();
+      const planId = document.getElementById('newMemberPlan')?.value || 'safa';
+      const relation = document.getElementById('newMemberRelation')?.value.trim();
+      const groupType = document.querySelector('input[name="newMemberGroupType"]:checked')?.value || 'family';
+      const startPage = Math.max(1, parseInt(document.getElementById('newMemberPage')?.value, 10) || 1);
 
       if (!name) return;
 
-      window.QuraniWirdEngine.addUser({
+      window.QuraniWirdEngine.addContact({
         name,
         phone,
         planId,
         relation,
-        currentPage: 1
+        groupType,
+        currentPage: startPage
       });
 
-      bootstrap.Modal.getInstance(document.getElementById('addMemberModal')).hide();
+      const modalInstance = bootstrap.Modal.getInstance(document.getElementById('addMemberModal'));
+      if (modalInstance) modalInstance.hide();
       addMemberForm.reset();
+      if (groupTypeFamilyRadio) groupTypeFamilyRadio.checked = true;
+      if (memberRelationInput) memberRelationInput.placeholder = 'مثلاً: الوالد، الأخت، صديق العمل';
+
       updateDashboardUI();
       renderFamilyMembers();
-      showToast('مشترك جديد 🌸', `تمت إضافة ${name} بنجاح إلى قائمة الورد المبارك.`);
+      updateWhatsAppRecipientDropdown();
+      const groupName = groupType === 'friends' ? 'مقرأة الأصدقاء 👥' : 'مقرأة الأهل 👨‍👩‍👧‍👦';
+      showToast('قارئ جديد في المقرأة 🌸', `تمت إضافة ${name} بنجاح إلى ${groupName}.`);
+    });
+  }
+
+  // نموذج إعدادات حساب المالك
+  const ownerSettingsForm = document.getElementById('ownerSettingsForm');
+  const ownerSettingsPlan = document.getElementById('ownerSettingsPlan');
+  const ownerSettingsCustomPagesBox = document.getElementById('ownerSettingsCustomPagesBox');
+
+  if (ownerSettingsPlan && ownerSettingsCustomPagesBox) {
+    ownerSettingsPlan.addEventListener('change', () => {
+      ownerSettingsCustomPagesBox.classList.toggle('d-none', ownerSettingsPlan.value !== 'custom');
+    });
+  }
+
+  if (ownerSettingsForm) {
+    ownerSettingsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('ownerSettingsName')?.value.trim();
+      const phone = document.getElementById('ownerSettingsPhone')?.value.trim();
+      const planId = document.getElementById('ownerSettingsPlan')?.value;
+      const customPages = document.getElementById('ownerSettingsCustomPages')?.value;
+      const currentPage = document.getElementById('ownerSettingsPage')?.value;
+
+      if (!name) return;
+
+      window.QuraniWirdEngine.updateOwner({
+        name,
+        phone,
+        planId,
+        customPagesPerDay: customPages ? parseInt(customPages, 10) : undefined,
+        currentPage: currentPage ? parseInt(currentPage, 10) : undefined
+      });
+
+      const modalInstance = bootstrap.Modal.getInstance(document.getElementById('ownerSettingsModal'));
+      if (modalInstance) modalInstance.hide();
+
+      updateDashboardUI();
+      renderPlans();
+      updateWhatsAppRecipientDropdown();
+      showToast('تم حفظ إعدادات حساب المالك بنجاح ✨', `مرحباً بك يا ${name}. نسأل الله لك التوفيق والبركة.`);
     });
   }
 
@@ -1186,13 +1889,28 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFamilyMembers();
   renderPlans();
 
-  // ملء قائمة مستلمي الواتساب
-  if (elements.whatsappRecipientSelect && window.QuraniWirdEngine) {
-    elements.whatsappRecipientSelect.innerHTML = window.QuraniWirdEngine.getAllUsers().map(u => `
-      <option value="${u.id}">${u.name} (${u.relation || 'مشترك'} - ${u.phone || 'بدون هاتف'})</option>
-    `).join('');
+  // ملء قائمة مستلمي الواتساب مصنفة
+  updateWhatsAppRecipientDropdown();
+  updateWhatsAppPreview();
+
+  // مستمع تحديث المستخدمين
+  window.addEventListener('qurani:users_updated', () => {
+    updateDashboardUI();
+    renderFamilyMembers();
+    updateWhatsAppRecipientDropdown();
+  });
+
+  window.addEventListener('qurani:active_user_changed', () => {
+    updateDashboardUI();
+    renderFamilyMembers();
+    updateWhatsAppRecipientDropdown();
+  });
+
+  window.addEventListener('qurani:groups_updated', () => {
+    renderWhatsAppGroups();
+    updateWhatsAppRecipientDropdown();
     updateWhatsAppPreview();
-  }
+  });
 
   // فحص عنوان الرابط أو الوسم لفتح قسم الوقف مباشرة إن طلب
   if (window.location.hash === '#section-waqf' || window.location.search.includes('tab=waqf') || window.location.pathname.includes('/waqf')) {

@@ -152,7 +152,8 @@ app.post('/api/waqf', (req, res) => {
     prayerText: (prayerText && prayerText.trim()) || 'رحمه الله تعالى',
     reciterId: reciterId || 'ar.alafasy',
     reciterName: reciterName || 'الشيخ مشاري راشد العفاسي',
-    startSurah: parseInt(startSurah, 10) || 1,
+    startSurah: 1, // الوقف دائماً للقرآن الكريم كاملاً بدءاً من الفاتحة
+    scope: 'full_quran',
     country: country || 'السعودية',
     creatorName: (creatorName && creatorName.trim()) || 'فاعل خير',
     phone: phone || '',

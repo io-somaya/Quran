@@ -1,46 +1,91 @@
 /**
+ * ==============================================================================
  * تهيئة خطوط المصحف الشريف والزخارف القرآنية — «قرءاني»
- * Quranic Typography & Calligraphic Glyphs Setup
+ * Quranic Typography, Calligraphic Ligatures & Authentic Glyphs Setup
+ * ==============================================================================
  */
 
 @import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=Scheherazade+New:wght@400;600;700&display=swap');
 
-/* خصائص عرض النص القرآني بأعلى درجات التشكيل الدقيق */
+/* خصائص عرض النص القرآني بأعلى درجات التشكيل الدقيق والوضوح البصري الفاخر */
 .quran-text,
 .font-mushaf {
-  font-family: 'Amiri Quran', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
-  font-feature-settings: "cv01" on, "cv02" on, "cv03" on, "ss01" on;
-  -webkit-font-feature-settings: "cv01" on, "cv02" on, "cv03" on, "ss01" on;
+  font-family: 'Amiri Quran', 'Scheherazade New', 'Amiri', 'Traditional Arabic', serif;
+  font-feature-settings: "cv01" on, "cv02" on, "cv03" on, "ss01" on, "calt" on, "liga" on;
+  -webkit-font-feature-settings: "cv01" on, "cv02" on, "cv03" on, "ss01" on, "calt" on, "liga" on;
   text-rendering: optimizeLegibility;
   font-display: swap;
   direction: rtl;
+  letter-spacing: normal !important;
+  line-height: 2.85;
 }
 
-/* علامات الوقف القرآنية (ج، صلي، قلي، لا، مـ، ∴) */
+/* عناوين السور الكريمة بالخط القرآني الأصيل */
+.font-quran-title {
+  font-family: 'Amiri Quran', 'Scheherazade New', 'Amiri', serif;
+  font-weight: 700;
+  text-rendering: optimizeLegibility;
+  font-display: swap;
+  letter-spacing: normal !important;
+}
+
+/* نصوص التفسير والتدبر للآيات */
+.quran-verse-quote {
+  font-family: 'Amiri Quran', 'Scheherazade New', 'Amiri', serif;
+  font-size: 1.35rem;
+  line-height: 2.1;
+  color: var(--qur-emerald, #063c2e);
+  font-weight: 700;
+  display: block;
+  letter-spacing: normal !important;
+}
+
+/* علامات الوقف القرآنية المعتمدة في مصحف المدينة (ج، صلي، قلي، لا، مـ، ∴) */
 .quran-waqf-mark {
   font-family: 'Amiri Quran', serif;
-  font-size: 0.85em;
-  color: var(--qur-gold-dark, #9f7d23);
-  margin: 0 0.25rem;
+  font-size: 0.88em;
+  color: var(--qur-gold, #c49a45);
+  margin: 0 0.3rem;
   vertical-align: super;
   user-select: none;
+  font-weight: 700;
 }
 
 /* رموز الأحزاب والأرباع وأرقام الأجزاء */
 .hizb-rub-symbol {
   font-family: 'Amiri Quran', serif;
-  color: var(--qur-gold-primary, #d4af37);
+  color: var(--qur-gold, #c49a45);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin: 0 0.5rem;
   font-size: 1.25em;
+  user-select: none;
 }
 
 /* علامة السجدة القرآنية ۩ */
 .sajdah-mark {
-  color: var(--qur-gold-primary, #d4af37);
+  color: var(--qur-gold, #c49a45);
   font-weight: bold;
-  padding: 0 0.3rem;
-  border-bottom: 2px solid var(--qur-gold-primary, #d4af37);
+  padding: 0 0.35rem;
+  border-bottom: 2px solid var(--qur-gold, #c49a45);
+  display: inline-block;
+  user-select: none;
+}
+
+/* زينة إطار السورة والأجنحة النباتية (Arabesque Cartouche Wings) */
+.surah-cartouche-ornament {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.surah-cartouche-ornament::before,
+.surah-cartouche-ornament::after {
+  content: '❖';
+  font-size: 0.8em;
+  color: var(--qur-gold, #c49a45);
+  opacity: 0.85;
 }

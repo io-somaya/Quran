@@ -144,7 +144,9 @@
       const soundwaveBox = document.getElementById('audioSoundwaveBox');
 
       if (playerBar) {
-        playerBar.classList.toggle('d-none', !this.audio.src);
+        const isVisible = Boolean(this.audio.src);
+        playerBar.classList.toggle('d-none', !isVisible);
+        document.body.classList.toggle('audio-dock-active', isVisible);
       }
 
       if (soundwaveBox) {

@@ -65,10 +65,16 @@
    * استخراج الرابط المباشر للتطبيق
    */
   function getAppBaseUrl() {
-    if (typeof window !== 'undefined' && window.location) {
-      return window.location.origin + window.location.pathname;
-    }
-    return 'https://qurani.app';
+    return 'https://qurani-production.up.railway.app/';
+  }
+
+  /**
+   * تحويل الأرقام إلى الأرقام العربية المشرقية
+   * @param {number|string} num 
+   */
+  function toArabicDigits(num) {
+    if (num === null || num === undefined) return '';
+    return String(num).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
   }
 
   // =========================================================================
@@ -76,35 +82,168 @@
   // =========================================================================
 
   /**
-   * 1. قالب تذكير الورد القرآني اليومي
+   * 1. قالب إرسال الورد القرآني كاملاً مكتوباً برسم المصحف مع الدعاء والرابط
+   * @param {object} user كائن المشترك/القارئ
+   * @param {object} optionalWird حسابات الورد (اختياري)
+   * @returns {Promise<string>}
+   */
+  async function createFullWirdTextMessage(user, optionalWird = null) {
+    const person = user || (QuraniWirdEngine ? (QuraniWirdEngine.getActiveUser() || QuraniWirdEngine.getOwner()) : null);
+    if (!person) return '';
+
+    let wird = optionalWird;
+    if (!wird && QuraniWirdEngine && typeof QuraniWirdEngine.calculateTodayWird === 'function') {
+      wird = QuraniWirdEngine.calculateTodayWird(person);
+    }
+
+    const startPage = Math.max(1, Math.min(604, wird ? wird.startPage : (person.currentPage || 1)));
+    const endPage = Math.max(startPage, Math.min(604, wird ? wird.endPage : (startPage + (person.customPagesPerDay || 2) - 1)));
+    const planName = wird && wird.plan ? wird.plan.name : 'الورد اليومي';
+    const surahs = wird && wird.surahsNames ? wird.surahsNames : 'القرآن الكريم';
+    const juzName = wird ? wird.juzName : 'الجزء الأول';
+    const pagesCount = endPage - startPage + 1;
+
+    const baseUrl = getAppBaseUrl();
+    const readingLink = `${baseUrl}#page=${startPage}&user=${encodeURIComponent(person.id || '')}`;
+
+    const bismillahUthmani = 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ';
+    const qData = QuraniData || (typeof window !== 'undefined' ? window.QuraniData : null);
+
+    // عدد الصفحات المراد استعراض نصها بالكامل (حتى 4 صفحات كاملة لضمان كفاءة واتساب)
+    const maxPagesToRender = 4;
+    const pagesToFetchCount = Math.min(pagesCount, maxPagesToRender);
+    const pageTexts = [];
+
+    for (let i = 0; i < pagesToFetchCount; i++) {
+      const p = startPage + i;
+      let ayahs = [];
+      if (qData && typeof qData.fetchPageAyahs === 'function') {
+        try {
+          ayahs = await qData.fetchPageAyahs(p);
+        } catch (e) {
+          console.warn(`فشل جلب آيات الصفحة ${p}`, e);
+        }
+      }
+
+      if (!ayahs || ayahs.length === 0) {
+        const info = (qData && typeof qData.getPageInfo === 'function') ? qData.getPageInfo(p) : null;
+        const sName = info && info.primarySurah ? info.primarySurah.name : 'القرآن الكريم';
+        pageTexts.push([
+          `📄 *[صفحة ${p}]*`,
+          `📜 *سورة ${sName}*`,
+          `بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ`,
+          `﴿ صفحة مباركة من كتاب الله العزيز ﴾`
+        ].join('\n'));
+        continue;
+      }
+
+      const pageLines = [];
+      pageLines.push(`📄 *[الصفحة ${p}]*`);
+
+      let currentSurahNum = null;
+      let runningAyahs = [];
+
+      ayahs.forEach((a) => {
+        let txt = (a.text || '').replace(/^\uFEFF/, '').trim();
+        const surahNumber = a.surahNumber || (a.surah ? a.surah.number : 1);
+        let surahName = a.surahName || (a.surah ? a.surah.name : '');
+        surahName = surahName.replace(/^سُورَةُ\s*/, '').replace(/^سورة\s*/, '').trim();
+
+        if (surahNumber !== currentSurahNum) {
+          if (runningAyahs.length > 0) {
+            pageLines.push(runningAyahs.join(' '));
+            runningAyahs = [];
+          }
+          currentSurahNum = surahNumber;
+          pageLines.push(`\n📜 *سورة ${surahName}*`);
+
+          // تنسيق البسملة في بداية السور ما عدا الفاتحة والتوبة
+          if (surahNumber !== 1 && surahNumber !== 9) {
+            if (txt.startsWith(bismillahUthmani)) {
+              pageLines.push(`بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n`);
+              txt = txt.replace(bismillahUthmani, '').trim();
+            } else if (a.numberInSurah === 1) {
+              pageLines.push(`بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n`);
+            }
+          }
+        }
+
+        const ayahNumArabic = toArabicDigits(a.numberInSurah);
+        runningAyahs.push(`﴿ ${txt} ﴾ [${ayahNumArabic}]`);
+      });
+
+      if (runningAyahs.length > 0) {
+        pageLines.push(runningAyahs.join(' '));
+      }
+
+      pageTexts.push(pageLines.join('\n'));
+    }
+
+    if (pagesCount > maxPagesToRender) {
+      pageTexts.push(`\n... وتستكمل بقية صفحات الورد (من صفحة ${startPage + maxPagesToRender} إلى صفحة ${endPage}) عبر رابط المصحف المباشر أدناه.`);
+    }
+
+    const messageLines = [
+      `🌸 *السلام عليكم ورحمة الله وبركاته* 🌸`,
+      ``,
+      `📖 *ورد اليوم المبارك من القرآن الكريم (مكتوباً كاملاً)*`,
+      `━━━━━━━━━━━━━━━━━━`,
+      `🌿 *الخطة:* ${planName}`,
+      `📄 *الصفحات:* من صفحة *${startPage}* إلى صفحة *${endPage}* (${pagesCount} ${pagesCount === 1 ? 'صفحة' : 'صفحات'})`,
+      `📜 *السور الكريمة:* ${surahs}`,
+      `💎 *الموقع:* ${juzName}`,
+      `━━━━━━━━━━━━━━━━━━`,
+      ``,
+      `✨ *نص الآيات الكريمة المباركة:*`,
+      ``,
+      pageTexts.join('\n\n━━━━━━━━━━━━━━━━━━\n\n'),
+      ``,
+      `━━━━━━━━━━━━━━━━━━`,
+      `🔗 *رابط القراءة والتفسير الميسر والاستماع الصوتي:*`,
+      `${readingLink}`,
+      ``,
+      `🤲 *دعاء تلاوة القرآن والورد:*`,
+      `«اللَّهُمَّ اجْعَلِ القُرْآنَ العَظِيمَ رَبِيعَ قُلُوبِنَا، وَنُورَ صُدُورِنَا، وَجَلَاءَ أَحْزَانِنَا، وَذَهَابَ هُمُومِنَا وَغُمُومِنَا».`,
+      `«اللَّهُمَّ ذَكِّرْنَا مِنْهُ مَا نُسِّينَا، وَعَلِّمْنَا مِنْهُ مَا جَهِلْنَا، وَارْزُقْنَا تِلَاوَتَهُ آنَاءَ اللَّيْلِ وَأَطْرَافَ النَّهَارِ عَلَى الوَجْهِ الَّذِي يُرْضِيكَ عَنَّا».`,
+      ``,
+      `✨ قال رسول الله ﷺ: «اقْرَؤُوا القُرْآنَ فإنَّه يَأْتي يَومَ القِيامَةِ شَفِيعاً لأَصْحابِهِ».`,
+      `تقبل الله طاعتكم وجعله نوراً وشفيعاً لكم ولوالديكم في الدارين 🤲🤍`
+    ];
+
+    return messageLines.join('\n');
+  }
+
+  /**
+   * 2. قالب تذكير الورد القرآني اليومي (مختصر ومحفز مع رابط الموقع)
    * @param {object} user كائن المشترك
    * @param {object} optionalWird حسابات الورد (اختياري)
    */
   function createDailyWirdReminder(user, optionalWird = null) {
-    if (!user) return '';
+    const person = user || (QuraniWirdEngine ? (QuraniWirdEngine.getActiveUser() || QuraniWirdEngine.getOwner()) : null);
+    if (!person) return '';
 
     let wird = optionalWird;
     if (!wird && QuraniWirdEngine && typeof QuraniWirdEngine.calculateTodayWird === 'function') {
-      wird = QuraniWirdEngine.calculateTodayWird(user);
+      wird = QuraniWirdEngine.calculateTodayWird(person);
     }
 
-    const startPage = wird ? wird.startPage : (user.currentPage || 1);
-    const endPage = wird ? wird.endPage : (startPage + (user.customPagesPerDay || 2) - 1);
+    const startPage = wird ? wird.startPage : (person.currentPage || 1);
+    const endPage = wird ? wird.endPage : (startPage + (person.customPagesPerDay || 2) - 1);
     const planName = wird && wird.plan ? wird.plan.name : 'الورد اليومي';
     const surahs = wird && wird.surahsNames ? wird.surahsNames : 'القرآن الكريم';
     const juzName = wird ? wird.juzName : 'الجزء الأول';
     const pagesCount = wird ? wird.pagesCount : (endPage - startPage + 1);
 
     const baseUrl = getAppBaseUrl();
-    const readingLink = `${baseUrl}#page=${startPage}&user=${encodeURIComponent(user.id)}`;
+    const readingLink = `${baseUrl}#page=${startPage}&user=${encodeURIComponent(person.id || '')}`;
 
     return [
-      `🌸 *السلام عليكم ورحمة الله وبركاته يا ${user.name}* 🌸`,
+      `🌸 *السلام عليكم ورحمة الله وبركاته* 🌸`,
       ``,
-      `📖 *تذكير وردك القرآني المبارك لليوم*`,
+      `🔔 *تذكير الورد القرآني المبارك لليوم*`,
       `━━━━━━━━━━━━━━━━━━`,
       `🌿 *الخطة:* ${planName}`,
-      `📄 *المقدار:* من صفحة *${startPage}* إلى صفحة *${endPage}* (${pagesCount} صفحات)`,
+      `📄 *المقدار:* من صفحة *${startPage}* إلى صفحة *${endPage}* (${pagesCount} ${pagesCount === 1 ? 'صفحة' : 'صفحات'})`,
       `📜 *السور المشمولة:* ${surahs}`,
       `💎 *الموقع:* ${juzName}`,
       `━━━━━━━━━━━━━━━━━━`,
@@ -113,7 +252,7 @@
       `${readingLink}`,
       ``,
       `✨ قال رسول الله ﷺ: «اقْرَؤُوا القُرْآنَ فإنَّه يَأْتي يَومَ القِيامَةِ شَفِيعاً لأَصْحابِهِ».`,
-      `نسأل الله أن يجعله نوراً في قلبك وشفيعاً لك يوم القيامة 🤲🤍`
+      `نسأل الله أن يجعله نوراً في قلوبنا وشفيعاً لنا يوم القيامة 🤲🤍`
     ].join('\n');
   }
 
@@ -232,6 +371,117 @@
     ].join('\n');
   }
 
+  /**
+   * 6. قالب مشاركة ورد المالك اليومي مع الأهل والأصدقاء أو في الحالة (Owner Wird Share)
+   * @param {object} owner كائن المالك
+   * @param {object} optionalWird حسابات الورد
+   */
+  function createOwnerWirdShareMessage(owner, optionalWird = null) {
+    const person = owner || (QuraniWirdEngine ? QuraniWirdEngine.getOwner() : null);
+    if (!person) return '';
+
+    let wird = optionalWird;
+    if (!wird && QuraniWirdEngine && typeof QuraniWirdEngine.calculateTodayWird === 'function') {
+      wird = QuraniWirdEngine.calculateTodayWird(person);
+    }
+
+    const name = person.name || 'أخوكم';
+    const startPage = wird ? wird.startPage : (person.currentPage || 1);
+    const endPage = wird ? wird.endPage : (startPage + (person.customPagesPerDay || 2) - 1);
+    const surahs = wird && wird.surahsNames ? wird.surahsNames : 'القرآن الكريم';
+    const juzName = wird ? wird.juzName : 'الجزء الأول';
+    const streak = person.streak || 1;
+    const isCompleted = wird ? wird.isCompletedToday : person.completedToday;
+    const progress = wird ? wird.progressPercentage : (((person.currentPage || 1) / 604) * 100).toFixed(1);
+
+    const baseUrl = getAppBaseUrl();
+    const readingLink = `${baseUrl}#page=${startPage}`;
+
+    return [
+      `🌿 *السلام عليكم ورحمة الله وبركاته* 🌸`,
+      ``,
+      isCompleted 
+        ? `📖 *بحمد الله وفضله أتممت قراءة وردي القرآني لليوم:*`
+        : `📖 *شاركوني البركة — وردي القرآني المستهدف لهذا اليوم:*`,
+      `━━━━━━━━━━━━━━━━━━`,
+      `📄 *الصفحات:* من صفحة *${startPage}* إلى صفحة *${endPage}*`,
+      `📜 *السور الكريمة:* ${surahs}`,
+      `💎 *الموقع:* ${juzName}`,
+      `📊 *إنجاز الختمة:* ${progress}%`,
+      `🔥 *أيام الالتزام المتتالي:* ${streak} يوماً`,
+      `━━━━━━━━━━━━━━━━━━`,
+      ``,
+      `✨ أدعوكم لمشاركتي صحبة كتاب الله وتلاوة وردكم اليومي:`,
+      `🔗 *رابط المصحف المباشر:* ${readingLink}`,
+      ``,
+      `🤲 «اللَّهُمَّ اجْعَلِ القُرْآنَ العَظِيمَ رَبِيعَ قُلُوبِنَا وَنُورَ صُدُورِنَا».`,
+      `أخوكم المحب: *${name}* 🤍`
+    ].join('\n');
+  }
+
+  /**
+   * 7. قالب ملخص الورد الجماعي لقروب الأهل أو الأصدقاء أو أي قروب مخصص (Group Summary for WhatsApp)
+   * @param {string} groupType 'family' | 'friends' | 'all'
+   * @param {Array} contacts مصفوفة أفراد المقرأة
+   * @param {string} customTitle اسم القروب المخصص
+   */
+  function createGroupSummaryMessage(groupType = 'family', contacts = null, customTitle = '') {
+    let list = contacts;
+    if (!list && QuraniWirdEngine && typeof QuraniWirdEngine.getContacts === 'function') {
+      list = (groupType === 'all')
+        ? QuraniWirdEngine.getContacts('all')
+        : QuraniWirdEngine.getContacts(groupType);
+    }
+
+    const isFamily = (groupType === 'family');
+    const defaultTitle = isFamily 
+      ? 'مقرأة الأهل المباركة 👨‍👩‍👧‍👦' 
+      : (groupType === 'friends' ? 'مقرأة الأصدقاء الكرام 👥' : 'مقرأتنا القرآنية المباركة 📖');
+    const groupTitle = customTitle || defaultTitle;
+    const todayStr = (new Date()).toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const baseUrl = getAppBaseUrl();
+
+    const lines = [
+      `📖 *جدول الورد القرآني اليومي — ${groupTitle}* 🌸`,
+      `🗓️ *التاريخ:* ${todayStr}`,
+      `━━━━━━━━━━━━━━━━━━`,
+      ``
+    ];
+
+    if (list && list.length > 0) {
+      list.forEach((m, idx) => {
+        let wird = null;
+        if (QuraniWirdEngine && typeof QuraniWirdEngine.calculateTodayWird === 'function') {
+          wird = QuraniWirdEngine.calculateTodayWird(m);
+        }
+        const startP = wird ? wird.startPage : (m.currentPage || 1);
+        const endP = wird ? wird.endPage : (startP + (m.customPagesPerDay || 2) - 1);
+        const statusIcon = m.completedToday ? '✅ (أتم)' : '⏳ (بانتظار القراءة)';
+        const surahName = wird && wird.surahsNames ? `[سورة ${wird.surahsNames}]` : '';
+
+        lines.push(`${idx + 1}. *${m.name}* (${m.relation || ''}): ص ${startP}-${endP} ${surahName} ${statusIcon}`);
+      });
+    } else {
+      // إذا لم يكن هناك قراء بعد، نعرض ورد الحساب الشخصي
+      const owner = QuraniWirdEngine ? QuraniWirdEngine.getOwner() : null;
+      if (owner) {
+        let wird = QuraniWirdEngine ? QuraniWirdEngine.calculateTodayWird(owner) : null;
+        const startP = wird ? wird.startPage : (owner.currentPage || 1);
+        const endP = wird ? wird.endPage : (startP + (owner.customPagesPerDay || 2) - 1);
+        const surahName = wird && wird.surahsNames ? `[سورة ${wird.surahsNames}]` : '';
+        lines.push(`1. *${owner.name}*: ص ${startP}-${endP} ${surahName} ${owner.completedToday ? '✅ (أتم)' : '⏳'}`);
+      }
+    }
+
+    lines.push(``);
+    lines.push(`━━━━━━━━━━━━━━━━━━`);
+    lines.push(`✨ قال رسول الله ﷺ: «خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ».`);
+    lines.push(`🔗 *رابط الموقع المباشر لتلاوة الورد وتدبره:* https://qurani-production.up.railway.app/`);
+    lines.push(`نسأل الله أن يبارك في جمعنا وأن يوفقنا لختم كتابه وتدبره 🤲🤍`);
+
+    return lines.join('\n');
+  }
+
   // =========================================================================
   // دوال التفاعل (Clipboard & Browser Share & Tab Opener)
   // =========================================================================
@@ -311,16 +561,51 @@
     return { method: 'whatsapp', success: true };
   }
 
+  /**
+   * فتح رابط القروب المباشر مع نسخ نص الرسالة للحافظة
+   * @param {string} groupLink رابط القروب مثل https://chat.whatsapp.com/xxx
+   * @param {string} message نص الرسالة المراد نسخه
+   * @returns {Promise<{success: boolean, copied: boolean, opened: boolean}>}
+   */
+  async function openGroupWithClipboard(groupLink, message) {
+    let copied = false;
+    if (message) {
+      copied = await copyToClipboard(message);
+    }
+    let opened = false;
+    if (groupLink && typeof window !== 'undefined') {
+      let targetUrl = groupLink.trim();
+      if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
+        targetUrl = 'https://' + targetUrl;
+      }
+      window.open(targetUrl, '_blank', 'noopener,noreferrer');
+      opened = true;
+    }
+    return { success: true, copied, opened };
+  }
+
   return {
     cleanPhoneNumber,
     generateWhatsAppLink,
     createDailyWirdReminder,
+    generateDailyWirdMessage: createDailyWirdReminder,
+    createFullWirdTextMessage,
+    generateFullWirdTextMessage: createFullWirdTextMessage,
     createWirdCompletedCongratulations,
+    generateCongratsMessage: createWirdCompletedCongratulations,
     createFridayKahfReminder,
+    generateFridayKahfMessage: createFridayKahfReminder,
     createAdhkarReminder,
+    generateAdhkarReminderMessage: createAdhkarReminder,
     createCustomEncouragementMessage,
+    generateCustomMessage: createCustomEncouragementMessage,
+    createOwnerWirdShareMessage,
+    generateOwnerShareMessage: createOwnerWirdShareMessage,
+    createGroupSummaryMessage,
+    generateGroupSummaryMessage: createGroupSummaryMessage,
     copyToClipboard,
     openWhatsApp,
+    openGroupWithClipboard,
     shareNativeOrWhatsApp
   };
 }));

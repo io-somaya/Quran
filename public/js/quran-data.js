@@ -472,29 +472,36 @@
     }];
   }
 
+  // كاش في الذاكرة لآيات الصفحات لتسريع العرض
+  const _pageAyahsCache = {};
+
   /**
    * جلب آيات صفحة كاملة برسم المصحف العثماني (1 - 604)
    * @param {number} pageNumber 
    */
   async function fetchPageAyahs(pageNumber) {
     const p = Math.max(1, Math.min(604, parseInt(pageNumber, 10) || 1));
+    if (_pageAyahsCache[p]) {
+      return _pageAyahsCache[p];
+    }
     try {
-      const res = await fetch(`https://api.alquran.cloud/v1/page/${p}/editions/quran-uthmani,ar.muyassar`);
+      const res = await fetch(`https://api.alquran.cloud/v1/page/${p}/quran-uthmani`);
       if (res.ok) {
         const json = await res.json();
-        if (json.code === 200 && json.data) {
-          const uthmani = json.data[0].ayahs;
-          const muyassar = json.data[1] ? json.data[1].ayahs : [];
-          return uthmani.map((ayah, i) => ({
-            surahNumber: ayah.surah.number,
-            surahName: ayah.surah.name,
+        if (json.code === 200 && json.data && Array.isArray(json.data.ayahs)) {
+          const uthmani = json.data.ayahs;
+          const result = uthmani.map((ayah) => ({
+            surahNumber: ayah.surah ? ayah.surah.number : 1,
+            surahName: ayah.surah ? ayah.surah.name : "",
             numberInSurah: ayah.numberInSurah,
             globalNumber: ayah.number,
             text: ayah.text,
             juz: ayah.juz,
-            page: ayah.page,
-            tafseer: muyassar[i] ? muyassar[i].text : ""
+            page: ayah.page || p,
+            tafseer: ""
           }));
+          _pageAyahsCache[p] = result;
+          return result;
         }
       }
     } catch (e) {
@@ -503,6 +510,18 @@
 
     // Fallback: تجميع من السور الواقعة في هذه الصفحة
     const info = getPageInfo(p);
+    if (p === 1 && SAMPLE_AYAHS[1]) {
+      return SAMPLE_AYAHS[1].map((a, idx) => ({
+        surahNumber: 1,
+        surahName: "سُورَةُ الفَاتِحَةِ",
+        numberInSurah: a.number || (idx + 1),
+        globalNumber: idx + 1,
+        text: a.text,
+        juz: 1,
+        page: 1,
+        tafseer: a.tafseer || ""
+      }));
+    }
     return [{
       surahNumber: info.primarySurah ? info.primarySurah.id : 1,
       surahName: info.primarySurah ? info.primarySurah.name : "القرآن الكريم",

@@ -3,33 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="metaPageTitle">وقف وصدقة جارية — صفحة قرآنية | الأنس بالقرآن</title>
-  <meta name="description" id="metaDescription" content="استمع للقرآن الكريم — صفحة قرآنية لـ وقف وصدقة جارية على مدار الساعة">
+  <title id="metaPageTitle">وقف وصدقة جارية — القرآن الكريم كاملاً (114 سورة) | الأنس بالقرآن</title>
+  <meta name="description" id="metaDescription" content="استمع للقرآن الكريم كاملاً (114 سورة بالتتابع دون توقف) — صفحة قرآنية لـ وقف وصدقة جارية على مدار الساعة">
   
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
   
-  <!-- Google Fonts: Alexandria & Amiri -->
+  <!-- Google Fonts: Alexandria, Cairo, Amiri, Amiri Quran, Scheherazade New -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800;900&family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800;900&family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700;800;900&family=Scheherazade+New:wght@400;600;700&display=swap" rel="stylesheet">
   
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   
   <style>
-    :root {
-      --waqf-cream-bg: #F5EFE0;
-      --waqf-cream-light: #FAF6ED;
-      --waqf-cream-dark: #E6DCB8;
-      --waqf-primary: #064E3B;
-      --waqf-primary-dark: #032B21;
-      --waqf-primary-light: #0D6B52;
-      --waqf-gold: #B48325;
-      --waqf-gold-light: #D4AF37;
-      --waqf-gray: #6B7280;
-      --font-main: 'Alexandria', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-quran: 'Amiri Quran', 'Amiri', serif;
+    :root,
+    [data-theme="light"] {
+      --waqf-cream-bg: #f8faf7;
+      --waqf-cream-light: #ffffff;
+      --waqf-cream-dark: #e8eee9;
+      --waqf-primary: #063c2e;
+      --waqf-primary-dark: #03231b;
+      --waqf-primary-light: #0d5c46;
+      --waqf-gold: #c49a45;
+      --waqf-gold-light: #e1bd6d;
+      --waqf-gray: #536471;
+      --waqf-card-bg: #ffffff;
+      --waqf-card-border: rgba(196, 154, 69, 0.35);
+      --waqf-text: #1e293b;
+      --font-main: 'Alexandria', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-heading: 'Cairo', 'Alexandria', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-quran: 'Amiri Quran', 'Scheherazade New', 'Amiri', 'Traditional Arabic', serif;
+    }
+
+    [data-theme="parchment"] {
+      --waqf-cream-bg: #faf5ea;
+      --waqf-cream-light: #fffdf8;
+      --waqf-cream-dark: #e6dcb8;
+      --waqf-primary: #164332;
+      --waqf-primary-dark: #0b2b20;
+      --waqf-primary-light: #1f5c45;
+      --waqf-gold: #b08830;
+      --waqf-gold-light: #d4ab4b;
+      --waqf-gray: #6b583f;
+      --waqf-card-bg: #fffdf8;
+      --waqf-card-border: rgba(176, 136, 48, 0.4);
+      --waqf-text: #271d10;
+    }
+
+    [data-theme="dark"] {
+      --waqf-cream-bg: #050e0b;
+      --waqf-cream-light: #0b1e17;
+      --waqf-cream-dark: #133227;
+      --waqf-primary: #22c55e;
+      --waqf-primary-dark: #15803d;
+      --waqf-primary-light: #4ade80;
+      --waqf-gold: #dfba73;
+      --waqf-gold-light: #eed59b;
+      --waqf-gray: #8a9ba8;
+      --waqf-card-bg: #0b1e17;
+      --waqf-card-border: rgba(223, 186, 115, 0.35);
+      --waqf-text: #e2e8f0;
     }
 
     * {
@@ -41,7 +76,14 @@
     body {
       font-family: var(--font-main);
       background-color: var(--waqf-cream-bg);
-      color: #1F2937;
+      color: var(--waqf-text);
+      font-size: 16px;
+      line-height: 1.75;
+      font-weight: 400;
+      letter-spacing: normal;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -51,6 +93,7 @@
       position: relative;
       overflow-x: hidden;
       direction: rtl;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     /* خلفية النقش الإسلامي الهادئة */
@@ -68,8 +111,9 @@
       position: relative;
       z-index: 10;
       width: 100%;
-      max-width: 520px;
+      max-width: 540px;
       margin: 0 auto;
+      padding: clamp(12px, 3vw, 24px) 12px;
       animation: fadeIn 0.5s ease-out;
     }
 
@@ -79,19 +123,31 @@
     }
 
     .waqf-card {
-      background: #FFFFFF;
+      background: var(--waqf-card-bg);
       border-radius: 28px;
       overflow: hidden;
-      box-shadow: 0 20px 45px -10px rgba(6, 78, 59, 0.12), 0 8px 20px -5px rgba(0, 0, 0, 0.04);
-      border: 1px solid rgba(230, 220, 184, 0.6);
+      box-shadow: 0 20px 45px -10px rgba(6, 60, 46, 0.15), 0 8px 20px -5px rgba(0, 0, 0, 0.04);
+      border: 1.5px solid var(--waqf-card-border);
+      transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    [data-theme="dark"] .waqf-card {
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.7), 0 0 20px rgba(34, 197, 94, 0.06);
     }
 
     /* رأس الكارت الملكي */
     .waqf-header-banner {
       background: linear-gradient(135deg, #064E3B 0%, #0A634B 100%);
-      padding: 24px 20px;
-      text-align: center;
+      padding: 18px 20px;
       position: relative;
+    }
+
+    .waqf-header-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .waqf-logo-wrapper {
@@ -100,34 +156,75 @@
       gap: 10px;
       text-decoration: none;
       color: #FFFFFF;
-      background: rgba(255, 255, 255, 0.08);
-      padding: 8px 18px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 7px 16px;
       border-radius: 9999px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       transition: all 0.2s ease;
     }
 
     .waqf-logo-wrapper:hover {
-      background: rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.18);
       transform: translateY(-1px);
     }
 
     .waqf-logo-icon {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       background: #FAF6ED;
       color: #064E3B;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 15px;
     }
 
     .waqf-logo-text {
+      font-family: var(--font-heading);
       font-weight: 800;
-      font-size: 15px;
+      font-size: 14px;
       letter-spacing: -0.2px;
+    }
+
+    /* محول أنماط المظهر الملكي في صفحة الوقف */
+    .waqf-theme-switch-group {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 9999px;
+      padding: 3px;
+      gap: 2px;
+      backdrop-filter: blur(8px);
+    }
+
+    .waqf-theme-btn {
+      font-family: var(--font-main);
+      background: transparent;
+      border: none;
+      border-radius: 9999px;
+      padding: 4px 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.8);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .waqf-theme-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .waqf-theme-btn.active {
+      background: #ffffff;
+      color: #064E3B;
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
     }
 
     /* تفاصيل اسم المتوفى والدعاء */
@@ -138,25 +235,90 @@
     }
 
     .waqf-name {
-      font-size: 26px;
+      font-family: var(--font-heading);
+      font-size: 28px;
       font-weight: 800;
       color: var(--waqf-primary);
-      line-height: 1.45;
+      line-height: 1.4;
       margin-bottom: 8px;
       letter-spacing: -0.3px;
     }
 
     @media (min-width: 640px) {
       .waqf-name {
-        font-size: 30px;
+        font-size: 32px;
       }
     }
 
     .waqf-prayer-badge {
       display: inline-block;
-      font-size: 16px;
-      color: #64748B;
+      font-family: var(--font-main);
+      font-size: 16.5px;
+      color: var(--waqf-gray);
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    /* شارة الوقف الفاخرة: القرآن الكريم كاملاً */
+    .waqf-scope-golden-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 9px 22px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.18) 0%, rgba(254, 243, 199, 0.8) 100%);
+      border: 1.5px solid var(--waqf-gold);
+      border-radius: 9999px;
+      color: #78350F;
+      font-weight: 800;
+      font-size: 14.5px;
+      box-shadow: 0 4px 15px rgba(180, 131, 37, 0.2);
+      animation: gentleGlow 3s ease-in-out infinite alternate;
+    }
+
+    [data-theme="dark"] .waqf-scope-golden-badge {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.22) 0%, rgba(20, 45, 34, 0.9) 100%);
+      color: #FDE047;
+      border-color: rgba(223, 186, 115, 0.6);
+    }
+
+    @keyframes gentleGlow {
+      0% { box-shadow: 0 4px 15px rgba(180, 131, 37, 0.2); }
+      100% { box-shadow: 0 8px 24px rgba(212, 175, 55, 0.45); }
+    }
+
+    .waqf-scope-hint {
+      margin-top: 6px;
+      font-size: 12.5px;
+      color: var(--waqf-gray);
       font-weight: 500;
+    }
+
+    .audio-surah-badge {
+      background: rgba(250, 246, 237, 0.22);
+      border: 1px solid rgba(250, 246, 237, 0.35);
+      padding: 2px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #FDE047;
+      letter-spacing: 0.5px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10B981;
+      display: inline-block;
+      box-shadow: 0 0 8px #10B981;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.85); opacity: 0.7; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.85); opacity: 0.7; }
     }
 
     /* مشغل الصوت القرآني الفاخر */
@@ -346,22 +508,25 @@
 
     .waqf-ayah-text {
       font-family: var(--font-quran);
-      font-size: 19px;
-      line-height: 1.8;
+      font-size: 22px;
+      line-height: 2.15;
       color: var(--waqf-primary);
-      margin-bottom: 12px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      text-rendering: optimizeLegibility;
     }
 
     .waqf-visits-badge {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      background: rgba(230, 220, 184, 0.45);
+      background: rgba(230, 220, 184, 0.5);
       color: var(--waqf-primary);
-      padding: 6px 18px;
+      padding: 7px 20px;
       border-radius: 9999px;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: var(--font-main);
     }
 
     /* قسم المشاركة ونشر الأجر */
@@ -372,13 +537,15 @@
     }
 
     .share-title {
-      font-size: 13px;
-      color: #94A3B8;
+      font-family: var(--font-main);
+      font-size: 13.5px;
+      color: var(--waqf-gray);
       margin-bottom: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
+      font-weight: 600;
     }
 
     .share-buttons-row {
@@ -426,7 +593,8 @@
       background-color: #2AABEE;
       color: #FFFFFF;
       text-decoration: none;
-      font-size: 12px;
+      font-family: var(--font-main);
+      font-size: 12.5px;
       font-weight: 700;
       box-shadow: 0 4px 10px rgba(42, 171, 238, 0.25);
       transition: all 0.2s ease;
@@ -444,13 +612,14 @@
       justify-content: center;
       gap: 8px;
       width: 100%;
-      background: #FFFFFF;
+      background: var(--waqf-card-bg);
       color: var(--waqf-primary);
-      border: 1px solid rgba(6, 78, 59, 0.2);
+      border: 1.5px solid var(--waqf-card-border);
       padding: 16px 20px;
       border-radius: 20px;
-      font-weight: 700;
-      font-size: 15px;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 16px;
       text-decoration: none;
       margin-top: 18px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
@@ -458,10 +627,10 @@
     }
 
     .btn-create-waqf-cta:hover {
-      background: #FAF6ED;
+      background: var(--waqf-cream-dark);
       border-color: var(--waqf-primary);
       transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(6, 78, 59, 0.08);
+      box-shadow: 0 6px 20px rgba(6, 78, 59, 0.1);
     }
 
     /* أسهم التنقل بين صفحات الوقف */
@@ -476,8 +645,8 @@
       width: 44px;
       height: 44px;
       border-radius: 50%;
-      background: #FFFFFF;
-      border: 1px solid rgba(230, 220, 184, 0.8);
+      background: var(--waqf-card-bg);
+      border: 1px solid var(--waqf-card-border);
       color: var(--waqf-primary);
       display: flex;
       align-items: center;
@@ -489,7 +658,7 @@
     }
 
     .btn-nav-arrow:hover {
-      background: #FAF6ED;
+      background: var(--waqf-cream-dark);
       transform: scale(1.06);
     }
 
@@ -566,15 +735,33 @@
     }
 
     .modal-box {
-      background: #FFFFFF;
+      font-family: var(--font-main);
+      background: var(--waqf-card-bg);
+      color: var(--waqf-text);
+      border: 1.5px solid var(--waqf-card-border);
       border-radius: 24px;
       max-width: 480px;
       width: 100%;
       padding: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
       transform: scale(0.95);
       transition: transform 0.25s ease;
       direction: rtl;
+    }
+
+    .modal-box h3 {
+      font-family: var(--font-heading);
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--waqf-primary);
+    }
+
+    .modal-box input,
+    .modal-box select,
+    .modal-box textarea {
+      background: var(--waqf-cream-light) !important;
+      color: var(--waqf-text) !important;
+      border: 1px solid var(--waqf-card-border) !important;
     }
 
     .modal-overlay.open .modal-box {
@@ -591,20 +778,47 @@
   <main class="waqf-card-container">
     <div class="waqf-card">
       
-      <!-- شعار المنصة والرأس -->
+      <!-- شعار المنصة والرأس ومحول الثيمات الفاخر -->
       <div class="waqf-header-banner">
-        <a href="/#section-waqf" class="waqf-logo-wrapper" title="العودة لمنصة الأنس بالقرآن">
-          <div class="waqf-logo-icon">
-            <i class="bi bi-book-half"></i>
+        <div class="waqf-header-top-row">
+          <a href="/#section-waqf" class="waqf-logo-wrapper" title="العودة لمنصة الأنس بالقرآن">
+            <div class="waqf-logo-icon">
+              <i class="bi bi-book-half"></i>
+            </div>
+            <span class="waqf-logo-text">الأُنْسُ بِالقُرْآن</span>
+          </a>
+
+          <!-- محول الثيمات الملكي (نهاري / ورقي / ليلي) -->
+          <div class="waqf-theme-switch-group" id="waqfThemeSwitchGroup" role="group" aria-label="تبديل مظهر الصفحة">
+            <button class="waqf-theme-btn active" data-set-theme="light" title="المظهر النهاري النقي" onclick="window.setTheme('light')">
+              <i class="bi bi-sun-fill text-warning"></i>
+              <span>نهاري</span>
+            </button>
+            <button class="waqf-theme-btn" data-set-theme="parchment" title="مصحف المدينة الورقي الدافئ" onclick="window.setTheme('parchment')">
+              <i class="bi bi-journal-bookmark-fill text-gold"></i>
+              <span>ورقي</span>
+            </button>
+            <button class="waqf-theme-btn" data-set-theme="dark" title="الوضع الليلي الزمردي الهادئ" onclick="window.setTheme('dark')">
+              <i class="bi bi-moon-stars-fill text-info"></i>
+              <span>ليلي</span>
+            </button>
           </div>
-          <span class="waqf-logo-text">الأُنْسُ بِالقُرْآن — صَفْحَةٌ قُرْآنِيَّة</span>
-        </a>
+        </div>
       </div>
 
       <!-- عنوان الوقف والمهدى له -->
       <div class="waqf-title-section">
         <h1 class="waqf-name" id="waqfPersonName">وقف وصدقة جارية عن الحميدي عبدالله النهار</h1>
         <p class="waqf-prayer-badge" id="waqfPrayerText">رحمه الله تعالى</p>
+        <div>
+          <div class="waqf-scope-golden-badge">
+            <i class="bi bi-patch-check-fill text-gold"></i>
+            <span>الوقف: القرآن الكريم كاملاً 📖 (114 سورة)</span>
+          </div>
+          <div class="waqf-scope-hint">
+            تلاوة متواصلة آناء الليل وأطراف النهار بالتتابع من الفاتحة حتى الناس
+          </div>
+        </div>
       </div>
 
       <!-- مشغل التلاوة الصوتية المتواصل -->
@@ -615,8 +829,9 @@
           <!-- بيانات السورة والقارئ الحالية -->
           <div class="audio-meta-header">
             <span class="audio-surah-title">
-              <i class="bi bi-music-note-beamed text-warning"></i>
+              <i class="bi bi-book-half text-warning"></i>
               <span id="audioSurahNameDisplay">سورة الفاتحة</span>
+              <span class="audio-surah-badge" id="audioSurahBadgeDisplay">1 / 114</span>
             </span>
             <span class="audio-reciter-name" id="audioReciterNameDisplay">الشيخ مشاري راشد العفاسي</span>
           </div>
@@ -648,9 +863,24 @@
               <i class="bi bi-volume-up-fill" id="audioVolumeIcon"></i>
             </button>
 
+            <!-- السورة السابقة -->
+            <button class="btn-audio-action" id="btnAudioPrev" title="السورة السابقة" aria-label="السورة السابقة">
+              <i class="bi bi-skip-backward-fill"></i>
+            </button>
+
+            <!-- تأخير 10 ثوانٍ -->
+            <button class="btn-audio-action" id="btnAudioSeekBack" title="تأخير 10 ثوانٍ" aria-label="تأخير 10 ثوانٍ">
+              <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+
             <!-- زر التشغيل والإيقاف الكبير -->
             <button class="btn-audio-play" id="btnAudioPlay" title="تشغيل / إيقاف التلاوة" aria-label="تشغيل">
               <i class="bi bi-play-fill" id="playIcon"></i>
+            </button>
+
+            <!-- تقديم 10 ثوانٍ -->
+            <button class="btn-audio-action" id="btnAudioSeekFwd" title="تقديم 10 ثوانٍ" aria-label="تقديم 10 ثوانٍ">
+              <i class="bi bi-arrow-clockwise"></i>
             </button>
 
             <!-- السورة التالية -->
@@ -659,11 +889,17 @@
             </button>
           </div>
 
-          <!-- نص التبديل السريع للسورة التالية -->
-          <button class="btn-next-surah-text" id="btnNextSurahBottom">
-            <i class="bi bi-skip-forward"></i>
-            <span>الانتقال للسورة التالية تلقائياً</span>
-          </button>
+          <!-- مؤشر التتابع التلقائي بدون توقف وزر السورة التالية -->
+          <div class="d-flex align-items-center justify-content-between mt-3 pt-2" style="border-top: 1px solid rgba(250, 246, 237, 0.15); display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 7px; color: rgba(250, 246, 237, 0.85); font-size: 11.5px;">
+              <span class="pulse-dot"></span>
+              <span>تلاوة متتابعة تلقائية بدون توقف</span>
+            </div>
+            <button class="btn-next-surah-text" id="btnNextSurahBottom" style="margin-top: 0; width: auto;" title="الانتقال للسورة التالية">
+              <span>السورة التالية</span>
+              <i class="bi bi-skip-forward-fill"></i>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -731,7 +967,7 @@
       <a href="#" class="btn-nav-arrow" id="navPrevWaqf" title="صفحة الوقف السابقة">
         <i class="bi bi-chevron-right"></i>
       </a>
-      <a href="/#section-waqf" class="btn-footer-text" style="font-weight: 600; color: #064E3B;">
+      <a href="/#section-waqf" class="btn-footer-text" style="font-weight: 700; color: var(--waqf-primary);">
         <i class="bi bi-grid-fill"></i>
         <span>عرض مجمع صفحات الوقف</span>
       </a>
@@ -845,8 +1081,12 @@
         duration: document.getElementById('audioDuration'),
         btnPlay: document.getElementById('btnAudioPlay'),
         playIcon: document.getElementById('playIcon'),
+        btnPrev: document.getElementById('btnAudioPrev'),
         btnNext: document.getElementById('btnAudioNext'),
+        btnSeekBack: document.getElementById('btnAudioSeekBack'),
+        btnSeekFwd: document.getElementById('btnAudioSeekFwd'),
         btnNextBottom: document.getElementById('btnNextSurahBottom'),
+        surahBadgeDisplay: document.getElementById('audioSurahBadgeDisplay'),
         btnMute: document.getElementById('btnAudioMute'),
         volumeIcon: document.getElementById('audioVolumeIcon'),
         visitsCount: document.getElementById('visitsCountDisplay'),
@@ -918,7 +1158,7 @@
       // عرض البيانات في الصفحة
       function renderPage(data, nav) {
         state.waqfData = data;
-        state.currentSurah = data.startSurah || 1;
+        state.currentSurah = 1; // يبدأ دائماً من سورة الفاتحة ويتتابع حتى سورة الناس
         state.reciterId = data.reciterId || 'ar.alafasy';
         state.reciterName = data.reciterName || 'الشيخ مشاري راشد العفاسي';
 
@@ -926,10 +1166,10 @@
         els.prayerText.textContent = data.prayerText || 'رحمه الله تعالى';
         els.visitsCount.textContent = (data.visits || 495).toLocaleString('ar-SA');
 
-        const titleText = `وقف وصدقة جارية عن ${data.name} ${data.prayerText || ''} - صفحة قرآنية | الأنس بالقرآن`;
+        const titleText = `وقف وصدقة جارية عن ${data.name} ${data.prayerText || ''} — القرآن الكريم كاملاً | الأنس بالقرآن`;
         document.title = titleText;
         if (els.metaTitle) els.metaTitle.textContent = titleText;
-        if (els.metaDesc) els.metaDesc.content = `استمع للقرآن الكريم — صفحة قرآنية لـ وقف وصدقة جارية عن ${data.name} ${data.prayerText || ''}`;
+        if (els.metaDesc) els.metaDesc.content = `استمع للقرآن الكريم كاملاً (114 سورة بالتتابع دون توقف) — صفحة قرآنية لـ وقف وصدقة جارية عن ${data.name} ${data.prayerText || ''}`;
 
         // إعداد روابط التنقل
         if (nav && nav.prevId) {
@@ -955,6 +1195,9 @@
         state.currentSurah = Math.max(1, Math.min(114, surahNumber));
         const surahName = SURAH_NAMES[state.currentSurah - 1] || "الفاتحة";
         els.surahNameDisplay.textContent = `سورة ${surahName}`;
+        if (els.surahBadgeDisplay) {
+          els.surahBadgeDisplay.textContent = `${state.currentSurah} / 114`;
+        }
         els.reciterNameDisplay.textContent = state.reciterName;
 
         const reciterObj = RECITERS_SERVERS[state.reciterId] || RECITERS_SERVERS['ar.alafasy'];
@@ -980,23 +1223,29 @@
         }
       }
 
-      // السورة التالية
-      function nextSurah() {
+      // السورة التالية بالتتابع التلقائي
+      function nextSurah(autoPlay = false) {
         let next = state.currentSurah + 1;
         if (next > 114) next = 1;
         setupAudio(next);
-        if (state.isPlaying) {
-          els.audio.play().catch(console.error);
+        if (autoPlay || state.isPlaying) {
+          state.isPlaying = true;
+          els.audio.play().catch(err => {
+            console.warn('تتابع التلاوة الصوتية:', err);
+          });
         }
       }
 
       // السورة السابقة
-      function prevSurah() {
+      function prevSurah(autoPlay = false) {
         let prev = state.currentSurah - 1;
         if (prev < 1) prev = 114;
         setupAudio(prev);
-        if (state.isPlaying) {
-          els.audio.play().catch(console.error);
+        if (autoPlay || state.isPlaying) {
+          state.isPlaying = true;
+          els.audio.play().catch(err => {
+            console.warn('تتابع التلاوة الصوتية:', err);
+          });
         }
       }
 
@@ -1060,9 +1309,17 @@
       });
 
       els.audio.addEventListener('ended', () => {
-        // انتقال تلقائي للسورة التالية
-        nextSurah();
-        els.audio.play().catch(console.error);
+        // انتقال تلقائي مباشر للسورة التالية بالتتابع بدون توقف من الفاتحة حتى الناس
+        nextSurah(true);
+      });
+
+      els.audio.addEventListener('error', (e) => {
+        console.warn('تعذر تشغيل السورة الحالية، التخطي التلقائي للسورة التالية:', e);
+        if (state.isPlaying) {
+          setTimeout(() => {
+            nextSurah(true);
+          }, 1200);
+        }
       });
 
       els.timelineSlider.addEventListener('input', (e) => {
@@ -1074,8 +1331,27 @@
 
       // أزرار التحكم
       els.btnPlay.addEventListener('click', togglePlay);
-      els.btnNext.addEventListener('click', nextSurah);
-      els.btnNextBottom.addEventListener('click', nextSurah);
+      if (els.btnPrev) {
+        els.btnPrev.addEventListener('click', () => prevSurah(state.isPlaying));
+      }
+      els.btnNext.addEventListener('click', () => nextSurah(state.isPlaying));
+      els.btnNextBottom.addEventListener('click', () => nextSurah(state.isPlaying));
+
+      // تقديم وتأخير 10 ثوانٍ
+      if (els.btnSeekBack) {
+        els.btnSeekBack.addEventListener('click', () => {
+          if (els.audio) {
+            els.audio.currentTime = Math.max(0, els.audio.currentTime - 10);
+          }
+        });
+      }
+      if (els.btnSeekFwd) {
+        els.btnSeekFwd.addEventListener('click', () => {
+          if (els.audio) {
+            els.audio.currentTime = Math.min(els.audio.duration || 0, els.audio.currentTime + 10);
+          }
+        });
+      }
 
       // كتم الصوت
       els.btnMute.addEventListener('click', () => {
@@ -1088,6 +1364,20 @@
           els.volumeIcon.classList.add('bi-volume-up-fill');
         }
       });
+
+      // تبديل وحفظ الثيم الملكي (Light / Parchment / Dark)
+      function setTheme(theme) {
+        const validThemes = ['light', 'parchment', 'dark'];
+        const chosen = validThemes.includes(theme) ? theme : 'light';
+        document.documentElement.setAttribute('data-theme', chosen);
+        try {
+          localStorage.setItem('qurani_theme', chosen);
+        } catch (e) {}
+        document.querySelectorAll('.waqf-theme-btn').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-set-theme') === chosen);
+        });
+      }
+      window.setTheme = setTheme;
 
       // نسخ الرابط
       els.btnCopyLink.addEventListener('click', () => {
@@ -1131,6 +1421,12 @@
         showToast('تم إرسال طلبكم بنجاح، جزاكم الله خيراً 🌿');
         els.reportForm.reset();
       });
+
+      // مزامنة الثيم تلقائياً مع خيار المستخدم
+      try {
+        const savedTheme = localStorage.getItem('qurani_theme') || 'light';
+        setTheme(savedTheme);
+      } catch (e) {}
 
       // تشغيل عند تحميل الصفحة
       const id = getWaqfIdFromUrl();

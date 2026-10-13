@@ -12,146 +12,203 @@
    ========================================================================== */
 :root,
 [data-theme="light"] {
-  /* درجات الزمردي الملكي */
-  --qur-emerald: #064e3b;
-  --qur-emerald-deep: #032b21;
-  --qur-emerald-light: #0d6b52;
-  --qur-emerald-accent: #10b981;
-  --qur-emerald-subtle: #f0fdf4;
-  --qur-emerald-border: #a7f3d0;
-  --qur-emerald-glow: rgba(6, 78, 59, 0.25);
+  /* درجات الزمرد الأندلسي الملكي */
+  --qur-emerald: #063c2e;
+  --qur-emerald-deep: #03231b;
+  --qur-emerald-light: #0d5c46;
+  --qur-emerald-accent: #059669;
+  --qur-emerald-subtle: #f0f7f4;
+  --qur-emerald-border: #b7e4d3;
+  --qur-emerald-glow: rgba(6, 60, 46, 0.22);
 
-  /* درجات الذهب الإمبراطوري المعتق */
-  --qur-gold: #b48325;
-  --qur-gold-dark: #8c6418;
-  --qur-gold-light: #d4af37;
-  --qur-gold-bright: #eab308;
-  --qur-gold-subtle: #fef9ee;
-  --qur-gold-border: #fcd34d;
-  --qur-gold-glow: rgba(212, 175, 55, 0.35);
+  /* درجات الذهب الإمبراطوري المعتق عيار 24 */
+  --qur-gold: #c49a45;
+  --qur-gold-dark: #9e7528;
+  --qur-gold-light: #e1bd6d;
+  --qur-gold-bright: #dfb23e;
+  --qur-gold-subtle: #fdfaf2;
+  --qur-gold-border: #ebd39c;
+  --qur-gold-glow: rgba(196, 154, 69, 0.32);
 
-  /* التدرجات الفاخرة */
-  --qur-emerald-gradient: linear-gradient(135deg, #064e3b 0%, #0d5f49 55%, #032e23 100%);
-  --qur-gold-gradient: linear-gradient(135deg, #f5d77f 0%, #d4af37 40%, #b48325 80%, #8c6418 100%);
-  --qur-gold-shimmer: linear-gradient(90deg, #d4af37 0%, #fef08a 50%, #d4af37 100%);
+  /* التدرجات الفاخرة المزدوجة */
+  --qur-emerald-gradient: linear-gradient(135deg, #04291f 0%, #063c2e 45%, #0d5c46 75%, #03231b 100%);
+  --qur-gold-gradient: linear-gradient(135deg, #fef08a 0%, #facc15 25%, #d4af37 60%, #9e7528 100%);
+  --qur-gold-shimmer: linear-gradient(90deg, #c49a45 0%, #fef3c7 50%, #c49a45 100%);
   --qur-card-gradient: linear-gradient(180deg, #ffffff 0%, #f9fbf9 100%);
+  --qur-dual-border: linear-gradient(90deg, rgba(212, 175, 55, 0.35) 0%, rgba(5, 150, 105, 0.45) 50%, rgba(212, 175, 55, 0.35) 100%);
 
-  /* ألوان الخلفيات والمحتوى (الوضع النهاري النقي) */
-  --bg-main: #f8faf9;
+  /* ألوان الخلفيات والمحتوى (الوضع النهاري الحريري الملكي) */
+  --bg-main: #f8faf7;
   --bg-card: #ffffff;
-  --bg-card-subtle: #f1f7f4;
+  --bg-card-subtle: #f0f5f2;
   --bg-card-elevated: #ffffff;
-  --bg-mushaf-wrapper: #f8faf8;
+  --bg-mushaf-wrapper: #f6faf7;
   --bg-mushaf: #ffffff;
-  --navbar-bg: rgba(255, 255, 255, 0.92);
+  --navbar-bg: rgba(255, 255, 255, 0.86);
 
-  /* النصوص ذات التباين العالي ومريحة للعين */
-  --text-primary: #09261e;
+  /* النصوص ذات التباين العالي والمريحة للعين */
+  --text-primary: #07251c;
   --text-body: #1e293b;
-  --text-muted: #52637a;
+  --text-muted: #536471;
   --text-subtle: #64748b;
-  --mushaf-text: #0a1f19;
+  --mushaf-text: #081e17;
 
-  /* الحدود والظلال */
-  --border-light: rgba(6, 78, 59, 0.08);
-  --border-emerald: rgba(6, 78, 59, 0.22);
-  --border-gold: rgba(180, 131, 37, 0.3);
+  /* الحدود والظلال المعمارية المتطورة */
+  --border-light: rgba(6, 60, 46, 0.08);
+  --border-emerald: rgba(6, 60, 46, 0.20);
+  --border-gold: rgba(196, 154, 69, 0.28);
+  --border-gold-subtle: rgba(196, 154, 69, 0.16);
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 6px 20px -2px rgba(6, 78, 59, 0.07), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
-  --shadow-lg: 0 16px 36px -4px rgba(6, 78, 59, 0.12), 0 6px 14px -2px rgba(0, 0, 0, 0.04);
-  --shadow-gold: 0 8px 25px rgba(180, 131, 37, 0.22);
-  --shadow-glow: 0 0 25px rgba(16, 185, 129, 0.2);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 24px -3px rgba(6, 60, 46, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 20px 42px -6px rgba(6, 60, 46, 0.13), 0 8px 16px -2px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 8px 24px -3px rgba(6, 60, 46, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+  --shadow-card-hover: 0 18px 40px -4px rgba(6, 60, 46, 0.12), 0 0 20px rgba(196, 154, 69, 0.14);
+  --shadow-gold: 0 8px 28px rgba(196, 154, 69, 0.25);
+  --shadow-glow: 0 0 28px rgba(5, 150, 105, 0.22);
 
-  /* الخطوط */
+  /* رموز التأثير الزجاجي والحواف الآمنة للشاشات (Glassmorphism & Safe Tokens) */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(196, 154, 69, 0.22);
+  --glass-blur: blur(20px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --bottom-dock-clearance: calc(80px + var(--safe-bottom));
+
+  /* نظام الخطوط والطباعة العربية الراقية (Arabic Luxury Typography System) */
   --font-ui: 'Alexandria', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-quran: 'Amiri Quran', 'Amiri', serif;
-  --font-scheherazade: 'Scheherazade New', serif;
+  --font-heading: 'Cairo', 'Alexandria', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-quran: 'Amiri Quran', 'Scheherazade New', 'Amiri', 'Traditional Arabic', serif;
+  --font-adhkar: 'Scheherazade New', 'Amiri', serif;
+  --font-scheherazade: 'Scheherazade New', 'Amiri', serif;
+  --font-calligraphy: 'Amiri', 'Amiri Quran', serif;
 
   --quran-font-scale: 1;
 }
 
 /* ==========================================================================
    نمط مصحف المدينة الورقي الدافئ (Parchment / Warm Ivory Mushaf Theme)
-   مريح جداً لجلسات التلاوة الطويلة وتدبر المصحف نهاراً ومساءً
+   ورق الرق الشامي الدافئ وحبر الجوز المريح للتلاوة الطويلة
    ========================================================================== */
 [data-theme="parchment"] {
-  --bg-main: #fbf7ef;
-  --bg-card: #fffdf9;
-  --bg-card-subtle: #f6eedf;
+  --bg-main: #faf5ea;
+  --bg-card: #fffdf8;
+  --bg-card-subtle: #f5ede0;
   --bg-card-elevated: #ffffff;
-  --bg-mushaf-wrapper: #f6efe0;
-  --bg-mushaf: #fdfbf7;
-  --navbar-bg: rgba(251, 247, 239, 0.92);
+  --bg-mushaf-wrapper: #f4ecdd;
+  --bg-mushaf: #fcf9f2;
+  --navbar-bg: rgba(250, 245, 234, 0.90);
 
-  --qur-emerald: #144534;
-  --qur-emerald-deep: #0a2d21;
-  --qur-emerald-light: #1b5b45;
-  --qur-emerald-subtle: #f3ede2;
-  --qur-emerald-border: #d4c5a9;
+  --qur-emerald: #164332;
+  --qur-emerald-deep: #0b2b20;
+  --qur-emerald-light: #1f5c45;
+  --qur-emerald-subtle: #f2e9db;
+  --qur-emerald-border: #d6c6a8;
 
-  --qur-gold: #a67c1e;
-  --qur-gold-dark: #805e12;
-  --qur-gold-light: #c99b2e;
-  --qur-gold-subtle: #fdf5e6;
-  --qur-gold-border: #e6cb8b;
+  --qur-gold: #b08830;
+  --qur-gold-dark: #8a661c;
+  --qur-gold-light: #d4ab4b;
+  --qur-gold-subtle: #fbf2df;
+  --qur-gold-border: #e7ce92;
 
-  --text-primary: #271d10;
-  --text-body: #3c2f1d;
-  --text-muted: #6e5c46;
-  --text-subtle: #8a755d;
-  --mushaf-text: #21170a;
+  --text-primary: #1f160c;
+  --text-body: #342614;
+  --text-muted: #6b553b;
+  --text-subtle: #877258;
+  --mushaf-text: #191107;
 
-  --border-light: rgba(166, 124, 30, 0.16);
-  --border-emerald: rgba(20, 69, 52, 0.25);
-  --border-gold: rgba(166, 124, 30, 0.38);
+  --border-light: rgba(176, 136, 48, 0.16);
+  --border-emerald: rgba(22, 67, 50, 0.22);
+  --border-gold: rgba(176, 136, 48, 0.35);
+  --border-gold-subtle: rgba(176, 136, 48, 0.20);
 
-  --shadow-md: 0 6px 20px -2px rgba(90, 65, 20, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
-  --shadow-lg: 0 16px 36px -4px rgba(90, 65, 20, 0.13), 0 6px 14px -2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px -2px rgba(90, 65, 20, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 18px 40px -4px rgba(90, 65, 20, 0.13), 0 6px 14px -2px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 8px 24px -2px rgba(90, 65, 20, 0.07);
+  --shadow-card-hover: 0 18px 38px -4px rgba(90, 65, 20, 0.14), 0 0 18px rgba(176, 136, 48, 0.18);
+
+  --glass-bg: rgba(250, 245, 234, 0.90);
+  --glass-border: rgba(176, 136, 48, 0.25);
+  scrollbar-color: var(--qur-gold) var(--bg-main);
 }
 
 /* ==========================================================================
-   الوضع الليلي الزمردي الهادئ (Midnight Emerald Dark Theme)
+   الوضع الليلي الزمردي الغائر (Midnight Qiyam / Obsidian Emerald Dark Theme)
    مخصص للتلاوة في الظلام وقيام الليل بدون إجهاد للعين مع الحفاظ على الفخامة
    ========================================================================== */
 [data-theme="dark"] {
-  --bg-main: #061611;
-  --bg-card: #0b221a;
-  --bg-card-subtle: #0f2c22;
-  --bg-card-elevated: #13362a;
-  --bg-mushaf-wrapper: #071a14;
-  --bg-mushaf: #0a2018;
-  --navbar-bg: rgba(11, 34, 26, 0.92);
+  --bg-main: #040e0b;
+  --bg-card: #0a1f18;
+  --bg-card-subtle: #0f2b22;
+  --bg-card-elevated: #14372c;
+  --bg-mushaf-wrapper: #061611;
+  --bg-mushaf: #081d16;
+  --navbar-bg: rgba(10, 31, 24, 0.88);
 
-  --qur-emerald: #34d399;
-  --qur-emerald-deep: #059669;
-  --qur-emerald-light: #6ee7b7;
-  --qur-emerald-subtle: #0f2d22;
-  --qur-emerald-border: #10b981;
-  --qur-emerald-gradient: linear-gradient(135deg, #092c21 0%, #0d3b2d 55%, #051d16 100%);
+  --qur-emerald: #22c55e;
+  --qur-emerald-deep: #15803d;
+  --qur-emerald-light: #4ade80;
+  --qur-emerald-subtle: #0f291f;
+  --qur-emerald-border: rgba(34, 197, 94, 0.35);
+  --qur-emerald-gradient: linear-gradient(135deg, #051a14 0%, #0a3327 50%, #134e3e 80%, #061c15 100%);
 
-  --qur-gold: #f59e0b;
-  --qur-gold-dark: #fbbf24;
-  --qur-gold-light: #fcd34d;
-  --qur-gold-subtle: #1f2714;
-  --qur-gold-border: #b45309;
+  --qur-gold: #dfba73;
+  --qur-gold-dark: #b89243;
+  --qur-gold-light: #eed59b;
+  --qur-gold-subtle: #1c2214;
+  --qur-gold-border: rgba(223, 186, 115, 0.40);
+  --qur-gold-gradient: linear-gradient(135deg, #eed59b 0%, #dfba73 50%, #b89243 100%);
+  --qur-dual-border: linear-gradient(90deg, rgba(223, 186, 115, 0.35) 0%, rgba(34, 197, 94, 0.35) 50%, rgba(223, 186, 115, 0.35) 100%);
 
-  --text-primary: #f8fafc;
-  --text-body: #e2e8f0;
+  --text-primary: #f0fdf4;
+  --text-body: #d1fae5;
   --text-muted: #94a3b8;
   --text-subtle: #64748b;
-  --mushaf-text: #f3f6f4;
+  --mushaf-text: #f0fdf4;
 
   --border-light: rgba(255, 255, 255, 0.08);
-  --border-emerald: rgba(52, 211, 153, 0.25);
-  --border-gold: rgba(245, 158, 11, 0.35);
+  --border-emerald: rgba(34, 197, 94, 0.28);
+  --border-gold: rgba(223, 186, 115, 0.35);
+  --border-gold-subtle: rgba(223, 186, 115, 0.20);
 
-  --shadow-md: 0 6px 20px -2px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 16px 36px -4px rgba(0, 0, 0, 0.65);
+  --shadow-md: 0 8px 24px -2px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 20px 45px -4px rgba(0, 0, 0, 0.75);
+  --shadow-card: 0 10px 28px -3px rgba(0, 0, 0, 0.60);
+  --shadow-card-hover: 0 20px 42px -4px rgba(0, 0, 0, 0.85), 0 0 22px rgba(34, 197, 94, 0.20);
+
+  --glass-bg: rgba(10, 31, 24, 0.90);
+  --glass-border: rgba(223, 186, 115, 0.25);
+  scrollbar-color: var(--qur-emerald) var(--bg-main);
+}
+
+/* حل تعارض وتوافق ألوان نصوص وخلفيات Bootstrap في الوضع الليلي والورقي */
+[data-theme="dark"] .text-dark {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .bg-white:not(.btn-white-action):not(.badge) {
+  background-color: var(--bg-card-elevated) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .bg-light {
+  background-color: var(--bg-card-subtle) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .border-light {
+  border-color: var(--border-light) !important;
+}
+
+[data-theme="dark"] .whatsapp-chat-bubble {
+  background: #0d382b !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(34, 197, 94, 0.25) !important;
 }
 
 /* ==========================================================================
-   التهيئة العامة والطباعة العصرية (Base & Modern Typography)
+   التهيئة العامة ونظام الطباعة والخطوط العربية الراقية (Arabic Luxury Typography)
    ========================================================================== */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -162,6 +219,28 @@ html {
   direction: rtl;
   text-align: right;
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(6, 60, 46, 0.35) var(--bg-main);
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* شريط التمرير الفاخر لكافة المتصفحات الحديثة */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(6, 60, 46, 0.28);
+  border-radius: 9999px;
+  border: 1.5px solid var(--bg-main);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--qur-gold);
 }
 
 body {
@@ -170,21 +249,129 @@ body {
   font-family: var(--font-ui);
   background-color: var(--bg-main);
   color: var(--text-body);
-  line-height: 1.65;
+  font-size: 1rem; /* 16px أساسي مقروء بوضوح فائق */
+  line-height: 1.75; /* تباعد أسطر مريح جداً للعين لمنع إجهاد القراءة */
+  font-weight: 400;
+  letter-spacing: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-ui);
+/* إزالة التباعد السالب قطعياً عن النصوص العربية والقرآنية */
+.quran-text,
+.font-mushaf,
+.ayah-text,
+.font-adhkar,
+.adhkar-text,
+.font-calligraphy,
+.font-quran-title {
+  letter-spacing: normal !important;
+}
+
+/* نعومة الانتقال التلقائي بين الأقسام الرئيسية */
+.app-section:not(.d-none) {
+  animation: appSectionFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes appSectionFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* التدرج الهرمي المتناسق للعناوين الفخمة بخط كيرو المتقن */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--font-heading);
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: 800;
+  line-height: 1.38;
   letter-spacing: -0.02em;
   margin-top: 0;
+  margin-bottom: 0.65rem;
 }
 
-p, span, div, label {
+h1, .h1 {
+  font-size: clamp(2rem, 3.5vw, 2.5rem);
+  line-height: 1.32;
+  font-weight: 800;
+}
+
+h2, .h2 {
+  font-size: clamp(1.65rem, 2.8vw, 2.05rem);
+  line-height: 1.36;
+  font-weight: 800;
+}
+
+h3, .h3 {
+  font-size: clamp(1.35rem, 2.2vw, 1.65rem);
+  line-height: 1.42;
+  font-weight: 700;
+}
+
+h4, .h4 {
+  font-size: clamp(1.18rem, 1.8vw, 1.35rem);
+  line-height: 1.48;
+  font-weight: 700;
+}
+
+h5, .h5 {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+h6, .h6 {
+  font-size: 0.98rem;
+  line-height: 1.55;
+  font-weight: 700;
+}
+
+.display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.28;
+}
+
+.display-6 {
+  font-size: clamp(1.85rem, 3.2vw, 2.45rem);
+}
+
+p {
+  line-height: 1.75;
+  margin-bottom: 0.85rem;
+}
+
+.lead {
+  font-size: 1.15rem;
+  line-height: 1.82;
+  font-weight: 500;
+}
+
+small, .small {
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+label, .form-label {
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.45rem;
+}
+
+p, span, div {
   color: inherit;
 }
 
@@ -221,59 +408,59 @@ p, span, div, label {
   border: 1px solid var(--border-emerald);
 }
 
-/* شريط تمرير أنيق ونحيف */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-main);
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(6, 78, 59, 0.25);
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--qur-emerald);
-}
-
 /* ==========================================================================
-   الناف بار الملكي الشفاف (Frosted Luxury Navbar)
+   الناف بار الملكي الشفاف الفاخر (Frosted Clean Luxury Navbar)
    ========================================================================== */
 .navbar-clean-luxury {
   background: var(--navbar-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-light);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border-gold-subtle);
+  box-shadow: 0 4px 24px -2px rgba(6, 60, 46, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
   padding: 0.75rem 0;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: sticky;
+  top: 0;
   z-index: 1030;
+}
+
+/* خط الإطار المزدوج الذهبي-الزمردي الدقيق في أسفل الناف بار */
+.navbar-clean-luxury::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: var(--qur-dual-border);
+  pointer-events: none;
+  opacity: 0.85;
 }
 
 .navbar-brand-wrapper {
   display: flex;
   align-items: center;
   text-decoration: none;
-  transition: transform 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .navbar-brand-wrapper:hover {
-  transform: scale(1.02);
+  transform: translateY(-1px) scale(1.02);
 }
 
 .brand-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
   background: var(--qur-emerald-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 16px rgba(6, 78, 59, 0.25);
-  border: 1.5px solid rgba(212, 175, 55, 0.5);
+  box-shadow: 0 6px 18px rgba(6, 78, 59, 0.28), 0 0 14px rgba(212, 175, 55, 0.22);
+  border: 1.5px solid rgba(225, 189, 109, 0.7);
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .brand-icon::after {
@@ -283,94 +470,140 @@ p, span, div, label {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(60deg, transparent 40%, rgba(255, 255, 255, 0.25) 50%, transparent 60%);
-  animation: shimmer 4s infinite;
+  background: linear-gradient(60deg, transparent 40%, rgba(255, 255, 255, 0.35) 50%, transparent 60%);
+  animation: brandShimmer 4.5s infinite ease-in-out;
 }
 
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+@keyframes brandShimmer {
+  0% { transform: translateX(-120%); }
+  40%, 100% { transform: translateX(120%); }
 }
 
 .brand-title {
-  font-family: var(--font-ui);
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: var(--qur-emerald);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-family: var(--font-heading);
+  font-size: 1.68rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--qur-emerald) 0%, var(--qur-emerald-light) 45%, var(--qur-gold-dark) 85%, var(--qur-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  display: block;
+  margin-bottom: 0.35rem;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .brand-title {
+  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 45%, #fde047 85%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="parchment"] .brand-title {
+  background: linear-gradient(135deg, #164332 0%, #1f5c45 45%, #8a661c 85%, #b08830 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .brand-subtitle {
-  font-size: 0.72rem;
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
   color: var(--qur-gold);
-  font-weight: 600;
+  font-weight: 700;
   display: block;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  margin-top: 0.15rem;
 }
 
-/* أزرار تنقل الناف بار العصرية */
+/* أزرار تنقل الناف بار العصرية الفاخرة (Luxury Nav Pills) */
 .nav-link-custom {
-  font-family: var(--font-ui);
-  font-size: 0.92rem;
-  font-weight: 600;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
   color: var(--text-muted);
-  padding: 0.5rem 1.1rem !important;
+  padding: 0.55rem 1.25rem !important;
   border-radius: 50rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid transparent;
   background: transparent;
   cursor: pointer;
+  letter-spacing: -0.01em;
+  position: relative;
+  text-decoration: none;
 }
 
 .nav-link-custom:hover {
   color: var(--qur-emerald);
   background-color: var(--qur-emerald-subtle);
-  border-color: var(--border-emerald);
-  transform: translateY(-1px);
+  border-color: rgba(6, 60, 46, 0.14);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 14px rgba(6, 60, 46, 0.08);
 }
 
 .nav-link-custom.active {
   color: #ffffff !important;
-  background: var(--qur-emerald) !important;
-  box-shadow: 0 4px 14px var(--qur-emerald-glow);
-  border-color: var(--qur-emerald);
+  background: var(--qur-emerald-gradient) !important;
+  border-color: rgba(225, 189, 109, 0.55) !important;
+  box-shadow: 0 4px 16px var(--qur-emerald-glow), 0 0 12px rgba(212, 175, 55, 0.22);
+}
+
+.nav-link-custom.active::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 20%;
+  right: 20%;
+  height: 2.5px;
+  background: var(--qur-gold-gradient);
+  border-radius: 9999px;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.85);
 }
 
 .nav-link-custom.active i {
   color: #fef08a !important;
+  filter: drop-shadow(0 0 5px rgba(254, 240, 138, 0.6));
 }
 
 .nav-link-custom i {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
-/* شريط تبديل الثيمات (Theme Selector Pill) */
+.nav-link-custom:hover i {
+  transform: scale(1.1);
+}
+
+/* شريط تبديل الثيمات العصري (Segmented Theme Control) */
 .theme-selector-group {
   display: inline-flex;
   align-items: center;
   background: var(--bg-card-subtle);
-  border: 1px solid var(--border-light);
+  border: 1.5px solid var(--border-light);
   border-radius: 50rem;
-  padding: 3px;
-  gap: 2px;
+  padding: 4px;
+  gap: 3px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .theme-btn-chip {
+  font-family: var(--font-ui);
   background: transparent;
   border: none;
   border-radius: 50rem;
-  padding: 0.35rem 0.65rem;
-  font-size: 0.8rem;
-  font-weight: 600;
+  padding: 0.38rem 0.82rem;
+  font-size: 0.82rem;
+  font-weight: 700;
   color: var(--text-muted);
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  min-height: 36px;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .theme-btn-chip:hover {
@@ -380,23 +613,234 @@ p, span, div, label {
 .theme-btn-chip.active {
   background: var(--bg-card);
   color: var(--qur-emerald);
-  font-weight: 700;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-emerald);
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--border-emerald);
+  transform: scale(1.02);
 }
 
-/* زر المشترك النشط والقائمة المنسدلة */
+.theme-btn-chip i {
+  font-size: 0.95rem;
+}
+
+/* زر الهامبرجر الملكي للجوال (Luxury Navbar Toggler) */
+.navbar-clean-luxury .navbar-toggler,
+.navbar-toggler-luxury {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--bg-card-subtle) !important;
+  border: 1.5px solid var(--border-light) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--qur-emerald);
+  padding: 0;
+  box-shadow: var(--shadow-xs);
+}
+
+@media (min-width: 992px) {
+  .navbar-clean-luxury .navbar-toggler,
+  .navbar-toggler-luxury {
+    display: none !important;
+  }
+}
+
+.navbar-clean-luxury .navbar-toggler:hover,
+.navbar-clean-luxury .navbar-toggler[aria-expanded="true"],
+.navbar-toggler-luxury:hover,
+.navbar-toggler-luxury[aria-expanded="true"] {
+  background: var(--qur-emerald-subtle) !important;
+  border-color: var(--border-emerald) !important;
+  color: var(--qur-emerald);
+  transform: scale(1.05);
+  box-shadow: 0 4px 14px var(--qur-emerald-glow);
+}
+
+.navbar-clean-luxury .navbar-toggler i,
+.navbar-toggler-luxury i {
+  font-size: 1.45rem;
+  transition: transform 0.25s ease;
+}
+
+.navbar-clean-luxury .navbar-toggler[aria-expanded="true"] i,
+.navbar-toggler-luxury[aria-expanded="true"] i {
+  transform: rotate(90deg);
+}
+
+/* القائمة المنسدلة في الجوال بتصميم درج تطبيقي فاخر (Mobile App-like Drawer Navigation) */
+@media (max-width: 991.98px) {
+  .navbar-clean-luxury .navbar-collapse {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1.5px solid var(--border-gold);
+    border-radius: 26px;
+    padding: 1.35rem 1.15rem;
+    margin-top: 0.85rem;
+    box-shadow: 0 20px 45px -5px rgba(0, 0, 0, 0.20), 0 0 25px var(--qur-emerald-glow);
+    max-height: calc(85vh - 70px);
+    overflow-y: auto;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: mobileNavDrawerOpen 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes mobileNavDrawerOpen {
+    from {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .navbar-clean-luxury .navbar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem !important;
+  }
+
+  .navbar-clean-luxury .nav-link-custom {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0.75rem 1.25rem !important;
+    border-radius: 18px;
+    font-size: 1rem;
+    min-height: 48px;
+  }
+
+  .navbar-clean-luxury .nav-link-custom.active::after {
+    display: none;
+  }
+
+  .navbar-clean-luxury .theme-selector-group {
+    width: 100%;
+    justify-content: space-between;
+    padding: 4px;
+    margin-bottom: 0.6rem;
+  }
+
+  .navbar-clean-luxury .theme-btn-chip {
+    flex: 1;
+    justify-content: center;
+    min-height: 42px;
+  }
+
+  .navbar-clean-luxury .owner-profile-chip {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.65rem 1.15rem;
+    min-height: 48px;
+  }
+}
+
+/* ==========================================================================
+   بطاقة حساب القارئ وشريط التنقل الفاخر (Reader / Profile Chip)
+   ========================================================================== */
+.owner-profile-chip {
+  font-family: var(--font-heading);
+  background: var(--bg-card);
+  border: 1.5px solid rgba(212, 175, 55, 0.35);
+  color: var(--text-primary);
+  border-radius: 50rem;
+  padding: 0.35rem 0.95rem 0.35rem 0.45rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.92rem;
+  letter-spacing: -0.01em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(212, 175, 55, 0.1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  position: relative;
+  text-decoration: none;
+}
+
+.owner-profile-chip:hover {
+  background: var(--bg-card);
+  border-color: var(--qur-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(26, 77, 58, 0.12), 0 0 20px rgba(212, 175, 55, 0.25);
+}
+
+.owner-avatar-glow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(26, 77, 58, 0.12) 0%, rgba(212, 175, 55, 0.2) 100%);
+  border: 2px solid var(--qur-gold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.18rem;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+  flex-shrink: 0;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.owner-profile-chip:hover .owner-avatar-glow {
+  transform: scale(1.08);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.6);
+}
+
+.owner-name-text {
+  font-weight: 800;
+  font-size: 0.94rem;
+  line-height: 1.25;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.owner-streak-sub {
+  font-size: 0.70rem;
+  font-weight: 700;
+  color: #b48325;
+  background: rgba(212, 175, 55, 0.14);
+  padding: 0.08rem 0.5rem;
+  border-radius: 50rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  line-height: 1.2;
+  margin-top: 0.15rem;
+  width: fit-content;
+}
+
+[data-theme="dark"] .owner-streak-sub {
+  background: rgba(212, 175, 55, 0.22);
+  color: #fde047;
+}
+
+.owner-gear-icon {
+  font-size: 0.88rem;
+  color: var(--qur-gold);
+  opacity: 0.75;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+}
+
+.owner-profile-chip:hover .owner-gear-icon {
+  opacity: 1;
+  transform: rotate(60deg) scale(1.1);
+  color: var(--qur-gold-dark);
+}
+
+/* زر المشترك النشط والقائمة المنسدلة للتوافق */
 .user-dropdown-btn {
+  font-family: var(--font-heading);
   background-color: var(--bg-card);
   border: 1.5px solid var(--border-gold);
   color: var(--qur-emerald);
   border-radius: 50rem;
-  padding: 0.4rem 1rem;
+  padding: 0.45rem 1.15rem;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.92rem;
+  letter-spacing: -0.01em;
   box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
 }
@@ -433,17 +877,28 @@ p, span, div, label {
 }
 
 /* ==========================================================================
-   بطاقة الورد اليومي الملكية المتطورة (Hero Wird Card)
+   بطاقة الورد اليومي الملكية الفاخرة (Hero Wird Card & Action Suite)
    ========================================================================== */
 .hero-wird-card {
-  background: var(--qur-emerald-gradient);
+  background: linear-gradient(135deg, #022018 0%, #063c2e 35%, #0a4f3d 70%, #021a14 100%);
   border-radius: 28px;
-  box-shadow: var(--shadow-lg), 0 0 35px var(--qur-emerald-glow);
-  border: 1.5px solid rgba(212, 175, 55, 0.45);
+  box-shadow: var(--shadow-lg), 0 0 38px var(--qur-emerald-glow);
+  border: 1.5px solid rgba(212, 175, 55, 0.5);
   position: relative;
   overflow: hidden;
   color: #ffffff;
-  padding: 2.2rem 2.4rem;
+  padding: 2.3rem 2.5rem;
+}
+
+/* طبقات الإضاءة الذهبية والزمردية المشعة في خلفية بطاقة الورد */
+.hero-wird-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 85% 15%, rgba(212, 175, 55, 0.22) 0%, transparent 60%),
+              radial-gradient(circle at 12% 88%, rgba(5, 150, 105, 0.25) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .hero-wird-card * {
@@ -458,73 +913,164 @@ p, span, div, label {
   color: rgba(255, 255, 255, 0.88) !important;
 }
 
-/* خلفية الزخارف الإسلامية المتكررة بخفة */
+/* خلفية الزخارف الإسلامية المتكررة بنعومة حركية هادئة */
 .hero-islamic-pattern {
   position: absolute;
   inset: 0;
   background-image: url('../assets/patterns/islamic-geometric.svg');
   background-repeat: repeat;
   background-size: 100px 100px;
-  opacity: 0.07;
+  opacity: 0.08;
   pointer-events: none;
+  z-index: 0;
+  animation: heroPatternFloat 14s infinite ease-in-out;
 }
 
-/* الأزرار التفاعلية العالية الجاذبية */
+@keyframes heroPatternFloat {
+  0%, 100% {
+    opacity: 0.07;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.11;
+    transform: scale(1.025);
+  }
+}
+
+/* الأساس العام للأزرار العصرية الفاخرة */
+.btn {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  padding: 0.62rem 1.45rem;
+  border-radius: 50rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 44px;
+}
+
+.btn-sm {
+  font-size: 0.86rem;
+  padding: 0.42rem 1.15rem;
+  min-height: 38px;
+}
+
+.btn-lg {
+  font-size: 1.08rem;
+  padding: 0.85rem 2.2rem;
+  min-height: 50px;
+}
+
+/* أزرار الإجراء السريع بتباين فائق وأناقة ملكية */
 .btn-gold-action {
+  font-family: var(--font-heading);
   background: var(--qur-gold-gradient);
-  color: #1a1402 !important;
+  color: #1a1202 !important;
   font-weight: 800;
-  border: 1.5px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 6px 20px rgba(180, 131, 37, 0.4);
+  font-size: 1rem;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 6px 22px rgba(180, 131, 37, 0.45), 0 0 16px rgba(250, 204, 21, 0.25);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 50rem;
-  padding: 0.75rem 1.8rem;
-  font-size: 0.98rem;
+  padding: 0.75rem 1.85rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .btn-gold-action:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 10px 28px rgba(180, 131, 37, 0.55);
+  transform: translateY(-2.5px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(180, 131, 37, 0.65), 0 0 25px rgba(250, 204, 21, 0.45);
   color: #000000 !important;
 }
 
+.btn-gold-action:active {
+  transform: translateY(0) scale(0.98);
+}
+
 .btn-white-action {
+  font-family: var(--font-heading);
   background: #ffffff;
-  color: #064e3b !important;
+  color: #043224 !important;
   font-weight: 800;
-  border: 1.5px solid #ffffff;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  font-size: 1rem;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 50rem;
-  padding: 0.75rem 1.8rem;
-  font-size: 0.98rem;
+  padding: 0.75rem 1.85rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .btn-white-action:hover {
   background: #f8fafc;
-  color: #022c22 !important;
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+  color: #022319 !important;
+  transform: translateY(-2.5px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.btn-white-action:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-whatsapp-action {
+  font-family: var(--font-heading);
+  background: linear-gradient(135deg, #25d366 0%, #16a34a 60%, #059669 100%);
+  color: #ffffff !important;
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.42);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 50rem;
+  padding: 0.75rem 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-whatsapp-action:hover {
+  background: linear-gradient(135deg, #28e06d 0%, #15803d 60%, #047857 100%);
+  transform: translateY(-2.5px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(37, 211, 102, 0.6);
+  color: #ffffff !important;
+}
+
+.btn-whatsapp-action:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .btn-emerald-action {
+  font-family: var(--font-heading);
   background: var(--qur-emerald);
   color: #ffffff !important;
   font-weight: 700;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
   border-radius: 50rem;
-  padding: 0.65rem 1.5rem;
+  padding: 0.68rem 1.65rem;
   border: 1px solid var(--qur-emerald);
   box-shadow: 0 4px 15px var(--qur-emerald-glow);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .btn-emerald-action:hover {
@@ -535,12 +1081,15 @@ p, span, div, label {
 }
 
 .btn-outline-gold {
+  font-family: var(--font-heading);
   background: transparent;
   color: var(--qur-gold) !important;
   border: 1.5px solid var(--qur-gold);
   font-weight: 700;
+  font-size: 0.94rem;
+  line-height: 1.45;
   border-radius: 50rem;
-  padding: 0.55rem 1.4rem;
+  padding: 0.58rem 1.5rem;
   transition: all 0.2s ease;
 }
 
@@ -552,12 +1101,15 @@ p, span, div, label {
 }
 
 .btn-outline-emerald {
+  font-family: var(--font-heading);
   background: transparent;
   color: var(--qur-emerald) !important;
   border: 1.5px solid var(--qur-emerald);
   font-weight: 700;
+  font-size: 0.94rem;
+  line-height: 1.45;
   border-radius: 50rem;
-  padding: 0.55rem 1.4rem;
+  padding: 0.58rem 1.5rem;
   transition: all 0.2s ease;
 }
 
@@ -568,10 +1120,10 @@ p, span, div, label {
   transform: translateY(-1px);
 }
 
-/* حلقة الإنجاز الدائرية الفاخرة (Circular Progress Ring) */
+/* حلقة الإنجاز الدائرية الفاخرة للورد اليومي (Glowing Circular Progress Ring) */
 .circular-progress-box {
-  width: 145px;
-  height: 145px;
+  width: 152px;
+  height: 152px;
   position: relative;
   margin: 0 auto;
 }
@@ -580,22 +1132,22 @@ p, span, div, label {
   width: 100%;
   height: 100%;
   transform: rotate(-90deg);
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.28));
 }
 
 .progress-track {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.18);
+  stroke: rgba(255, 255, 255, 0.16);
   stroke-width: 8;
 }
 
 .progress-bar-circle {
   fill: none;
-  stroke: #fcd34d;
-  stroke-width: 8.5;
+  stroke: #fde047;
+  stroke-width: 9;
   stroke-linecap: round;
   transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  filter: drop-shadow(0 0 6px rgba(252, 211, 77, 0.6));
+  filter: drop-shadow(0 0 10px rgba(253, 224, 71, 0.8)) drop-shadow(0 0 4px rgba(212, 175, 55, 0.5));
 }
 
 .circular-inner-text {
@@ -665,16 +1217,17 @@ p, span, div, label {
 .card-luxury {
   background: var(--bg-card);
   border-radius: 24px;
-  border: 1px solid var(--border-light);
-  box-shadow: var(--shadow-md);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1.5px solid var(--border-gold-subtle);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
   position: relative;
+  overflow: hidden;
 }
 
 .card-luxury:hover {
-  box-shadow: var(--shadow-lg);
-  border-color: var(--border-emerald);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--qur-gold-light);
+  transform: translateY(-4px);
 }
 
 .feature-box-icon {
@@ -811,23 +1364,26 @@ p, span, div, label {
 
 .mushaf-surah-title-badge {
   font-family: var(--font-quran);
-  font-size: 1.85rem;
+  font-size: clamp(1.85rem, 3.5vw, 2.25rem);
   color: var(--qur-emerald);
   font-weight: 700;
+  line-height: 1.3;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .mushaf-meta-badge {
+  font-family: var(--font-heading);
   background: var(--qur-gold-subtle);
   color: var(--qur-gold);
   border: 1px solid var(--border-gold);
   border-radius: 50rem;
-  padding: 0.35rem 1.1rem;
+  padding: 0.42rem 1.25rem;
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.92rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
+  letter-spacing: -0.01em;
 }
 
 /* ترويسة السورة وبانر البسملة الفاخر */
@@ -845,10 +1401,11 @@ p, span, div, label {
 .surah-header-title {
   font-family: var(--font-quran);
   color: var(--qur-emerald);
-  font-size: 2.4rem;
+  font-size: clamp(2.2rem, 4.5vw, 2.85rem);
   font-weight: 700;
-  margin-bottom: 0.3rem;
-  line-height: 1.2;
+  margin-bottom: 0.4rem;
+  line-height: 1.3;
+  text-shadow: 0 1px 2px rgba(6, 78, 59, 0.08);
 }
 
 .bismillah-banner {
@@ -859,42 +1416,47 @@ p, span, div, label {
 
 .bismillah-text {
   font-family: var(--font-quran);
-  font-size: 2.4rem;
+  font-size: clamp(2.2rem, 4.5vw, 2.85rem);
   color: var(--qur-emerald);
   display: inline-block;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.35;
+  text-shadow: 0 1px 2px rgba(6, 78, 59, 0.08);
 }
 
 /* الآيات الشريفة ونصوص المصحف الرسم العثماني */
 .quran-page-verses {
   font-family: var(--font-quran);
-  font-size: calc(1.85rem * var(--quran-font-scale));
-  line-height: 2.65;
+  font-size: calc(2.1rem * var(--quran-font-scale));
+  line-height: 2.85;
   color: var(--mushaf-text);
   text-align: justify;
   text-align-last: center;
-  word-spacing: 3px;
+  word-spacing: 4px;
   font-feature-settings: "cv01" on, "cv02" on, "cv03" on, "ss01" on;
   -webkit-font-feature-settings: "cv01" on, "cv02" on, "cv03" on, "ss01" on;
+  text-rendering: optimizeLegibility;
+  font-display: swap;
+  direction: rtl;
 }
 
 .ayah-segment {
   cursor: pointer;
-  padding: 2px 4px;
+  padding: 3px 6px;
   border-radius: 8px;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline;
+  -webkit-tap-highlight-color: rgba(196, 154, 69, 0.25);
 }
 
 .ayah-segment:hover {
-  background-color: rgba(254, 240, 138, 0.45);
-  box-shadow: 0 0 10px rgba(254, 240, 138, 0.3);
+  background-color: rgba(196, 154, 69, 0.18);
+  box-shadow: 0 0 12px rgba(196, 154, 69, 0.22);
 }
 
 [data-theme="dark"] .ayah-segment:hover {
-  background-color: rgba(52, 211, 153, 0.2);
-  box-shadow: 0 0 12px rgba(52, 211, 153, 0.25);
+  background-color: rgba(34, 197, 94, 0.16);
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.25);
 }
 
 .ayah-number-badge {
@@ -902,27 +1464,36 @@ p, span, div, label {
   align-items: center;
   justify-content: center;
   position: relative;
-  margin: 0 6px;
+  margin: 0 7px;
   user-select: none;
   vertical-align: middle;
+  min-width: 32px;
+  min-height: 32px;
 }
 
 .ayah-glyph {
   font-family: var(--font-quran);
   color: var(--qur-gold);
-  font-size: 1.6em;
+  font-size: 1.75em;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ayah-num-digits {
   position: absolute;
-  top: 50%;
+  top: 52%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-family: var(--font-ui);
-  font-size: 0.48em;
+  font-family: var(--font-heading);
+  font-size: 0.50em;
   font-weight: 800;
   color: var(--qur-emerald);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 [data-theme="dark"] .ayah-num-digits {
@@ -945,44 +1516,70 @@ p, span, div, label {
   cursor: pointer;
 }
 
-/* شارة العلامة المرجعية المحفوظة (Bookmark Badge) */
+/* شارة العلامة المرجعية المحفوظة الفاخرة (Luxury Bookmark Chip) */
 .bookmark-saved-chip {
   background: var(--qur-gold-subtle);
-  border: 1px solid var(--border-gold);
-  color: var(--qur-gold);
+  border: 1.5px solid var(--qur-gold);
+  color: var(--qur-gold-dark);
   border-radius: 50rem;
-  padding: 0.35rem 0.9rem;
-  font-weight: 700;
-  font-size: 0.85rem;
+  padding: 0.38rem 1.05rem;
+  font-weight: 800;
+  font-size: 0.88rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(196, 154, 69, 0.18);
+  animation: bookmarkPulseGlow 3.5s infinite ease-in-out;
+}
+
+@keyframes bookmarkPulseGlow {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(196, 154, 69, 0.18);
+    border-color: var(--qur-gold);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(212, 175, 55, 0.55);
+    border-color: var(--qur-gold-light);
+  }
 }
 
 .bookmark-saved-chip:hover {
-  background: var(--qur-gold);
-  color: #ffffff;
+  background: var(--qur-gold-gradient);
+  color: #1a1202 !important;
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(180, 131, 37, 0.45);
+}
+
+.bookmark-saved-chip i {
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.bookmark-saved-chip:hover i {
+  transform: scale(1.15) rotate(-6deg);
 }
 
 /* ==========================================================================
    الأذكار النبوية والسبحة الذكية ثلاثية الأبعاد (Adhkar & 3D Tasbeeh)
    ========================================================================== */
 .adhkar-tab-btn {
-  font-family: var(--font-ui);
-  font-size: 0.92rem;
+  font-family: var(--font-heading);
+  font-size: 0.96rem;
   font-weight: 700;
   color: var(--text-muted);
   background: var(--bg-card);
   border: 1.5px solid var(--border-light);
   border-radius: 50rem;
-  padding: 0.6rem 1.4rem;
+  padding: 0.65rem 1.5rem;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   cursor: pointer;
+  letter-spacing: -0.01em;
 }
 
 .adhkar-tab-btn:hover {
@@ -998,41 +1595,51 @@ p, span, div, label {
   box-shadow: 0 4px 16px var(--qur-emerald-glow);
 }
 
-.adhkar-card {
+.adhkar-card,
+.adhkar-card-modern {
   background: var(--bg-card);
-  border-radius: 22px;
-  border: 1.5px solid var(--border-light);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 24px;
+  border: 1.5px solid var(--border-gold-subtle);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
-.adhkar-card:hover {
-  border-color: var(--border-emerald);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+.adhkar-card:hover,
+.adhkar-card-modern:hover {
+  border-color: var(--qur-gold-light);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-4px);
 }
 
-.adhkar-card.adhkar-completed {
+.adhkar-card.adhkar-completed,
+.adhkar-card-modern.adhkar-completed {
   background: var(--qur-emerald-subtle);
   border-color: var(--qur-emerald-border);
+  box-shadow: 0 4px 18px var(--qur-emerald-glow);
 }
 
 .adhkar-arabic-text {
-  font-family: var(--font-scheherazade);
-  font-size: 1.5rem;
-  line-height: 2.15;
+  font-family: var(--font-adhkar);
+  font-size: 1.65rem;
+  line-height: 2.3;
   color: var(--text-primary);
   font-weight: 600;
+  text-rendering: optimizeLegibility;
 }
 
 .adhkar-virtue-box {
+  font-family: var(--font-ui);
   background: var(--qur-gold-subtle);
   border-right: 3.5px solid var(--qur-gold);
-  border-radius: 10px;
+  border-radius: 12px;
   color: var(--text-muted);
-  padding: 0.65rem 0.9rem;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  padding: 0.75rem 1rem;
 }
 
 /* شريط التقدم لكل ذكر */
@@ -1050,12 +1657,16 @@ p, span, div, label {
 
 /* السبحة الرقمية الحديثة ثلاثية الأبعاد الفاخرة */
 .tasbeeh-circle-btn {
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
-  background: var(--qur-emerald-gradient);
+  background: radial-gradient(circle at 40% 32%, #0d6b52 0%, var(--qur-emerald) 55%, var(--qur-emerald-deep) 100%);
   border: 7px solid var(--qur-gold-light);
-  box-shadow: 0 12px 30px rgba(6, 78, 59, 0.35), 0 0 0 12px var(--qur-emerald-subtle), inset 0 2px 8px rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 18px 40px rgba(6, 60, 46, 0.38),
+    0 0 0 10px var(--qur-emerald-subtle),
+    inset 0 4px 10px rgba(255, 255, 255, 0.4),
+    inset 0 -8px 16px rgba(0, 0, 0, 0.35);
   color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -1063,15 +1674,18 @@ p, span, div, label {
   justify-content: center;
   margin: 1.8rem auto;
   cursor: pointer;
-  transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.12s ease;
+  transition: transform 0.09s cubic-bezier(0.2, 0.8, 0.3, 1), box-shadow 0.09s ease;
   user-select: none;
   position: relative;
   overflow: hidden;
 }
 
 .tasbeeh-circle-btn:active {
-  transform: scale(0.93);
-  box-shadow: 0 4px 14px rgba(6, 78, 59, 0.4), 0 0 0 8px var(--qur-emerald-subtle);
+  transform: scale(0.92) translateY(4px);
+  box-shadow: 
+    0 4px 14px rgba(6, 60, 46, 0.45),
+    0 0 0 6px var(--qur-emerald-subtle),
+    inset 0 8px 20px rgba(0, 0, 0, 0.55);
 }
 
 .tasbeeh-circle-btn::after {
@@ -1081,46 +1695,246 @@ p, span, div, label {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.25) 0%, transparent 60%);
+  background: radial-gradient(circle at 45% 25%, rgba(255, 255, 255, 0.35) 0%, transparent 65%);
   pointer-events: none;
 }
 
 .tasbeeh-count-big {
-  font-size: 3.4rem;
+  font-family: var(--font-heading);
+  font-size: 3.6rem;
   font-weight: 900;
   line-height: 1;
   color: #ffffff;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  transition: transform 0.09s ease;
+}
+
+.tasbeeh-count-pop {
+  animation: countPop 0.18s ease-out;
+}
+
+@keyframes countPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); color: #fde047; }
+  100% { transform: scale(1); }
 }
 
 .tasbeeh-click-hint {
-  font-size: 0.85rem;
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
   color: #fde047;
   font-weight: 700;
-  margin-top: 4px;
+  margin-top: 5px;
+}
+
+/* بطاقة السبحة التفاعلية الملكية في مقدمة الصفحة */
+.tasbeeh-hero-wrapper {
+  margin-bottom: 2.5rem;
+}
+
+.tasbeeh-hero-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-gold-subtle);
+  border-radius: 28px;
+  box-shadow: var(--shadow-card-hover);
+  position: relative;
+  overflow: hidden;
+}
+
+.tasbeeh-hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 6px;
+  background: var(--qur-gold-gradient);
+}
+
+.tasbeeh-active-dhikr-box {
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-light);
+  transition: all 0.25s ease;
+}
+
+.tasbeeh-active-dhikr-text {
+  font-family: var(--font-quran-page), var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--qur-emerald);
+  min-height: 2.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tasbeeh-chip-btn {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-light);
+  border-radius: 50rem;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tasbeeh-chip-btn:hover {
+  border-color: var(--qur-emerald);
+  color: var(--qur-emerald);
+  transform: translateY(-1px);
+}
+
+.tasbeeh-chip-btn.active {
+  background: var(--qur-emerald-subtle);
+  border-color: var(--qur-emerald);
+  color: var(--qur-emerald);
+  font-weight: 800;
+}
+
+.tasbeeh-stat-box {
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-light);
+  transition: transform 0.2s ease;
+}
+
+.tasbeeh-stat-box:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-gold-subtle);
+}
+
+.tasbeeh-dial-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ==========================================================================
-   إدارة المشتركين وبطاقات العائلة (Members & WhatsApp Engine)
+   المقرأة المصغرة (قسم الأهل والأصدقاء - Maqraa Hub)
    ========================================================================== */
+.maqraa-stat-card {
+  background: var(--bg-card);
+  border-radius: 24px;
+  border: 1.5px solid var(--border-gold-subtle);
+  padding: 1.35rem 1.5rem;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.maqraa-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--qur-gold-light);
+}
+
+.maqraa-stat-card.is-family {
+  border-color: rgba(22, 163, 74, 0.3);
+  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(22, 163, 74, 0.06) 100%);
+}
+
+.maqraa-stat-card.is-friends {
+  border-color: rgba(2, 132, 199, 0.3);
+  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(2, 132, 199, 0.06) 100%);
+}
+
+.maqraa-half-header {
+  border-radius: 22px;
+  padding: 1.35rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border-light);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-xs);
+  transition: all 0.3s ease;
+}
+
+.maqraa-half-header.is-family {
+  border-right: 5px solid var(--qur-emerald);
+  background: linear-gradient(90deg, rgba(22, 163, 74, 0.04) 0%, var(--bg-card) 100%);
+}
+
+.maqraa-half-header.is-friends {
+  border-right: 5px solid #0284c7;
+  background: linear-gradient(90deg, rgba(2, 132, 199, 0.04) 0%, var(--bg-card) 100%);
+}
+
+.maqraa-tab-btn {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-light);
+  color: var(--text-muted);
+  transition: all 0.25s ease;
+  font-weight: 700;
+}
+
+.maqraa-tab-btn:hover {
+  border-color: var(--qur-emerald);
+  color: var(--qur-emerald);
+  transform: translateY(-1px);
+}
+
+.maqraa-tab-btn.active {
+  background: var(--qur-emerald) !important;
+  border-color: var(--qur-emerald) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px var(--qur-emerald-glow);
+}
+
+.maqraa-tab-btn.active .badge {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+}
+
+.group-badge-family {
+  background: rgba(22, 163, 74, 0.12);
+  color: #16a34a;
+  border: 1px solid rgba(22, 163, 74, 0.25);
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 50rem;
+}
+
+.group-badge-friends {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 50rem;
+}
+
+.empty-maqraa-box {
+  background: var(--bg-card-subtle);
+  border: 2px dashed var(--border-light);
+  border-radius: 20px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
 .member-card {
   background: var(--bg-card);
   border-radius: 24px;
-  border: 1.5px solid var(--border-light);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1.5px solid var(--border-gold-subtle);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+  overflow: hidden;
+  position: relative;
 }
 
 .member-card:hover {
-  box-shadow: var(--shadow-md);
-  border-color: var(--border-emerald);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--qur-gold-light);
+  transform: translateY(-4px);
 }
 
 .member-card.is-active-user {
   border: 2px solid var(--qur-emerald);
   background: var(--bg-card-subtle);
-  box-shadow: 0 6px 20px var(--qur-emerald-glow);
+  box-shadow: 0 8px 25px var(--qur-emerald-glow);
 }
 
 .btn-whatsapp {
@@ -1136,12 +1950,58 @@ p, span, div, label {
   gap: 0.45rem;
   box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
   transition: all 0.25s ease;
+  text-decoration: none;
 }
 
 .btn-whatsapp:hover {
   background: linear-gradient(135deg, #28e06d 0%, #0f7569 100%);
   transform: translateY(-2px);
   box-shadow: 0 8px 22px rgba(37, 211, 102, 0.45);
+  color: #ffffff !important;
+}
+
+.btn-whatsapp-action {
+  background: linear-gradient(135deg, #25d366 0%, #059669 100%);
+  color: #ffffff !important;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  border-radius: 50rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.75rem 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.btn-whatsapp-action:hover {
+  background: linear-gradient(135deg, #28e06d 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(37, 211, 102, 0.5);
+  color: #ffffff !important;
+}
+
+.btn-whatsapp-outline {
+  background: transparent;
+  color: #128c7e !important;
+  border: 1.5px solid #25d366;
+  border-radius: 50rem;
+  font-weight: 700;
+  padding: 0.5rem 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+.btn-whatsapp-outline:hover {
+  background: rgba(37, 211, 102, 0.1);
+  border-color: #128c7e;
+  transform: translateY(-1px);
 }
 
 /* فقاعة محاكاة واتساب العصرية */
@@ -1162,39 +2022,51 @@ p, span, div, label {
 /* ==========================================================================
    بطاقات الخطط والختمات (Plans Grid)
    ========================================================================== */
-.plan-card {
+.plan-card,
+.plan-card-luxury {
   background: var(--bg-card);
   border-radius: 26px;
-  border: 2px solid var(--border-light);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1.5px solid var(--border-gold-subtle);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
-.plan-card:hover {
-  border-color: var(--qur-gold);
+.plan-card:hover,
+.plan-card-luxury:hover {
+  border-color: var(--qur-gold-light);
   transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-card-hover);
 }
 
-.plan-card.plan-active {
+.plan-card.plan-active,
+.plan-card-luxury.plan-active {
   border: 2.5px solid var(--qur-emerald);
   background: var(--bg-card-subtle);
-  box-shadow: 0 8px 25px var(--qur-emerald-glow);
+  box-shadow: 0 0 0 2px var(--qur-emerald), 0 12px 32px var(--qur-emerald-glow);
 }
 
 .plan-icon-container {
-  width: 54px;
-  height: 54px;
-  border-radius: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
   background: var(--qur-gold-subtle);
-  border: 1px solid var(--border-gold);
+  border: 1.5px solid var(--border-gold);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
-  box-shadow: var(--shadow-sm);
+  font-size: 1.65rem;
+  box-shadow: 0 4px 12px rgba(196, 154, 69, 0.2);
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.plan-card:hover .plan-icon-container,
+.plan-card-luxury:hover .plan-icon-container {
+  transform: scale(1.08) rotate(-4deg);
 }
 
 /* ==========================================================================
@@ -1207,22 +2079,34 @@ p, span, div, label {
   transform: translateX(-50%);
   width: calc(100% - 36px);
   max-width: 920px;
-  background: var(--navbar-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border: 1.5px solid var(--border-gold);
   border-radius: 24px;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18), 0 0 25px var(--qur-emerald-glow);
   padding: 0.85rem 1.4rem;
   z-index: 1040;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (max-width: 991px) {
+  body {
+    padding-bottom: var(--bottom-dock-clearance) !important;
+  }
+
+  body.audio-dock-active {
+    padding-bottom: calc(var(--bottom-dock-clearance) + 84px) !important;
+  }
+
   .audio-floating-bar {
-    bottom: 80px;
-    width: calc(100% - 24px);
+    bottom: calc(84px + var(--safe-bottom)) !important;
+    left: 14px !important;
+    right: 14px !important;
+    width: calc(100% - 28px) !important;
+    transform: none !important;
     border-radius: 20px;
+    z-index: 1040;
   }
 }
 
@@ -1253,27 +2137,37 @@ p, span, div, label {
 }
 
 /* ==========================================================================
-   شريط التنقل السفلي للهواتف الذكية (Mobile Floating Bar)
+   شريط التنقل السفلي الفاخر للهواتف الذكية (Luxury Mobile Navigation Dock)
    ========================================================================== */
 .mobile-bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--navbar-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid var(--border-light);
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  bottom: calc(12px + var(--safe-bottom));
+  left: 12px;
+  right: 12px;
   height: 68px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1.5px solid var(--border-gold);
+  border-radius: 26px;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.18), 0 2px 10px rgba(0, 0, 0, 0.05), 0 0 22px var(--qur-emerald-glow);
+  padding: 0 8px;
+  z-index: 1045;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  z-index: 1030;
-  padding: 0 10px;
+  max-width: 540px;
+  margin: 0 auto;
 }
 
 .mobile-nav-btn {
+  flex: 1;
+  min-width: 48px;
+  max-width: 86px;
+  min-height: 52px;
+  padding: 6px 4px;
+  border-radius: 18px;
+  position: relative;
   background: transparent;
   border: none;
   display: flex;
@@ -1283,75 +2177,139 @@ p, span, div, label {
   color: var(--text-subtle);
   font-size: 0.74rem;
   font-weight: 700;
-  padding: 4px;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-nav-btn i {
   font-size: 1.3rem;
   margin-bottom: 2px;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.mobile-nav-btn:hover {
+  color: var(--qur-emerald);
 }
 
 .mobile-nav-btn.active {
   color: var(--qur-emerald);
+  background: var(--qur-emerald-subtle);
+  font-weight: 800;
 }
 
+.mobile-nav-btn.active i {
+  color: var(--qur-emerald);
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .mobile-nav-btn.active,
+[data-theme="dark"] .mobile-nav-btn.active i {
+  color: var(--qur-emerald-light);
+}
+
+/* مؤشر التبويب النشط المتوهج بالذهب الإمبراطوري */
+.mobile-nav-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  width: 18px;
+  height: 3px;
+  border-radius: 9999px;
+  background: var(--qur-gold-gradient);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.85);
+}
+
+/* زر المصحف المركزي العائم الفاخر (Hero Center Action Circle) */
 .mobile-nav-btn.center-circle {
-  width: 54px;
-  height: 54px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   background: var(--qur-emerald-gradient);
   color: #ffffff;
-  margin-top: -26px;
-  box-shadow: 0 6px 18px var(--qur-emerald-glow);
+  margin-top: -28px;
+  box-shadow: 0 8px 24px var(--qur-emerald-glow), 0 0 0 2px rgba(212, 175, 55, 0.65);
   border: 3.5px solid var(--bg-main);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 0 0 auto;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+.mobile-nav-btn.center-circle:hover,
+.mobile-nav-btn.center-circle:active {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 10px 28px var(--qur-emerald-glow), 0 0 0 3px rgba(212, 175, 55, 0.85);
 }
 
 .mobile-nav-btn.center-circle i {
+  font-size: 1.55rem;
+  color: #fef08a !important;
+  filter: drop-shadow(0 0 6px rgba(254, 240, 138, 0.7));
   margin-bottom: 0;
 }
 
-/* بطاقات فهرس السور */
+.mobile-nav-btn.center-circle::after {
+  display: none !important;
+}
+
+/* بطاقات فهرس السور الملكية الفاخرة (Surah Index Cards) */
 .surah-item-card {
   background: var(--bg-card);
-  border: 1.5px solid var(--border-light);
-  border-radius: 16px;
-  padding: 0.9rem 1.1rem;
+  border: 1.5px solid var(--border-gold-subtle);
+  border-radius: 18px;
+  padding: 0.95rem 1.15rem;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, background-color 0.25s ease;
+  min-height: 54px;
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
 }
 
 .surah-item-card:hover {
-  border-color: var(--qur-emerald);
+  border-color: var(--qur-gold);
   background: var(--qur-emerald-subtle);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card), 0 0 16px rgba(196, 154, 69, 0.15);
 }
 
 .surah-number-badge {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
   background: var(--qur-emerald-subtle);
   color: var(--qur-emerald);
   font-weight: 800;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
-  border: 1px solid var(--border-emerald);
+  font-size: 0.92rem;
+  border: 1.5px solid var(--border-emerald);
+  box-shadow: 0 2px 6px rgba(6, 60, 46, 0.08);
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.surah-item-card:hover .surah-number-badge {
+  background: var(--qur-emerald);
+  color: #ffffff;
+  border-color: var(--qur-gold);
+  box-shadow: 0 0 10px var(--qur-emerald-glow);
+  transform: scale(1.05);
 }
 
 /* حقول الإدخال الراقية */
 .form-control-luxury, .form-select-luxury {
+  font-family: var(--font-ui);
   border: 1.5px solid var(--border-light);
   border-radius: 14px;
-  padding: 0.65rem 1.1rem;
+  padding: 0.7rem 1.15rem;
+  font-size: 0.95rem;
   font-weight: 600;
+  line-height: 1.55;
   color: var(--text-primary);
   background-color: var(--bg-card);
   transition: all 0.2s ease;
@@ -1367,10 +2325,25 @@ p, span, div, label {
 
 /* نوافذ المودال الحديثة */
 .modal-content {
+  font-family: var(--font-ui);
   background-color: var(--bg-card);
   border: 1.5px solid var(--border-light);
   box-shadow: var(--shadow-lg);
   color: var(--text-body);
+}
+
+.modal-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.4;
+  color: var(--qur-emerald);
+  letter-spacing: -0.015em;
+}
+
+.modal-body {
+  font-size: 0.96rem;
+  line-height: 1.75;
 }
 
 .modal-header, .modal-footer {
@@ -1379,30 +2352,191 @@ p, span, div, label {
 
 /* رسالة التوست للاحتفال */
 #quraniToast .toast {
+  font-family: var(--font-ui);
   background: var(--qur-emerald-gradient) !important;
   border: 1.5px solid var(--border-gold) !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* تحسينات الشاشات الصغيرة */
+#toastTitle {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+/* ==========================================================================
+   معايير الاستجابة والشاشات الذكية (Flawless Responsiveness & Touch Ergonomics)
+   ========================================================================== */
+
+/* أجهزة الجوال والشاشات الصغيرة (< 576px) */
 @media (max-width: 576px) {
+  /* منع أي انزلاق أفقي وتأكيد مطابقة عرض الشاشة */
+  body, html {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  .container-fluid {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* بطاقة الورد اليومي في الشاشات الصغيرة */
   .hero-wird-card {
-    padding: 1.6rem 1.4rem;
+    padding: 1.65rem 1.25rem;
     border-radius: 22px;
   }
+
+  .hero-wird-card h2.display-6 {
+    font-size: 1.65rem !important;
+  }
+
+  .hero-wird-card h3.h4 {
+    font-size: 1.25rem !important;
+  }
+
+  .hero-wird-card .d-flex.flex-wrap.gap-2 {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-gold-action,
+  .btn-white-action,
+  .btn-whatsapp-action {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.75rem 1.25rem !important;
+    min-height: 48px;
+    font-size: 0.96rem;
+  }
+
+  .circular-progress-box {
+    width: 135px;
+    height: 135px;
+    margin-top: 1rem;
+  }
+
+  .circular-percentage {
+    font-size: 1.65rem;
+  }
+
+  /* قارئ المصحف الشريف والآيات الكريمة */
+  .mushaf-reader-wrapper {
+    border-radius: 20px;
+    border-width: 1.5px;
+  }
+
   .mushaf-inner-border {
-    padding: 1.4rem 1.2rem;
-    margin: 6px;
+    padding: 1.25rem 0.85rem;
+    margin: 4px;
+    border-radius: 16px;
   }
+
+  .mushaf-corner-motif {
+    width: 36px;
+    height: 36px;
+  }
+
   .quran-page-verses {
-    font-size: calc(1.55rem * var(--quran-font-scale));
-    line-height: 2.3;
+    font-size: calc(1.68rem * var(--quran-font-scale));
+    line-height: 2.65;
+    word-spacing: 2px;
   }
+
   .bismillah-text {
-    font-size: 1.8rem;
+    font-size: 2.1rem;
   }
+
   .surah-header-title {
-    font-size: 1.9rem;
+    font-size: 2.1rem;
+  }
+
+  .mushaf-surah-title-badge {
+    font-size: 1.65rem;
+  }
+
+  /* البطاقات العامة والمسافات البينية */
+  .card-luxury {
+    border-radius: 20px;
+    padding: 1.25rem 1.15rem !important;
+  }
+
+  .plan-card,
+  .plan-card-luxury {
+    border-radius: 22px;
+    padding: 1.25rem 1.15rem !important;
+  }
+
+  .adhkar-card,
+  .adhkar-card-modern {
+    border-radius: 20px;
+    padding: 1.25rem 1.15rem !important;
+  }
+
+  .waqf-card-item {
+    border-radius: 20px;
+  }
+
+  /* محطات الختمة المدمجة */
+  .khatmah-stepper {
+    margin: 1.2rem 0 0.8rem;
+  }
+
+  .stepper-circle {
+    width: 26px;
+    height: 26px;
+    font-size: 0.7rem;
+  }
+
+  .stepper-label {
+    font-size: 0.68rem;
+  }
+
+  /* نوافذ المودال وحقول الإدخال لتفادي تكبير الشاشة في iOS */
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+
+  .modal-content {
+    border-radius: 20px;
+  }
+
+  .form-control-luxury,
+  .form-select-luxury {
+    font-size: 16px !important; /* يمنع الزوم التلقائي المزعج في سفاري */
+    min-height: 46px;
+    padding: 0.65rem 1rem;
+  }
+
+  /* سهولة النقر لجميع الأزرار */
+  .btn {
+    min-height: 44px;
+  }
+}
+
+/* الأجهزة اللوحية والأجهزة المتوسطة (577px - 991.98px) */
+@media (min-width: 576.02px) and (max-width: 991.98px) {
+  body, html {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  .hero-wird-card {
+    padding: 2rem 1.85rem;
+    border-radius: 24px;
+  }
+
+  .card-luxury {
+    border-radius: 22px;
+  }
+
+  .mushaf-inner-border {
+    padding: 1.85rem 1.5rem;
+  }
+
+  .quran-page-verses {
+    font-size: calc(1.85rem * var(--quran-font-scale));
+    line-height: 2.75;
   }
 }
 
@@ -1430,20 +2564,21 @@ p, span, div, label {
 
 .waqf-card-item {
   background: var(--bg-card);
-  border-radius: 22px;
-  border: 1.5px solid var(--border-light);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 24px;
+  border: 1.5px solid var(--border-gold-subtle);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  position: relative;
 }
 
 .waqf-card-item:hover {
   transform: translateY(-4px);
-  border-color: var(--qur-emerald);
-  box-shadow: var(--shadow-md);
+  border-color: var(--qur-gold-light);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .waqf-card-header {
@@ -1469,24 +2604,27 @@ p, span, div, label {
 }
 
 .waqf-badge-prayer {
+  font-family: var(--font-ui);
   display: inline-block;
   background: var(--qur-gold-subtle);
   color: var(--qur-gold-dark);
   border: 1px solid var(--qur-gold-border);
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 50rem;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 600;
+  line-height: 1.4;
 }
 
 .waqf-chip {
-  padding: 8px 16px;
+  font-family: var(--font-heading);
+  padding: 9px 18px;
   border-radius: 50rem;
   border: 1px solid var(--border-light);
   background: var(--bg-card);
   color: var(--text-body);
-  font-size: 0.88rem;
-  font-weight: 600;
+  font-size: 0.92rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -1498,12 +2636,14 @@ p, span, div, label {
 }
 
 .waqf-prayer-pill {
-  padding: 6px 14px;
+  font-family: var(--font-ui);
+  padding: 7px 16px;
   border-radius: 50rem;
   border: 1px solid var(--border-light);
   background: var(--bg-card-subtle);
   color: var(--text-body);
-  font-size: 0.82rem;
+  font-size: 0.86rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -1514,3 +2654,30 @@ p, span, div, label {
   border-color: var(--qur-emerald);
   font-weight: 700;
 }
+
+/* بطاقة ونطاق الوقف: القرآن الكريم كاملاً */
+.waqf-full-quran-card {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(6, 78, 59, 0.05) 100%);
+  border: 1.5px solid var(--qur-gold);
+  box-shadow: 0 4px 15px rgba(180, 131, 37, 0.15);
+  transition: all 0.25s ease;
+}
+
+.waqf-full-quran-card:hover {
+  border-color: var(--qur-emerald);
+  box-shadow: 0 6px 20px rgba(180, 131, 37, 0.22);
+}
+
+.waqf-gold-emblem {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #d4af37;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(212, 175, 55, 0.25);
+  flex-shrink: 0;
+}
+

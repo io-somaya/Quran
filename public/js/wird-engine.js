@@ -1,13 +1,13 @@
 /**
  * ==============================================================================
- * منصة «قرءاني» (Qur'ani) — محرك حساب الورد والخطط وإدارة المستخدمين (Wird Engine)
+ * منصة «قرءاني» (Qur'ani) — محرك حساب الورد والخطط وإدارة المشتركين (Wird Engine)
  * ==============================================================================
- * يتولى هذا المحرك:
- * 1. تعريف خطط الورد القرآني (الصفا، النور، الفرقان، الهداية، والخطة المخصصة).
- * 2. الحسابات الرياضية الدقيقة للورد اليومي بالصفحات والسور والأجزاء.
- * 3. تتبع نسبة التقدم والإنجاز نحو الختمة وتاريخ الختام التقديري.
- * 4. إدارة أيام الالتزام المتتالي (Daily Streaks 🔥) وتحديثها يومياً.
- * 5. إدارة بيانات المشتركين في LocalStorage (إضافة، تعديل، إتمام الورد، تبديل المستخدم).
+ * النموذج المعماري: Single-Owner Architecture (حساب مالك واحد + دوائر الأهل والأصدقاء)
+ * 1. حساب المالك الوحيد (Owner): صاحب الورد والمشرف الأساسي على المنصة.
+ * 2. قوائم الأهل والأصدقاء (Contacts / Members): جهات اتصال للمتابعة، المشاركة، وإرسال الأوراد.
+ * 3. الحسابات الرياضية الدقيقة للورد اليومي بالصفحات والسور والأجزاء ونسب التقدم.
+ * 4. إدارة أيام الالتزام المتتالي (Streaks 🔥) وتحديثها يومياً.
+ * 5. ترقية وهجرة سلسة وتوافقية لبيانات LocalStorage القديمة.
  * ==============================================================================
  */
 
@@ -22,8 +22,15 @@
 }(typeof self !== 'undefined' ? self : this, function (QuraniData) {
   'use strict';
 
-  const STORAGE_USERS_KEY = 'qurani_users_v1';
-  const STORAGE_ACTIVE_USER_KEY = 'qurani_active_user_id';
+  // مفاتيح التخزين المحدثة
+  const STORAGE_OWNER_KEY = 'qurani_owner_v1';
+  const STORAGE_CONTACTS_KEY = 'qurani_contacts_v1';
+  const STORAGE_WHATSAPP_GROUPS_KEY = 'qurani_whatsapp_groups_v1';
+
+  // مفاتيح التخزين السابقة (للهجرة التوافقية والتلقائية)
+  const LEGACY_STORAGE_USERS_KEY = 'qurani_users_v1';
+  const LEGACY_STORAGE_ACTIVE_USER_KEY = 'qurani_active_user_id';
+
   const TOTAL_MUSHAF_PAGES = 604;
 
   /**
@@ -119,17 +126,44 @@
   }
 
   /**
-   * عينة المشتركين الأولية للبدء الفوري
+   * البيانات الافتراضية للمالك (صاحب الورد)
    */
-  function getInitialSampleUsers() {
+  function getDefaultOwner() {
+    const todayStr = getTodayString();
+    return {
+      id: 'owner',
+      name: 'أحمد',
+      phone: '966503333333',
+      planId: 'hidayah',
+      customPagesPerDay: 20,
+      currentPage: 122,
+      completedToday: true,
+      streak: 21,
+      longestStreak: 45,
+      khatmahCount: 3,
+      startDate: '2026-07-01',
+      lastCompletedDate: todayStr,
+      avatar: '🧔',
+      color: '#d97706',
+      relation: 'صاحب الحساب'
+    };
+  }
+
+  /**
+   * جهات الاتصال النموذجية الأولية (مقرأة الأهل ومقرأة الأصدقاء)
+   */
+  function getInitialSampleContacts() {
     const todayStr = getTodayString();
     const yesterdayStr = getYesterdayString();
 
     return [
+      // --- مقرأة الأهل (Family) ---
       {
-        id: 'user_father',
+        id: 'contact_father',
         name: 'الوالد (أبو أحمد)',
         phone: '966501111111',
+        relation: 'الوالد',
+        groupType: 'family',
         planId: 'safa',
         customPagesPerDay: 2,
         currentPage: 44,
@@ -144,9 +178,11 @@
         notes: 'يفضل القراءة بعد صلاة الفجر'
       },
       {
-        id: 'user_mother',
+        id: 'contact_mother',
         name: 'الوالدة (أم أحمد)',
         phone: '966502222222',
+        relation: 'الوالدة',
+        groupType: 'family',
         planId: 'safa',
         customPagesPerDay: 2,
         currentPage: 28,
@@ -161,26 +197,11 @@
         notes: 'تحب الاستماع لصوت الشيخ الحصري'
       },
       {
-        id: 'user_ahmed',
-        name: 'أحمد',
-        phone: '966503333333',
-        planId: 'hidayah',
-        customPagesPerDay: 20,
-        currentPage: 122,
-        completedToday: true,
-        streak: 21,
-        longestStreak: 45,
-        khatmahCount: 3,
-        startDate: '2026-07-01',
-        lastCompletedDate: todayStr,
-        avatar: '🧔',
-        color: '#d97706',
-        notes: 'يقرأ جزءاً كاملاً يومياً'
-      },
-      {
-        id: 'user_fatima',
+        id: 'contact_fatima',
         name: 'فاطمة',
         phone: '966504444444',
+        relation: 'الأخت',
+        groupType: 'family',
         planId: 'furqan',
         customPagesPerDay: 10,
         currentPage: 80,
@@ -195,9 +216,11 @@
         notes: 'تفضل القراءة في المساء'
       },
       {
-        id: 'user_omar',
+        id: 'contact_omar',
         name: 'عمر',
         phone: '966505555555',
+        relation: 'الابن',
+        groupType: 'family',
         planId: 'noor',
         customPagesPerDay: 4,
         currentPage: 16,
@@ -210,168 +233,587 @@
         avatar: '👦',
         color: '#0284c7',
         notes: 'همته طيبة ويحب التشجيع المستمر'
+      },
+
+      // --- مقرأة الأصدقاء (Friends) ---
+      {
+        id: 'contact_khalid',
+        name: 'خالد بن سعد',
+        phone: '966506666666',
+        relation: 'صديق الطفولة',
+        groupType: 'friends',
+        planId: 'furqan',
+        customPagesPerDay: 10,
+        currentPage: 90,
+        completedToday: true,
+        streak: 16,
+        longestStreak: 35,
+        khatmahCount: 2,
+        startDate: '2026-08-01',
+        lastCompletedDate: todayStr,
+        avatar: '👳‍♂️',
+        color: '#0284c7',
+        notes: 'رفيق حلقة المسجد والورد اليومي'
+      },
+      {
+        id: 'contact_tariq',
+        name: 'طارق المحمدي',
+        phone: '966507777777',
+        relation: 'زميل العمل',
+        groupType: 'friends',
+        planId: 'noor',
+        customPagesPerDay: 4,
+        currentPage: 52,
+        completedToday: false,
+        streak: 10,
+        longestStreak: 22,
+        khatmahCount: 1,
+        startDate: '2026-08-20',
+        lastCompletedDate: yesterdayStr,
+        avatar: '🧑‍💼',
+        color: '#8b5cf6',
+        notes: 'يتنافس معنا في الورد المسائي'
+      },
+      {
+        id: 'contact_anas',
+        name: 'المهندس أنس',
+        phone: '966508888888',
+        relation: 'صديق مقرأة الفجر',
+        groupType: 'friends',
+        planId: 'hidayah',
+        customPagesPerDay: 20,
+        currentPage: 160,
+        completedToday: true,
+        streak: 28,
+        longestStreak: 50,
+        khatmahCount: 4,
+        startDate: '2026-06-15',
+        lastCompletedDate: todayStr,
+        avatar: '👨‍🏫',
+        color: '#10b981',
+        notes: 'حافظ ومتقن - حريص على الجزء اليومي'
       }
     ];
   }
 
+  // =========================================================================
+  // إدارة حساب المالك (Single Owner Management)
+  // =========================================================================
+
   /**
-   * جلب المستخدمين من LocalStorage أو تعيين النماذج الأولية
+   * جلب بيانات المالك (صاحب الورد) من LocalStorage مع الهجرة الآمنة
    */
-  function getUsers() {
+  function getOwner() {
+    const todayStr = getTodayString();
+
     try {
       if (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function') {
-        const stored = localStorage.getItem(STORAGE_USERS_KEY);
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            // التحقق من حالة الالتزام اليومي بناء على تاريخ اليوم
-            const todayStr = getTodayString();
-            return parsed.map(user => {
-              const isCompletedToday = (user.lastCompletedDate === todayStr);
-              return {
-                ...user,
-                completedToday: isCompletedToday
-              };
-            });
+        const storedOwner = localStorage.getItem(STORAGE_OWNER_KEY);
+        if (storedOwner) {
+          const owner = JSON.parse(storedOwner);
+          if (owner && typeof owner === 'object') {
+            owner.id = 'owner';
+            owner.completedToday = (owner.lastCompletedDate === todayStr);
+            return owner;
+          }
+        }
+
+        // فحص وجود بيانات سابقة للترحيل (Migration from legacy users)
+        const legacyUsersStr = localStorage.getItem(LEGACY_STORAGE_USERS_KEY);
+        if (legacyUsersStr) {
+          const legacyUsers = JSON.parse(legacyUsersStr);
+          if (Array.isArray(legacyUsers) && legacyUsers.length > 0) {
+            // البحث عن المالك (أحمد أو الحساب النشط أو صاحب الحساب)
+            const activeId = localStorage.getItem(LEGACY_STORAGE_ACTIVE_USER_KEY);
+            let ownerCandidate = legacyUsers.find(u => u.id === 'user_ahmed' || u.id === 'owner');
+            if (!ownerCandidate && activeId) {
+              ownerCandidate = legacyUsers.find(u => u.id === activeId);
+            }
+            if (!ownerCandidate) {
+              ownerCandidate = legacyUsers.find(u => (u.relation || '').includes('صاحب') || (u.relation || '').includes('أنا'));
+            }
+            if (!ownerCandidate) {
+              ownerCandidate = legacyUsers[0];
+            }
+
+            const migratedOwner = {
+              id: 'owner',
+              name: ownerCandidate.name || 'أحمد',
+              phone: ownerCandidate.phone || '966503333333',
+              planId: ownerCandidate.planId || 'hidayah',
+              customPagesPerDay: ownerCandidate.customPagesPerDay || 20,
+              currentPage: ownerCandidate.currentPage || 122,
+              completedToday: (ownerCandidate.lastCompletedDate === todayStr),
+              streak: ownerCandidate.streak || 21,
+              longestStreak: ownerCandidate.longestStreak || 45,
+              khatmahCount: ownerCandidate.khatmahCount || 3,
+              startDate: ownerCandidate.startDate || '2026-07-01',
+              lastCompletedDate: ownerCandidate.lastCompletedDate || todayStr,
+              avatar: ownerCandidate.avatar || '🧔',
+              color: ownerCandidate.color || '#d97706',
+              relation: 'صاحب الحساب'
+            };
+
+            saveOwner(migratedOwner);
+            return migratedOwner;
           }
         }
       }
     } catch (e) {
-      console.warn("تعذر قراءة المستخدمين من التخزين المحلي، سيتم استخدام البيانات النموذجية", e);
+      console.warn("خطأ في قراءة بيانات المالك من التخزين، سيتم استخدام الافتراضية:", e);
     }
 
-    const initial = getInitialSampleUsers();
-    saveUsers(initial);
-    return initial;
+    const defaultOwner = getDefaultOwner();
+    saveOwner(defaultOwner);
+    return defaultOwner;
   }
 
   /**
-   * حفظ المستخدمين في LocalStorage
+   * حفظ بيانات المالك في LocalStorage وإرسال الأحداث
    */
-  function saveUsers(users) {
+  function saveOwner(owner) {
     try {
       if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
-        localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(users));
+        localStorage.setItem(STORAGE_OWNER_KEY, JSON.stringify(owner));
       }
-      // إرسال حدث مخصص للمتصفح لتحديث الواجهات التفاعلية فوراً
       if (typeof window !== 'undefined' && window.dispatchEvent) {
-        window.dispatchEvent(new CustomEvent('qurani:users_updated', { detail: { users } }));
+        window.dispatchEvent(new CustomEvent('qurani:owner_updated', { detail: { owner } }));
+        // حدث توافقي للواجهات
+        window.dispatchEvent(new CustomEvent('qurani:users_updated', { detail: { owner } }));
       }
     } catch (e) {
-      console.error("فشل حفظ بيانات المشتركين", e);
+      console.error("فشل حفظ بيانات المالك:", e);
     }
   }
 
   /**
-   * جلب المستخدم النشط حالياً
+   * تحديث بيانات المالك جزئياً أو كلياً
    */
-  function getActiveUser() {
-    const users = getUsers();
-    let activeId = null;
+  function updateOwner(data) {
+    const current = getOwner();
+    const updated = {
+      ...current,
+      ...data,
+      id: 'owner' // ضمان ثبات المعرف كمالك
+    };
+
+    if (data.planId && data.planId !== 'custom') {
+      const plan = PLANS[data.planId] || PLANS.safa;
+      updated.customPagesPerDay = plan.pagesPerDay;
+    } else if (data.planId === 'custom' && data.customPagesPerDay) {
+      updated.customPagesPerDay = Math.max(1, parseInt(data.customPagesPerDay, 10) || 5);
+    }
+
+    if (data.currentPage !== undefined) {
+      updated.currentPage = Math.max(1, Math.min(TOTAL_MUSHAF_PAGES, parseInt(data.currentPage, 10) || 1));
+    }
+
+    saveOwner(updated);
+    return updated;
+  }
+
+  // =========================================================================
+  // إدارة دوائر الأهل والأصدقاء (Contacts / Members Management)
+  // =========================================================================
+
+  /**
+   * جلب جهات الاتصال من LocalStorage مع الهجرة الآمنة
+   * @param {string} groupType اختياري ('family' | 'friends' | 'all')
+   */
+  function getContacts(groupType = 'all') {
+    const todayStr = getTodayString();
+    let contactsList = [];
+
     try {
       if (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function') {
-        activeId = localStorage.getItem(STORAGE_ACTIVE_USER_KEY);
+        const stored = localStorage.getItem(STORAGE_CONTACTS_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) {
+            contactsList = parsed.map(c => ({
+              ...c,
+              completedToday: (c.lastCompletedDate === todayStr)
+            }));
+          }
+        } else {
+          // هجرة جهات الاتصال من مصفوفة المستخدمين السابقة إن وجدت
+          const legacyUsersStr = localStorage.getItem(LEGACY_STORAGE_USERS_KEY);
+          if (legacyUsersStr) {
+            const legacyUsers = JSON.parse(legacyUsersStr);
+            if (Array.isArray(legacyUsers) && legacyUsers.length > 0) {
+              // استبعاد حساب المالك من جهات الاتصال
+              contactsList = legacyUsers
+                .filter(u => u.id !== 'user_ahmed' && u.id !== 'owner' && !(u.relation || '').includes('صاحب'))
+                .map(u => ({
+                  id: u.id.startsWith('contact_') ? u.id : 'contact_' + u.id.replace('user_', ''),
+                  name: u.name,
+                  phone: u.phone || '',
+                  relation: u.relation || (u.groupType === 'friends' ? 'صديق' : 'من الأهل'),
+                  groupType: u.groupType === 'friends' ? 'friends' : 'family',
+                  planId: u.planId || 'safa',
+                  customPagesPerDay: u.customPagesPerDay || 2,
+                  currentPage: u.currentPage || 1,
+                  completedToday: (u.lastCompletedDate === todayStr),
+                  streak: u.streak || 0,
+                  longestStreak: u.longestStreak || 0,
+                  khatmahCount: u.khatmahCount || 0,
+                  startDate: u.startDate || todayStr,
+                  lastCompletedDate: u.lastCompletedDate || null,
+                  avatar: u.avatar || (u.groupType === 'friends' ? '👥' : '👨‍👩‍👧‍👦'),
+                  color: u.color || (u.groupType === 'friends' ? '#0284c7' : '#16a34a'),
+                  notes: u.notes || ''
+                }));
+
+              saveContacts(contactsList);
+            }
+          }
+        }
       }
     } catch (e) {
-      // ignore
+      console.warn("خطأ في قراءة جهات الاتصال، سيتم تهيئة العينة:", e);
     }
-    const found = users.find(u => u.id === activeId);
-    return found || users[0];
+
+    if (!contactsList || contactsList.length === 0) {
+      contactsList = getInitialSampleContacts();
+      saveContacts(contactsList);
+    }
+
+    if (!groupType || groupType === 'all') {
+      return contactsList;
+    }
+    return contactsList.filter(c => (c.groupType || 'family') === groupType);
   }
 
   /**
-   * تعيين المستخدم النشط
+   * حفظ جهات الاتصال في LocalStorage وإرسال الأحداث
    */
-  function setActiveUser(userId) {
+  function saveContacts(contacts) {
     try {
       if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
-        localStorage.setItem(STORAGE_ACTIVE_USER_KEY, userId);
+        localStorage.setItem(STORAGE_CONTACTS_KEY, JSON.stringify(contacts));
       }
       if (typeof window !== 'undefined' && window.dispatchEvent) {
-        window.dispatchEvent(new CustomEvent('qurani:active_user_changed', { detail: { userId } }));
+        window.dispatchEvent(new CustomEvent('qurani:contacts_updated', { detail: { contacts } }));
+        // توافق للواجهات
+        window.dispatchEvent(new CustomEvent('qurani:users_updated', { detail: { contacts } }));
       }
     } catch (e) {
-      console.error("تعذر تعيين المستخدم النشط", e);
+      console.error("فشل حفظ جهات الاتصال:", e);
     }
-    return getActiveUser();
   }
 
   /**
-   * جلب مستخدم بواسطة المعرف ID
+   * إضافة جهة اتصال جديدة للأهل أو الأصدقاء
    */
-  function getUserById(userId) {
-    const users = getUsers();
-    return users.find(u => u.id === userId) || null;
-  }
-
-  /**
-   * إضافة مشترك جديد
-   */
-  function addUser(userData) {
-    const users = getUsers();
-    const id = 'user_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 6);
-    const plan = PLANS[userData.planId] || PLANS.safa;
-    const pagesPerDay = userData.planId === 'custom' 
-      ? Math.max(1, parseInt(userData.customPagesPerDay, 10) || 5) 
+  function addContact(contactData) {
+    const contacts = getContacts('all');
+    const id = 'contact_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 6);
+    const plan = PLANS[contactData.planId] || PLANS.safa;
+    const pagesPerDay = contactData.planId === 'custom'
+      ? Math.max(1, parseInt(contactData.customPagesPerDay, 10) || 5)
       : plan.pagesPerDay;
 
-    const newUser = {
+    const groupType = contactData.groupType === 'friends' ? 'friends' : 'family';
+    const defaultAvatar = groupType === 'friends' ? '👥' : '👨‍👩‍👧‍👦';
+    const defaultRelation = groupType === 'friends' ? 'صديق' : 'من الأهل';
+    const defaultColor = groupType === 'friends' ? '#0284c7' : '#16a34a';
+
+    const newContact = {
       id,
-      name: userData.name || 'مشترك جديد',
-      phone: userData.phone ? String(userData.phone).trim() : '',
+      name: contactData.name || 'قارئ جديد',
+      phone: contactData.phone ? String(contactData.phone).trim() : '',
+      relation: contactData.relation || defaultRelation,
+      groupType: groupType,
       planId: plan.id,
       customPagesPerDay: pagesPerDay,
-      currentPage: Math.max(1, parseInt(userData.currentPage, 10) || 1),
+      currentPage: Math.max(1, Math.min(TOTAL_MUSHAF_PAGES, parseInt(contactData.currentPage, 10) || 1)),
       completedToday: false,
       streak: 0,
       longestStreak: 0,
       khatmahCount: 0,
       startDate: getTodayString(),
       lastCompletedDate: null,
-      avatar: userData.avatar || '📖',
-      color: userData.color || '#16a34a',
-      notes: userData.notes || ''
+      avatar: contactData.avatar || defaultAvatar,
+      color: contactData.color || defaultColor,
+      notes: contactData.notes || ''
     };
 
-    users.push(newUser);
-    saveUsers(users);
-    return newUser;
+    contacts.push(newContact);
+    saveContacts(contacts);
+    return newContact;
   }
 
   /**
-   * تحديث بيانات مستخدم
+   * تحديث بيانات جهة اتصال
    */
-  function updateUser(userId, partialData) {
-    const users = getUsers();
-    const idx = users.findIndex(u => u.id === userId);
+  function updateContact(id, data) {
+    const contacts = getContacts('all');
+    const idx = contacts.findIndex(c => c.id === id);
     if (idx === -1) return null;
 
-    users[idx] = {
-      ...users[idx],
-      ...partialData
+    const current = contacts[idx];
+    const updated = {
+      ...current,
+      ...data,
+      id: current.id // عدم تغيير المعرف
     };
 
-    saveUsers(users);
-    return users[idx];
+    if (data.planId) {
+      const plan = PLANS[data.planId] || PLANS.safa;
+      if (data.planId === 'custom') {
+        updated.customPagesPerDay = Math.max(1, parseInt(data.customPagesPerDay || current.customPagesPerDay, 10) || 5);
+      } else {
+        updated.customPagesPerDay = plan.pagesPerDay;
+      }
+    }
+
+    if (data.currentPage !== undefined) {
+      updated.currentPage = Math.max(1, Math.min(TOTAL_MUSHAF_PAGES, parseInt(data.currentPage, 10) || 1));
+    }
+
+    contacts[idx] = updated;
+    saveContacts(contacts);
+    return updated;
   }
 
   /**
-   * حذف مستخدم
+   * حذف جهة اتصال
    */
-  function deleteUser(userId) {
-    let users = getUsers();
-    users = users.filter(u => u.id !== userId);
-    if (users.length === 0) {
-      users = getInitialSampleUsers();
-    }
-    saveUsers(users);
-    
-    const active = getActiveUser();
-    if (active.id === userId) {
-      setActiveUser(users[0].id);
-    }
-    return users;
+  function deleteContact(id) {
+    let contacts = getContacts('all');
+    contacts = contacts.filter(c => c.id !== id);
+    saveContacts(contacts);
+    return contacts;
   }
+
+  /**
+   * تبديل حالة إنجاز الورد لجهة اتصال لليوم (Mark / Undo completion)
+   */
+  function toggleContactCompleted(id) {
+    const contacts = getContacts('all');
+    const contact = contacts.find(c => c.id === id);
+    if (!contact) return null;
+
+    const todayStr = getTodayString();
+    const yesterdayStr = getYesterdayString();
+    const plan = PLANS[contact.planId] || PLANS.safa;
+    const pagesPerDay = contact.planId === 'custom' ? (contact.customPagesPerDay || 5) : plan.pagesPerDay;
+
+    const isCurrentlyCompleted = (contact.lastCompletedDate === todayStr || contact.completedToday === true);
+
+    if (!isCurrentlyCompleted) {
+      // إتمام الورد لليوم
+      let newPage = contact.currentPage + pagesPerDay;
+      let newKhatmahCount = contact.khatmahCount || 0;
+
+      if (newPage > TOTAL_MUSHAF_PAGES) {
+        newKhatmahCount++;
+        newPage = (newPage - TOTAL_MUSHAF_PAGES);
+      }
+
+      let newStreak = contact.streak || 0;
+      if (contact.lastCompletedDate === yesterdayStr) {
+        newStreak += 1;
+      } else {
+        newStreak = 1;
+      }
+
+      const longestStreak = Math.max(contact.longestStreak || 0, newStreak);
+
+      const updated = {
+        ...contact,
+        currentPage: newPage,
+        completedToday: true,
+        streak: newStreak,
+        longestStreak,
+        khatmahCount: newKhatmahCount,
+        lastCompletedDate: todayStr
+      };
+
+      const idx = contacts.findIndex(c => c.id === id);
+      contacts[idx] = updated;
+      saveContacts(contacts);
+      return { contact: updated, completed: true };
+    } else {
+      // التراجع عن الإتمام
+      let prevPage = contact.currentPage - pagesPerDay;
+      if (prevPage < 1) prevPage = 1;
+
+      const prevStreak = Math.max(0, (contact.streak || 1) - 1);
+
+      const updated = {
+        ...contact,
+        currentPage: prevPage,
+        completedToday: false,
+        streak: prevStreak,
+        lastCompletedDate: yesterdayStr
+      };
+
+      const idx = contacts.findIndex(c => c.id === id);
+      contacts[idx] = updated;
+      saveContacts(contacts);
+      return { contact: updated, completed: false };
+    }
+  }
+
+  /**
+   * حساب إحصائيات المقرأة حسب النوع
+   */
+  function getGroupStats(groupType = 'all') {
+    const contacts = getContacts(groupType);
+    const total = contacts.length;
+    const completed = contacts.filter(c => c.completedToday).length;
+    const rate = total > 0 ? Math.round((completed / total) * 100) : 0;
+    return {
+      total,
+      completed,
+      rate,
+      remaining: Math.max(0, total - completed)
+    };
+  }
+
+  // =========================================================================
+  // إدارة قروبات الواتساب (WhatsApp Groups Management)
+  // =========================================================================
+
+  /**
+   * مجموعات الواتساب الافتراضية
+   */
+  function getInitialSampleWhatsAppGroups() {
+    return [
+      {
+        id: 'group_family',
+        name: 'مقرأة الأهل المباركة 👨‍👩‍👧‍👦',
+        link: '',
+        category: 'family',
+        description: 'مجموعة العائلة لمتابعة الورد القرآني اليومي والتواصي بالحق',
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'group_friends',
+        name: 'حلقة الأصدقاء الكرام 👥',
+        link: '',
+        category: 'friends',
+        description: 'مجموعة الأصدقاء للتنافس في الخير ومدارسة كتاب الله',
+        createdAt: new Date().toISOString()
+      }
+    ];
+  }
+
+  /**
+   * جلب كافة مجموعات الواتساب المحفوظة
+   */
+  function getWhatsAppGroups() {
+    let groups = [];
+    try {
+      if (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function') {
+        const stored = localStorage.getItem(STORAGE_WHATSAPP_GROUPS_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            groups = parsed;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("خطأ في قراءة مجموعات الواتساب:", e);
+    }
+
+    if (!groups || groups.length === 0) {
+      groups = getInitialSampleWhatsAppGroups();
+      saveWhatsAppGroups(groups);
+    }
+    return groups;
+  }
+
+  /**
+   * حفظ مجموعات الواتساب في LocalStorage وإرسال الحدث
+   */
+  function saveWhatsAppGroups(groups) {
+    try {
+      if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+        localStorage.setItem(STORAGE_WHATSAPP_GROUPS_KEY, JSON.stringify(groups));
+      }
+      if (typeof window !== 'undefined' && window.dispatchEvent) {
+        window.dispatchEvent(new CustomEvent('qurani:groups_updated', { detail: { groups } }));
+      }
+    } catch (e) {
+      console.error("فشل حفظ مجموعات الواتساب:", e);
+    }
+  }
+
+  /**
+   * إضافة مجموعة واتساب جديدة (اسم، رابط، تصنيف، وصف)
+   */
+  function addWhatsAppGroup(groupData) {
+    const groups = getWhatsAppGroups();
+    const id = 'group_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 6);
+    
+    let link = (groupData.link || '').trim();
+    if (link && !link.startsWith('http://') && !link.startsWith('https://')) {
+      link = 'https://' + link;
+    }
+
+    const newGroup = {
+      id,
+      name: (groupData.name || 'مجموعة قرآنية جديدة').trim(),
+      link: link,
+      category: groupData.category || 'general',
+      description: (groupData.description || '').trim(),
+      createdAt: new Date().toISOString()
+    };
+
+    groups.push(newGroup);
+    saveWhatsAppGroups(groups);
+    return newGroup;
+  }
+
+  /**
+   * تحديث بيانات مجموعة واتساب
+   */
+  function updateWhatsAppGroup(id, data) {
+    const groups = getWhatsAppGroups();
+    const idx = groups.findIndex(g => g.id === id);
+    if (idx === -1) return null;
+
+    let link = data.link !== undefined ? (data.link || '').trim() : groups[idx].link;
+    if (link && !link.startsWith('http://') && !link.startsWith('https://')) {
+      link = 'https://' + link;
+    }
+
+    const updated = {
+      ...groups[idx],
+      ...data,
+      id: groups[idx].id,
+      link: link
+    };
+
+    groups[idx] = updated;
+    saveWhatsAppGroups(groups);
+    return updated;
+  }
+
+  /**
+   * حذف مجموعة واتساب
+   */
+  function deleteWhatsAppGroup(id) {
+    let groups = getWhatsAppGroups();
+    groups = groups.filter(g => g.id !== id);
+    saveWhatsAppGroups(groups);
+    return groups;
+  }
+
+  /**
+   * جلب مجموعة بالمعرف
+   */
+  function getWhatsAppGroupById(id) {
+    const groups = getWhatsAppGroups();
+    return groups.find(g => g.id === id) || null;
+  }
+
+  // =========================================================================
+  // الحسابات الرياضية للورد القرآني والختمات
+  // =========================================================================
 
   /**
    * احتساب نسبة التقدم في الختمة الحالية (0 - 100%)
@@ -421,29 +863,28 @@
   }
 
   /**
-   * حساب تفاصيل ورد اليوم لمستخدم معين
+   * حساب تفاصيل ورد اليوم لشخص معين (المالك أو جهة اتصال)
    */
-  function calculateTodayWird(user, date = new Date()) {
-    if (!user) return null;
+  function calculateTodayWird(person = null, date = new Date()) {
+    const target = person || getOwner();
+    if (!target) return null;
 
-    const plan = PLANS[user.planId] || PLANS.safa;
-    const pagesPerDay = user.planId === 'custom' 
-      ? (user.customPagesPerDay || 5) 
+    const plan = PLANS[target.planId] || PLANS.safa;
+    const pagesPerDay = target.planId === 'custom' 
+      ? (target.customPagesPerDay || 5) 
       : plan.pagesPerDay;
 
     const todayStr = getTodayString(date);
-    const isCompletedToday = (user.lastCompletedDate === todayStr || user.completedToday === true);
+    const isCompletedToday = (target.lastCompletedDate === todayStr || target.completedToday === true);
 
     let startPage;
     let endPage;
 
     if (isCompletedToday) {
-      // إذا كان قد قرأ ورده لليوم، نعرض له ما قرأه اليوم
-      endPage = Math.min(TOTAL_MUSHAF_PAGES, Math.max(1, user.currentPage));
+      endPage = Math.min(TOTAL_MUSHAF_PAGES, Math.max(1, target.currentPage));
       startPage = Math.max(1, endPage - pagesPerDay + 1);
     } else {
-      // الورد المطلوب إنجازه اليوم
-      startPage = Math.min(TOTAL_MUSHAF_PAGES, Math.max(1, user.currentPage || 1));
+      startPage = Math.min(TOTAL_MUSHAF_PAGES, Math.max(1, target.currentPage || 1));
       endPage = Math.min(TOTAL_MUSHAF_PAGES, startPage + pagesPerDay - 1);
     }
 
@@ -467,10 +908,12 @@
 
     const progressPercentage = calculateProgressPercentage(isCompletedToday ? endPage : (startPage - 1));
     const pagesRemaining = Math.max(0, TOTAL_MUSHAF_PAGES - (isCompletedToday ? endPage : startPage));
-    const estimated = calculateEstimatedKhatmahDate(user.currentPage, pagesPerDay, date);
+    const estimated = calculateEstimatedKhatmahDate(target.currentPage, pagesPerDay, date);
 
     return {
-      user,
+      user: target,
+      contact: target,
+      person: target,
       plan,
       pagesPerDay,
       startPage,
@@ -478,147 +921,212 @@
       pagesCount: (endPage - startPage) + 1,
       surahs,
       surahsNames,
+      surahName: surahsNames,
       juz: juzNumber,
       juzName,
       progressPercentage,
+      progressPercent: progressPercentage,
       pagesRemaining,
       daysRemaining: estimated.daysNeeded,
       estimatedKhatmahDate: estimated.dateFormatted,
+      expectedEndDate: estimated.dateFormatted,
       completedToday: isCompletedToday,
-      streak: user.streak || 0,
-      khatmahCount: user.khatmahCount || 0
+      isCompletedToday: isCompletedToday,
+      streak: target.streak || 0,
+      khatmahCount: target.khatmahCount || 0
     };
   }
 
   /**
-   * تسجيل "تمت قراءة الورد اليوم بحمد الله"
+   * تسجيل إتمام الورد اليومي للمالك أو لجهة اتصال
    */
-  function markTodayCompleted(userId) {
-    const users = getUsers();
-    const user = users.find(u => u.id === userId);
-    if (!user) return null;
+  function markTodayCompleted(personId = 'owner') {
+    if (!personId || personId === 'owner') {
+      const owner = getOwner();
+      const todayStr = getTodayString();
+      const yesterdayStr = getYesterdayString();
 
-    const todayStr = getTodayString();
-    const yesterdayStr = getYesterdayString();
+      if (owner.lastCompletedDate === todayStr) {
+        return { user: owner, person: owner, alreadyCompleted: true };
+      }
 
-    // إذا كان مسجلاً بالفعل لليوم نتجنب التكرار
-    if (user.lastCompletedDate === todayStr) {
-      return { user, alreadyCompleted: true };
-    }
+      const plan = PLANS[owner.planId] || PLANS.safa;
+      const pagesPerDay = owner.planId === 'custom' ? (owner.customPagesPerDay || 5) : plan.pagesPerDay;
 
-    const plan = PLANS[user.planId] || PLANS.safa;
-    const pagesPerDay = user.planId === 'custom' ? (user.customPagesPerDay || 5) : plan.pagesPerDay;
+      let newPage = owner.currentPage + pagesPerDay;
+      let newKhatmahCount = owner.khatmahCount || 0;
+      let khatmahCompleted = false;
 
-    // حساب الصفحة الجديدة
-    let newPage = user.currentPage + pagesPerDay;
-    let newKhatmahCount = user.khatmahCount || 0;
-    let khatmahCompleted = false;
+      if (newPage > TOTAL_MUSHAF_PAGES) {
+        newKhatmahCount++;
+        newPage = (newPage - TOTAL_MUSHAF_PAGES);
+        khatmahCompleted = true;
+      }
 
-    if (newPage > TOTAL_MUSHAF_PAGES) {
-      // إتمام ختمة كاملة! مبروك 🎉
-      newKhatmahCount++;
-      newPage = (newPage - TOTAL_MUSHAF_PAGES); // التدوير للبدء في ختمة جديدة
-      khatmahCompleted = true;
-    }
+      let newStreak = owner.streak || 0;
+      if (owner.lastCompletedDate === yesterdayStr) {
+        newStreak += 1;
+      } else {
+        newStreak = 1;
+      }
 
-    // حساب الـ Streak المتتالي
-    let newStreak = user.streak || 0;
-    if (user.lastCompletedDate === yesterdayStr) {
-      newStreak += 1;
+      const longestStreak = Math.max(owner.longestStreak || 0, newStreak);
+
+      const updatedOwner = {
+        ...owner,
+        currentPage: newPage,
+        completedToday: true,
+        streak: newStreak,
+        longestStreak,
+        khatmahCount: newKhatmahCount,
+        lastCompletedDate: todayStr
+      };
+
+      saveOwner(updatedOwner);
+
+      return {
+        user: updatedOwner,
+        person: updatedOwner,
+        khatmahCompleted,
+        newStreak
+      };
     } else {
-      // إذا انقطع يعود إلى 1
-      newStreak = 1;
+      // جهة اتصال
+      const res = toggleContactCompleted(personId);
+      return res ? { user: res.contact, person: res.contact, newStreak: res.contact.streak } : null;
     }
-
-    const longestStreak = Math.max(user.longestStreak || 0, newStreak);
-
-    const updatedUser = {
-      ...user,
-      currentPage: newPage,
-      completedToday: true,
-      streak: newStreak,
-      longestStreak,
-      khatmahCount: newKhatmahCount,
-      lastCompletedDate: todayStr
-    };
-
-    const idx = users.findIndex(u => u.id === userId);
-    users[idx] = updatedUser;
-    saveUsers(users);
-
-    return {
-      user: updatedUser,
-      khatmahCompleted,
-      newStreak
-    };
   }
 
   /**
-   * التراجع عن إتمام الورد (في حال النقر بالخطأ)
+   * التراجع عن إتمام الورد
    */
-  function undoTodayCompleted(userId) {
-    const users = getUsers();
-    const user = users.find(u => u.id === userId);
-    if (!user || !user.completedToday) return null;
+  function undoTodayCompleted(personId = 'owner') {
+    if (!personId || personId === 'owner') {
+      const owner = getOwner();
+      if (!owner.completedToday) return null;
 
-    const plan = PLANS[user.planId] || PLANS.safa;
-    const pagesPerDay = user.planId === 'custom' ? (user.customPagesPerDay || 5) : plan.pagesPerDay;
+      const plan = PLANS[owner.planId] || PLANS.safa;
+      const pagesPerDay = owner.planId === 'custom' ? (owner.customPagesPerDay || 5) : plan.pagesPerDay;
 
-    let prevPage = user.currentPage - pagesPerDay;
-    if (prevPage < 1) prevPage = 1;
+      let prevPage = owner.currentPage - pagesPerDay;
+      if (prevPage < 1) prevPage = 1;
 
-    let prevStreak = Math.max(0, (user.streak || 1) - 1);
+      const prevStreak = Math.max(0, (owner.streak || 1) - 1);
 
-    const updatedUser = {
-      ...user,
-      currentPage: prevPage,
-      completedToday: false,
-      streak: prevStreak,
-      lastCompletedDate: getYesterdayString()
-    };
+      const updatedOwner = {
+        ...owner,
+        currentPage: prevPage,
+        completedToday: false,
+        streak: prevStreak,
+        lastCompletedDate: getYesterdayString()
+      };
 
-    const idx = users.findIndex(u => u.id === userId);
-    users[idx] = updatedUser;
-    saveUsers(users);
-
-    return updatedUser;
+      saveOwner(updatedOwner);
+      return updatedOwner;
+    } else {
+      const res = toggleContactCompleted(personId);
+      return res ? res.contact : null;
+    }
   }
 
   /**
-   * تغيير خطة المشترك
+   * تغيير خطة الورد للمالك أو لجهة اتصال
    */
-  function changeUserPlan(userId, newPlanId, customPages = null) {
-    const users = getUsers();
-    const user = users.find(u => u.id === userId);
-    if (!user) return null;
+  function changeUserPlan(personId = 'owner', newPlanId = 'safa', customPages = null) {
+    if (!personId || personId === 'owner') {
+      const plan = PLANS[newPlanId] || PLANS.safa;
+      const pagesPerDay = newPlanId === 'custom'
+        ? Math.max(1, parseInt(customPages, 10) || 5)
+        : plan.pagesPerDay;
 
-    const plan = PLANS[newPlanId] || PLANS.safa;
-    const pagesPerDay = newPlanId === 'custom'
-      ? Math.max(1, parseInt(customPages, 10) || 5)
-      : plan.pagesPerDay;
-
-    const updatedUser = {
-      ...user,
-      planId: plan.id,
-      customPagesPerDay: pagesPerDay
-    };
-
-    const idx = users.findIndex(u => u.id === userId);
-    users[idx] = updatedUser;
-    saveUsers(users);
-
-    return updatedUser;
+      return updateOwner({
+        planId: plan.id,
+        customPagesPerDay: pagesPerDay
+      });
+    } else {
+      return updateContact(personId, {
+        planId: newPlanId,
+        customPagesPerDay: customPages
+      });
+    }
   }
 
   /**
-   * إعادة ضبط الختمة للمشترك للبدء من الصفحة الأولى
+   * إعادة ضبط الختمة للبدء من الصفحة الأولى
    */
-  function resetUserKhatmah(userId) {
-    return updateUser(userId, {
-      currentPage: 1,
-      completedToday: false,
-      lastCompletedDate: null
-    });
+  function resetUserKhatmah(personId = 'owner') {
+    if (!personId || personId === 'owner') {
+      return updateOwner({
+        currentPage: 1,
+        completedToday: false,
+        lastCompletedDate: null
+      });
+    } else {
+      return updateContact(personId, {
+        currentPage: 1,
+        completedToday: false,
+        lastCompletedDate: null
+      });
+    }
+  }
+
+  // =========================================================================
+  // دوال التوافقية مع الأنظمة والواجهات السابقة (Backwards Compatibility)
+  // =========================================================================
+
+  /**
+   * getActiveUser: يعيد حساب المالك دائماً في النموذج الأحادي
+   */
+  function getActiveUser() {
+    return getOwner();
+  }
+
+  /**
+   * setActiveUser: لم يعد هناك تبديل حسابات في نموذج المالك الواحد
+   */
+  function setActiveUser(userId) {
+    console.info("ملاحظة معمارية: تم إلغاء تبديل الحسابات، النظام يعمل بنموذج المالك الواحد (Single Owner).");
+    return getOwner();
+  }
+
+  /**
+   * getAllUsers: يعيد قائمة المشتركين مع تمييز المالك كأول عنصر
+   */
+  function getAllUsers() {
+    const owner = getOwner();
+    const contacts = getContacts('all');
+    return [
+      { ...owner, isOwner: true },
+      ...contacts.map(c => ({ ...c, isOwner: false }))
+    ];
+  }
+
+  function getUserById(userId) {
+    if (!userId || userId === 'owner' || userId === 'user_ahmed') {
+      return getOwner();
+    }
+    const contacts = getContacts('all');
+    return contacts.find(c => c.id === userId) || null;
+  }
+
+  function addUser(data) {
+    return addContact(data);
+  }
+
+  function updateUser(userId, data) {
+    if (!userId || userId === 'owner' || userId === 'user_ahmed') {
+      return updateOwner(data);
+    }
+    return updateContact(userId, data);
+  }
+
+  function deleteUser(userId) {
+    if (!userId || userId === 'owner') {
+      console.warn("لا يمكن حذف حساب المالك الرئيسي");
+      return getAllUsers();
+    }
+    deleteContact(userId);
+    return getAllUsers();
   }
 
   return {
@@ -627,48 +1135,70 @@
     TOTAL_MUSHAF_PAGES,
     getTodayString,
     getYesterdayString,
-    getUsers,
-    getAllUsers: getUsers,
-    saveUsers,
-    getActiveUser,
-    setActiveUser,
-    getUserById,
-    addUser,
-    updateUser,
-    deleteUser,
+
+    // واجهات المالك (Single Owner APIs)
+    getOwner,
+    updateOwner,
+
+    // واجهات دوائر الأهل والأصدقاء (Contacts / Members APIs)
+    getContacts,
+    getMembers: getContacts,
+    addContact,
+    updateContact,
+    deleteContact,
+    toggleContactCompleted,
+    getGroupStats,
+    getUsersByGroup: function(groupType) {
+      return getContacts(groupType);
+    },
+
+    // واجهات قروبات الواتساب (WhatsApp Groups APIs)
+    getWhatsAppGroups,
+    saveWhatsAppGroups,
+    addWhatsAppGroup,
+    updateWhatsAppGroup,
+    deleteWhatsAppGroup,
+    getWhatsAppGroupById,
+
+    // الحسابات الرياضية للورد والختمات
     calculateProgressPercentage,
-    calculateProgress: function(user) {
-      const p = calculateProgressPercentage(user ? user.currentPage : 1);
-      const plan = PLANS[user?.planId] || PLANS.safa;
-      const est = calculateEstimatedKhatmahDate(user ? user.currentPage : 1, plan.pagesPerDay || 2);
+    calculateProgress: function(person) {
+      const p = person || getOwner();
+      const pct = calculateProgressPercentage(p ? p.currentPage : 1);
+      const plan = PLANS[p?.planId] || PLANS.safa;
+      const pages = p?.planId === 'custom' ? (p?.customPagesPerDay || 5) : (plan.pagesPerDay || 2);
+      const est = calculateEstimatedKhatmahDate(p ? p.currentPage : 1, pages);
       return {
-        progressPercent: p,
-        progressPercentage: p,
+        progressPercent: pct,
+        progressPercentage: pct,
         expectedEndDate: est.dateFormatted
       };
     },
     calculateEstimatedKhatmahDate,
     calculateCustomPlanByDays,
     calculateTodayWird,
-    calculateWirdForUser: function(user) {
-      const w = calculateTodayWird(user);
-      if (w) {
-        w.surahName = w.surahsNames;
-        w.isCompletedToday = w.completedToday;
-      }
-      return w;
+    calculateWirdForUser: function(person) {
+      return calculateTodayWird(person || getOwner());
     },
     markTodayCompleted,
     markTodayWirdCompleted: function() {
-      const active = getActiveUser();
-      if (active) return markTodayCompleted(active.id);
+      return markTodayCompleted('owner');
     },
     undoTodayCompleted,
     changeUserPlan,
     changeActiveUserPlan: function(planId, customPages) {
-      const active = getActiveUser();
-      if (active) return changeUserPlan(active.id, planId, customPages);
+      return changeUserPlan('owner', planId, customPages);
     },
-    resetUserKhatmah
+    resetUserKhatmah,
+
+    // دوال التوافقية القديمة (Backward compatibility aliases)
+    getActiveUser,
+    setActiveUser,
+    getAllUsers,
+    getUsers: getAllUsers,
+    getUserById,
+    addUser,
+    updateUser,
+    deleteUser
   };
 }));

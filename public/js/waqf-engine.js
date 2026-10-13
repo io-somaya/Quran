@@ -76,7 +76,7 @@
         prayerText: "رحمه الله تعالى",
         reciterId: "ar.abdulbasitmurattal",
         reciterName: "الشيخ عبد الباسط عبد الصمد",
-        startSurah: 36,
+        startSurah: 1,
         country: "السعودية",
         creatorName: "أبناؤه وبناته",
         visits: 782,
@@ -88,7 +88,7 @@
         prayerText: "رحمها الله تعالى",
         reciterId: "ar.minshawi",
         reciterName: "الشيخ محمد صديق المنشاوي",
-        startSurah: 55,
+        startSurah: 1,
         country: "مصر",
         creatorName: "عائلتها وأحفادها",
         visits: 1240,
@@ -98,10 +98,10 @@
     return waqfState.pages;
   }
 
-  // ملء قائمة السور في نموذج الإنشاء
+  // ملء قائمة السور في نموذج الإنشاء (الوقف الآن للقرآن الكريم كاملاً)
   function populateSurahSelect() {
     const select = document.getElementById('waqfFormSurah');
-    if (!select || select.children.length > 0) return;
+    if (!select) return;
 
     select.innerHTML = SURAH_NAMES.map((name, index) => {
       const num = index + 1;
@@ -169,9 +169,9 @@
                   <i class="bi bi-mic-fill text-gold"></i>
                   <span>${page.reciterName || 'الشيخ مشاري راشد العفاسي'}</span>
                 </div>
-                <div class="d-flex align-items-center gap-2 mb-1.5">
-                  <i class="bi bi-book-half text-emerald"></i>
-                  <span>سورة البداية: <strong>${surahName}</strong></span>
+                <div class="d-flex align-items-center gap-2 mb-2 p-2 rounded-3" style="background: rgba(212, 175, 55, 0.12); border: 1px solid rgba(212, 175, 55, 0.35);">
+                  <i class="bi bi-book-half text-gold fs-5"></i>
+                  <span class="fw-bold text-dark" style="font-size: 0.85rem;">الوقف: القرآن الكريم كاملاً 📖 (114 سورة)</span>
                 </div>
                 <div class="d-flex align-items-center justify-content-between mt-2 pt-2 border-top">
                   <span class="badge bg-light text-dark fw-normal border">
@@ -281,7 +281,7 @@
     const reciterSelect = document.getElementById('waqfFormReciter');
     const reciterId = reciterSelect?.value || 'ar.alafasy';
     const reciterName = reciterSelect?.options[reciterSelect.selectedIndex]?.text || 'الشيخ مشاري راشد العفاسي';
-    const startSurah = parseInt(document.getElementById('waqfFormSurah')?.value, 10) || 1;
+    const startSurah = 1; // القرآن الكريم كاملاً دائماً بدءاً من الفاتحة
     const country = document.getElementById('waqfFormCountry')?.value || 'السعودية';
     const creatorName = document.getElementById('waqfFormCreator')?.value?.trim() || 'فاعل خير';
     const phone = document.getElementById('waqfFormPhone')?.value?.trim() || '';
@@ -296,7 +296,8 @@
       prayerText,
       reciterId,
       reciterName,
-      startSurah,
+      startSurah: 1,
+      fullQuran: true,
       country,
       creatorName,
       phone
