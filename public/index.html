@@ -122,9 +122,9 @@
 
           <!-- بطاقة حساب القارئ وإعدادات الورد والملف الشخصي -->
           <button class="owner-profile-chip" id="ownerProfileBtn" onclick="window.openOwnerSettingsModal()" title="إعدادات الحساب وتخصيص الورد">
-            <span class="owner-avatar-glow" id="navUserAvatar">🧔</span>
+            <span class="owner-avatar-glow" id="navUserAvatar">📖</span>
             <div class="d-flex flex-column text-end justify-content-center">
-              <span class="fw-bold owner-name-text" id="navUserName">أحمد</span>
+              <span class="fw-bold owner-name-text" id="navUserName">أخي / أختي</span>
               <span class="owner-streak-sub" id="navUserStreak"><i class="bi bi-fire text-warning"></i> 21 يوماً</span>
             </div>
             <i class="bi bi-gear-fill owner-gear-icon ms-1"></i>
@@ -153,7 +153,7 @@
             </span>
           </div>
           <h1 class="h2 fw-bold mb-1 text-emerald">
-            السلام عليكم ورحمة الله، يا <span class="text-gold" id="homeGreetingName">أحمد</span> 🌸
+            السلام عليكم ورحمة الله، يا <span class="text-gold" id="homeGreetingName">أخي / أختي</span> 🌸
           </h1>
           <p class="text-muted mb-0">"أَحَبُّ الأَعْمَالِ إِلَى اللهِ أَدْوَمُهَا وَإِنْ قَلَّ" — مبارك حرصك على وردك اليومي ونور قلبك.</p>
         </div>
@@ -1196,7 +1196,15 @@
         </div>
         <div class="modal-body p-4">
           <div class="row g-3 mb-3">
-            <div class="col-12">
+            <div class="col-12 col-md-6">
+              <label class="form-label small fw-bold mb-1">
+                <i class="bi bi-person-check me-1 text-success"></i> المستلم (اختر من الأهل أو الأصدقاء أو مشاركة عامة):
+              </label>
+              <select class="form-select form-select-luxury" id="whatsappRecipientSelect">
+                <!-- يُملأ بالجافاسكريبت تلقائياً -->
+              </select>
+            </div>
+            <div class="col-12 col-md-6">
               <label class="form-label small fw-bold mb-1">
                 <i class="bi bi-chat-text me-1 text-success"></i> نوع الرسالة ومحتوى الإرسال:
               </label>
@@ -1204,7 +1212,7 @@
                 <option value="wird_full_text" selected>📖 إرسال الورد كاملاً مكتوباً (نص الآيات والصفحة كاملة مع الدعاء والرابط)</option>
                 <option value="daily_wird">🔔 تذكير بقراءة الورد فقط مع رابط الموقع (تذكير مختصر ومحفز)</option>
                 <option value="wird_congrats">🎉 تهنئة وتشجيع بإتمام ورد اليوم</option>
-                <option value="owner_share">📲 مشاركة إنجاز الورد مع الأهل والأصدقاء</option>
+                <option value="owner_share">📲 مشاركة إنجاز وردي الشخصي</option>
                 <option value="group_summary_family">👨‍👩‍👧‍👦 جدول ورد مقرأة الأهل (متابعة الحفظ والقراءة)</option>
                 <option value="group_summary_friends">👥 جدول ورد مقرأة الأصدقاء (متابعة الحفظ والقراءة)</option>
                 <option value="group_summary_custom">💬 جدول الورد لجميع أفراد المقرأة</option>
@@ -1212,8 +1220,10 @@
                 <option value="morning_adhkar">☀️ تذكير بأذكار الصباح وحفظ اليوم</option>
                 <option value="evening_adhkar">🌙 تذكير بأذكار المساء والسكينة</option>
               </select>
-              <div class="form-text small text-muted mt-1">
-                <i class="bi bi-info-circle me-1"></i> عند الضغط على زر الإرسال أدناه، سيفتح واتساب مباشرة لتختار أي شخص أو مجموعة ترغب بمشاركتها معهم.
+            </div>
+            <div class="col-12">
+              <div class="form-text small text-muted mt-0" id="whatsappRecipientHint">
+                <i class="bi bi-info-circle me-1"></i> عند اختيار شخص برقم هاتف مسجل، سيتم الإرسال لرقمه مباشرة عبر واتساب باسمه.
               </div>
             </div>
           </div>
@@ -1353,7 +1363,7 @@
           <div class="modal-body p-4">
             <div class="mb-3">
               <label class="form-label small fw-bold">اسم صاحب الحساب الكريم:</label>
-              <input type="text" class="form-control form-control-luxury" id="ownerSettingsName" placeholder="أحمد" required>
+              <input type="text" class="form-control form-control-luxury" id="ownerSettingsName" placeholder="أخي / أختي (أو اسمك الكريم)" required>
             </div>
             <div class="mb-3">
               <label class="form-label small fw-bold">رقم هاتفك (اختياري):</label>

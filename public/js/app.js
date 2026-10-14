@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const owner = window.QuraniWirdEngine.getOwner();
     if (!owner) return;
     if (elements.navUserName) elements.navUserName.textContent = owner.name;
-    if (elements.navUserAvatar) elements.navUserAvatar.textContent = owner.avatar || '🧔';
+    if (elements.navUserAvatar) elements.navUserAvatar.textContent = owner.avatar || '📖';
     if (elements.navUserStreak) {
       elements.navUserStreak.innerHTML = `<i class="bi bi-fire text-warning"></i> ${owner.streak || 1} يوماً`;
     }
@@ -1060,17 +1060,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const templateKey = elements.whatsappTemplateSelect?.value || 'wird_full_text';
     const owner = window.QuraniWirdEngine.getOwner();
-    const person = state.currentWhatsAppUser || window.QuraniWirdEngine.getActiveUser() || owner;
+    
+    // تحديد المستلم بناءً على القائمة المنسدلة أو الحالة النشطة
+    const recipientId = elements.whatsappRecipientSelect?.value || (state.currentWhatsAppUser ? state.currentWhatsAppUser.id : 'owner');
+    let person = null;
+    if (recipientId === 'owner') {
+      person = owner;
+    } else {
+      person = window.QuraniWirdEngine.getContacts('all').find(u => u.id === recipientId) || state.currentWhatsAppUser || owner;
+    }
 
-    // إخفاء إشعارات وروابط القروب الفردية (لأن الإرسال أصبح عاماً يفتح قائمة واتساب مباشرة)
+    const isSpecificContact = (person && person.id !== 'owner');
+    const targetPhone = isSpecificContact ? (person.phone || '') : (owner.phone || '');
+    const isGroupTemplate = templateKey.startsWith('group_summary');
+    const effectivePhone = isGroupTemplate ? '' : targetPhone;
+
+    // إخفاء إشعارات وروابط القروب الفردية
     if (elements.whatsappGroupInfoBanner) {
       elements.whatsappGroupInfoBanner.classList.add('d-none');
     }
     if (elements.btnOpenGroupDirect) {
       elements.btnOpenGroupDirect.classList.add('d-none');
     }
+
+    // تحديث نص زر الإرسال والتلميح الإرشادي
+    const hintElem = document.getElementById('whatsappRecipientHint');
     if (elements.btnSendWhatsAppText) {
-      elements.btnSendWhatsAppText.textContent = 'اختيار جهات الاتصال من الواتساب (أشخاص أو مجموعات)';
+      if (effectivePhone && isSpecificContact) {
+        elements.btnSendWhatsAppText.textContent = `إرسال مباشرة إلى ${person.name} (${effectivePhone}) عبر واتساب 💬`;
+        if (hintElem) {
+          hintElem.innerHTML = `<i class="bi bi-check-circle-fill text-success me-1"></i> سيتم فتح محادثة <strong>${person.name}</strong> مباشرة على الرقم <strong>${effectivePhone}</strong> مع استخدام اسمه في الرسالة.`;
+        }
+      } else if (isSpecificContact && !effectivePhone) {
+        elements.btnSendWhatsAppText.textContent = `إرسال باسم ${person.name} (اختيار المحادثة من واتساب)`;
+        if (hintElem) {
+          hintElem.innerHTML = `<i class="bi bi-exclamation-circle text-warning me-1"></i> لم يُسجل رقم هاتف لـ <strong>${person.name}</strong>، سيتم فتح واتساب لاختيار المحادثة يدوياً مع إدراج اسمه بالرسالة.`;
+        }
+      } else if (effectivePhone && !isSpecificContact) {
+        elements.btnSendWhatsAppText.textContent = `إرسال مباشرة إلى رقمي (${effectivePhone}) عبر واتساب 💬`;
+        if (hintElem) {
+          hintElem.innerHTML = `<i class="bi bi-check-circle-fill text-success me-1"></i> سيتم إرسال الورد إلى رقمك المسجل <strong>${effectivePhone}</strong>.`;
+        }
+      } else {
+        elements.btnSendWhatsAppText.textContent = 'اختيار جهات الاتصال من الواتساب (مشاركة عامة)';
+        if (hintElem) {
+          hintElem.innerHTML = `<i class="bi bi-info-circle me-1"></i> مشاركة عامة باسم «أخي / أختي»، سيفتح واتساب لتختار أي شخص أو مجموعة ترغب بمشاركتها معهم.`;
+        }
+      }
     }
 
     const requestId = ++currentWhatsAppRequestId;
@@ -1120,7 +1156,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     elements.whatsappPreviewBubble.innerHTML = (messageText || '').replace(/\n/g, '<br>');
     elements.whatsappPreviewBubble.dataset.rawText = messageText || '';
-    elements.whatsappPreviewBubble.dataset.phone = '';
+    elements.whatsappPreviewBubble.dataset.phone = effectivePhone || '';
+    elements.whatsappPreviewBubble.dataset.recipientName = person ? person.name : '';
     elements.whatsappPreviewBubble.dataset.groupLink = '';
     elements.whatsappPreviewBubble.dataset.groupId = '';
   }
@@ -1294,20 +1331,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const family = window.QuraniWirdEngine.getContacts('family');
     const friends = window.QuraniWirdEngine.getContacts('friends');
 
+    const ownerDisplayName = (owner && owner.name && owner.name !== 'أحمد') ? owner.name : 'أخي / أختي';
+
     let html = `
-      <optgroup label="👤 حسابي الشخصي">
-        <option value="owner">وردي الشخصي (${owner.name}) ${owner.phone ? '- ' + owner.phone : ''}</option>
+      <optgroup label="✨ مشاركة عامة / وردي الشخصي">
+        <option value="owner">وردي الشخصي (${ownerDisplayName}) ${owner.phone ? '- ' + owner.phone : '(مشاركة عامة باسم أخي / أختي)'}</option>
       </optgroup>
     `;
 
     if (family.length > 0) {
       html += `<optgroup label="👨‍👩‍👧‍👦 أفراد مقرأة الأهل">`;
-      html += family.map(u => `<option value="${u.id}">${u.name} (${u.relation || 'الأهل'} ${u.phone ? '- ' + u.phone : ''})</option>`).join('');
+      html += family.map(u => `<option value="${u.id}">${u.name} (${u.relation || 'الأهل'}) ${u.phone ? '📱 ' + u.phone : '(بدون رقم)'}</option>`).join('');
       html += `</optgroup>`;
     }
     if (friends.length > 0) {
       html += `<optgroup label="👥 أفراد مقرأة الأصدقاء">`;
-      html += friends.map(u => `<option value="${u.id}">${u.name} (${u.relation || 'صديق'} ${u.phone ? '- ' + u.phone : ''})</option>`).join('');
+      html += friends.map(u => `<option value="${u.id}">${u.name} (${u.relation || 'صديق'}) ${u.phone ? '📱 ' + u.phone : '(بدون رقم)'}</option>`).join('');
       html += `</optgroup>`;
     }
     elements.whatsappRecipientSelect.innerHTML = html;
@@ -1320,6 +1359,12 @@ document.addEventListener('DOMContentLoaded', () => {
       state.currentWhatsAppUser = null;
     }
     updateWhatsAppRecipientDropdown();
+    if (elements.whatsappRecipientSelect && userId) {
+      elements.whatsappRecipientSelect.value = userId;
+    }
+    if (elements.whatsappTemplateSelect) {
+      elements.whatsappTemplateSelect.value = 'wird_full_text';
+    }
     updateWhatsAppPreview();
     const modal = new bootstrap.Modal(document.getElementById('whatsappModal'));
     modal.show();
@@ -1650,7 +1695,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // أحداث نافذة الواتساب
   if (elements.whatsappRecipientSelect) {
-    elements.whatsappRecipientSelect.addEventListener('change', updateWhatsAppPreview);
+    elements.whatsappRecipientSelect.addEventListener('change', () => {
+      const selectedId = elements.whatsappRecipientSelect.value;
+      if (selectedId === 'owner') {
+        state.currentWhatsAppUser = null;
+      } else {
+        const contact = window.QuraniWirdEngine.getContacts('all').find(u => u.id === selectedId);
+        state.currentWhatsAppUser = contact || null;
+      }
+      updateWhatsAppPreview();
+    });
   }
   if (elements.whatsappTemplateSelect) {
     elements.whatsappTemplateSelect.addEventListener('change', updateWhatsAppPreview);
@@ -1658,11 +1712,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (elements.btnSendWhatsAppDirect) {
     elements.btnSendWhatsAppDirect.addEventListener('click', async () => {
       const rawText = elements.whatsappPreviewBubble ? (elements.whatsappPreviewBubble.dataset.rawText || '') : '';
+      const phone = elements.whatsappPreviewBubble ? (elements.whatsappPreviewBubble.dataset.phone || '') : '';
       if (rawText && window.QuraniWhatsApp) {
         await window.QuraniWhatsApp.copyToClipboard(rawText);
       }
-      // فتح واتساب مباشرة بدون رقم محدد لتمكين المستخدم من اختيار أي جهة اتصال أو مجموعة مباشرة
-      window.QuraniWhatsApp.openWhatsApp('', rawText);
+      // إرسال مباشر للرقم المحدد إن وجد، أو فتح شات عام إن لم يتوفر رقم
+      window.QuraniWhatsApp.openWhatsApp(phone, rawText);
     });
   }
   if (elements.btnOpenGroupDirect) {

@@ -30,18 +30,48 @@
     if (!phone) return '';
     let cleaned = String(phone).replace(/[\s\-\(\)\+]/g, '');
 
-    // إزالة الأصفار في البداية
+    // إزالة الأصفار في البداية (مثل 0020 -> 20 أو 00966 -> 966)
     cleaned = cleaned.replace(/^00/, '');
 
-    // إذا بدأ بصفر محلي (مثل 050...) نضيف مفتاح الدولة الافتراضي
-    if (cleaned.startsWith('0') && cleaned.length === 10) {
-      cleaned = defaultCountryCode + cleaned.substring(1);
-    } else if (cleaned.length === 9 && cleaned.startsWith('5')) {
-      // مثل 501234567 بدون صفر
-      cleaned = defaultCountryCode + cleaned;
+    // أرقام مصر (تبدأ بـ 010 أو 011 أو 012 أو 015 وبطول 11 رقماً)
+    if (/^01[0125]\d{8}$/.test(cleaned)) {
+      cleaned = '2' + cleaned;
+    }
+    // أرقام السعودية (تبدأ بـ 05 وبطول 10 أرقام)
+    else if (/^05\d{8}$/.test(cleaned)) {
+      cleaned = '966' + cleaned.substring(1);
+    }
+    // أرقام السعودية بدون صفر البداية (تبدأ بـ 5 وبطول 9 أرقام)
+    else if (/^5\d{8}$/.test(cleaned)) {
+      cleaned = '966' + cleaned;
+    }
+    // أي رقم محلي يبدأ بصفر بطول 10 أو أكثر
+    else if (cleaned.startsWith('0') && cleaned.length >= 10) {
+      cleaned = defaultCountryCode + cleaned.replace(/^0+/, '');
     }
 
     return cleaned;
+  }
+
+  /**
+   * استخراج اسم المستلم المناسب للتحية والرسائل (عدم استخدام أحمد والافتراض أخي / أختي)
+   * @param {object} person كائن المشترك أو المالك
+   * @returns {string} اسم المستلم
+   */
+  function getRecipientName(person) {
+    if (!person) return 'أخي / أختي';
+    // إذا كان المالك أو الحساب العام
+    if (person.id === 'owner') {
+      if (!person.name || person.name === 'أحمد' || person.name === 'أخي / أختي') {
+        return 'أخي / أختي';
+      }
+      return person.name;
+    }
+    // جهة اتصال محددة من الأهل أو الأصدقاء
+    if (person.name && person.name !== 'أحمد') {
+      return person.name;
+    }
+    return 'أخي / أختي';
   }
 
   /**
@@ -183,8 +213,11 @@
       pageTexts.push(`\n... وتستكمل بقية صفحات الورد (من صفحة ${startPage + maxPagesToRender} إلى صفحة ${endPage}) عبر رابط المصحف المباشر أدناه.`);
     }
 
+    const recipientName = getRecipientName(person);
+    const greetingLine = `🌸 *السلام عليكم ورحمة الله وبركاته يا ${recipientName}* 🌸`;
+
     const messageLines = [
-      `🌸 *السلام عليكم ورحمة الله وبركاته* 🌸`,
+      greetingLine,
       ``,
       `📖 *ورد اليوم المبارك من القرآن الكريم (مكتوباً كاملاً)*`,
       `━━━━━━━━━━━━━━━━━━`,
@@ -236,9 +269,10 @@
 
     const baseUrl = getAppBaseUrl();
     const readingLink = `${baseUrl}#page=${startPage}&user=${encodeURIComponent(person.id || '')}`;
+    const recipientName = getRecipientName(person);
 
     return [
-      `🌸 *السلام عليكم ورحمة الله وبركاته* 🌸`,
+      `🌸 *السلام عليكم ورحمة الله وبركاته يا ${recipientName}* 🌸`,
       ``,
       `🔔 *تذكير الورد القرآني المبارك لليوم*`,
       `━━━━━━━━━━━━━━━━━━`,
@@ -273,9 +307,10 @@
     const progress = wird ? wird.progressPercentage : ((currentPage / 604) * 100).toFixed(1);
     const streak = user.streak || 1;
     const khatmahCount = user.khatmahCount || 0;
+    const recipientName = getRecipientName(user);
 
     return [
-      `🎉 *هنيئاً لك يا ${user.name}! تقبل الله طاعتك* 🌟`,
+      `🎉 *هنيئاً لك يا ${recipientName}! تقبل الله طاعتك* 🌟`,
       `━━━━━━━━━━━━━━━━━━`,
       `بحمد الله وفضله أتممت قراءة وردك القرآني لهذا اليوم مباركاً:`,
       ``,
@@ -296,7 +331,7 @@
    * @param {object} user 
    */
   function createFridayKahfReminder(user) {
-    const name = user ? user.name : 'أخي الكريم';
+    const name = getRecipientName(user);
     const baseUrl = getAppBaseUrl();
     const kahfLink = `${baseUrl}#page=293`; // صفحة بداية سورة الكهف
 
@@ -320,7 +355,7 @@
    * @param {string} type 'morning' | 'evening'
    */
   function createAdhkarReminder(user, type = 'morning') {
-    const name = user ? user.name : 'الكريم';
+    const name = getRecipientName(user);
     const baseUrl = getAppBaseUrl();
     const isMorning = (type === 'morning');
     const adhkarLink = `${baseUrl}#adhkar-${type}`;
@@ -356,7 +391,7 @@
    * @param {string} customNote ملحوظة المشرف
    */
   function createCustomEncouragementMessage(user, customNote = '') {
-    const name = user ? user.name : 'الصديق العزيز';
+    const name = getRecipientName(user);
     const baseUrl = getAppBaseUrl();
 
     return [
@@ -385,7 +420,7 @@
       wird = QuraniWirdEngine.calculateTodayWird(person);
     }
 
-    const name = person.name || 'أخوكم';
+    const rawName = (person.name && person.name !== 'أحمد') ? person.name : 'أخي / أختي';
     const startPage = wird ? wird.startPage : (person.currentPage || 1);
     const endPage = wird ? wird.endPage : (startPage + (person.customPagesPerDay || 2) - 1);
     const surahs = wird && wird.surahsNames ? wird.surahsNames : 'القرآن الكريم';
@@ -397,8 +432,10 @@
     const baseUrl = getAppBaseUrl();
     const readingLink = `${baseUrl}#page=${startPage}`;
 
+    const signature = (rawName === 'أخي / أختي') ? 'أخوكم / أختكم في الله 🤍' : `أخوكم / أختكم: *${rawName}* 🤍`;
+
     return [
-      `🌿 *السلام عليكم ورحمة الله وبركاته* 🌸`,
+      `🌿 *السلام عليكم ورحمة الله وبركاته يا أخي / أختي* 🌸`,
       ``,
       isCompleted 
         ? `📖 *بحمد الله وفضله أتممت قراءة وردي القرآني لليوم:*`
@@ -415,7 +452,7 @@
       `🔗 *رابط المصحف المباشر:* ${readingLink}`,
       ``,
       `🤲 «اللَّهُمَّ اجْعَلِ القُرْآنَ العَظِيمَ رَبِيعَ قُلُوبِنَا وَنُورَ صُدُورِنَا».`,
-      `أخوكم المحب: *${name}* 🤍`
+      signature
     ].join('\n');
   }
 
@@ -468,8 +505,8 @@
         let wird = QuraniWirdEngine ? QuraniWirdEngine.calculateTodayWird(owner) : null;
         const startP = wird ? wird.startPage : (owner.currentPage || 1);
         const endP = wird ? wird.endPage : (startP + (owner.customPagesPerDay || 2) - 1);
-        const surahName = wird && wird.surahsNames ? `[سورة ${wird.surahsNames}]` : '';
-        lines.push(`1. *${owner.name}*: ص ${startP}-${endP} ${surahName} ${owner.completedToday ? '✅ (أتم)' : '⏳'}`);
+        const displayName = (owner.name && owner.name !== 'أحمد') ? owner.name : 'أخي / أختي';
+        lines.push(`1. *${displayName}*: ص ${startP}-${endP} ${surahName} ${owner.completedToday ? '✅ (أتم)' : '⏳'}`);
       }
     }
 
