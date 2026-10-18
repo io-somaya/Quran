@@ -120,6 +120,12 @@
             <span class="small fw-bold" id="hijriDateDisplay">ربيع الآخر ١٤٤٨ هـ</span>
           </div>
 
+          <!-- زر تفعيل وإدارة إشعارات الورد اليومي -->
+          <button class="btn btn-sm btn-outline-emerald rounded-pill px-3 py-1 d-flex align-items-center gap-2" id="navNotificationBtn" onclick="window.openNotificationAccountModal()" title="إشعارات الورد اليومي وإنشاء الحساب">
+            <i class="bi bi-bell-fill text-gold" id="navNotificationIcon"></i>
+            <span class="d-none d-sm-inline small fw-bold" id="navNotificationBtnText">إشعارات الورد 🔔</span>
+          </button>
+
           <!-- بطاقة حساب القارئ وإعدادات الورد والملف الشخصي -->
           <button class="owner-profile-chip" id="ownerProfileBtn" onclick="window.openOwnerSettingsModal()" title="إعدادات الحساب وتخصيص الورد">
             <span class="owner-avatar-glow" id="navUserAvatar">📖</span>
@@ -178,11 +184,73 @@
         </button>
       </div>
 
+      <!-- بطاقة تفعيل وإدارة إشعارات الورد اليومي -->
+      <div id="notificationPromoBanner" class="alert bg-emerald-subtle border-emerald rounded-4 p-3 mb-4 d-flex align-items-center justify-content-between flex-wrap gap-3 shadow-sm">
+        <div class="d-flex align-items-center">
+          <div class="rounded-circle bg-emerald text-white p-2 me-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 44px; height: 44px; min-width: 44px;">
+            <i class="bi bi-bell-fill fs-5 text-gold-light"></i>
+          </div>
+          <div>
+            <strong class="text-emerald d-block fs-6 mb-1" id="promoBannerTitle">
+              هل ترغب في تلقي إشعار يومي بوردك القرآني على جهازك؟ 🔔
+            </strong>
+            <small class="text-muted" id="promoBannerSubtitle">
+              أنشئ حسابك الكريم (الاسم + الهاتف + الإيميل) لنرسل لك صفحات وردك يومياً في موعدك المفضل بنقرة واحدة.
+            </small>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <button class="btn btn-emerald-action btn-sm rounded-pill px-4 fw-bold shadow-sm" id="promoRegisterBtn" onclick="window.openNotificationAccountModal()">
+            <i class="bi bi-person-plus-fill me-1"></i> <span id="promoRegisterBtnText">إنشاء حساب وتفعيل الإشعارات</span>
+          </button>
+          <button class="btn btn-outline-emerald btn-sm rounded-pill px-3 fw-bold d-none" id="promoTestBtn" onclick="window.sendTestNotification()">
+            <i class="bi bi-send-fill me-1"></i> إرسال إشعار تجريبي الآن
+          </button>
+        </div>
+      </div>
+
       <!-- بطاقة الورد اليومي الملكية (Hero Card) -->
       <div class="row g-3 g-md-4 mb-4 mb-lg-5">
         <div class="col-12 col-lg-8">
-          <div class="hero-wird-card">
+          <div class="hero-wird-card" id="heroWirdCard">
+            <!-- خلفية الزخارف الهندسية الهادئة -->
             <div class="hero-islamic-pattern"></div>
+
+            <!-- أشكال إسلامية صغيرة وهادئة تتحرك بنعومة في الخلفية -->
+            <div class="hero-floating-shapes" aria-hidden="true">
+              <!-- نجمة إسلامية ثمانية (الربع الشريف) -->
+              <svg class="hero-shape hero-shape-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="5.5" y="5.5" width="13" height="13" rx="1.5" stroke-width="1.3"/>
+                <rect x="5.5" y="5.5" width="13" height="13" rx="1.5" stroke-width="1.3" transform="rotate(45 12 12)"/>
+                <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+              </svg>
+
+              <!-- هلال إسلامي ناعم -->
+              <svg class="hero-shape hero-shape-2" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-5.4-5.4c0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
+              </svg>
+
+              <!-- نجمة ثمانية مفرغة -->
+              <svg class="hero-shape hero-shape-3" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <polygon points="12,2 14.8,8.2 21.5,9.2 16.6,13.9 17.8,20.6 12,17.5 6.2,20.6 7.4,13.9 2.5,9.2 9.2,8.2" stroke-width="1.2"/>
+              </svg>
+
+              <!-- هلال إسلامي رقيق -->
+              <svg class="hero-shape hero-shape-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-5.4-5.4c0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
+              </svg>
+
+              <!-- نجمة إسلامية دقيقة -->
+              <svg class="hero-shape hero-shape-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="5.5" y="5.5" width="13" height="13" rx="1.5" stroke-width="1.2"/>
+                <rect x="5.5" y="5.5" width="13" height="13" rx="1.5" stroke-width="1.2" transform="rotate(45 12 12)"/>
+              </svg>
+
+              <!-- بريق إسلامي رباعي ناعم -->
+              <svg class="hero-shape hero-shape-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L14.2 9.8L22 12L14.2 14.2L12 22L9.8 14.2L2 12L9.8 9.8Z"/>
+              </svg>
+            </div>
             <div class="row align-items-center position-relative z-1">
               <!-- معلومات الورد والصفحات -->
               <div class="col-12 col-md-7 mb-4 mb-md-0">
@@ -1436,6 +1504,121 @@
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== نافذة إنشاء حساب وتفعيل إشعارات الورد اليومي (Account & Push Modal) ==================== -->
+  <div class="modal fade" id="notificationAccountModal" tabindex="-1" aria-labelledby="notificationAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        <div class="modal-header border-bottom bg-light rounded-top-4 py-3">
+          <div class="d-flex align-items-center">
+            <div class="rounded-circle bg-emerald text-white p-2 me-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+              <i class="bi bi-bell-fill text-gold-light fs-5"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold text-emerald mb-0" id="notificationAccountModalLabel">إنشاء حساب وتفعيل إشعارات الورد 🔔</h5>
+              <small class="text-muted">متابعة يومية مباركة لوردك مع تذكير بالصفحات في موعدك المفضل</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+
+        <form id="notificationAccountForm">
+          <div class="modal-body p-4">
+
+            <!-- تنبيه مميز -->
+            <div class="p-3 bg-emerald-subtle rounded-3 mb-3 border-emerald-subtle text-emerald small">
+              <i class="bi bi-info-circle-fill me-1"></i>
+              سيصلك إشعار يومي مبارك على هذا الجهاز يذكرك بصفحات وردك لليوم بنقرة واحدة لفتح المصحف مباشرة.
+            </div>
+
+            <!-- 1. الاسم الكريم -->
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-dark">
+                <i class="bi bi-person-fill text-emerald me-1"></i> الاسم الكريم: <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control form-control-luxury" id="accountNameInput" placeholder="أدخل اسمك الكريم (مثلاً: مهندسة سمية)" required>
+              <small class="text-muted">يُستخدم في الترحيب وإشعارات التذكير اليومية.</small>
+            </div>
+
+            <!-- 2. رقم الهاتف المحمول -->
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-dark">
+                <i class="bi bi-phone-fill text-emerald me-1"></i> رقم الهاتف المحمول: <span class="text-danger">*</span>
+              </label>
+              <input type="tel" class="form-control form-control-luxury" id="accountPhoneInput" placeholder="مثلاً: +201068156517 أو 01068156517" dir="ltr" required>
+              <small class="text-muted">للتواصل وتأكيد الحساب ومشاركات الورد.</small>
+            </div>
+
+            <!-- 3. البريد الإلكتروني -->
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-dark">
+                <i class="bi bi-envelope-fill text-emerald me-1"></i> البريد الإلكتروني: <span class="text-danger">*</span>
+              </label>
+              <input type="email" class="form-control form-control-luxury" id="accountEmailInput" placeholder="name@example.com" dir="ltr" required>
+              <small class="text-muted">لحفظ ومزامنة حسابك واسترجاع وردك في أي وقت.</small>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <!-- 4. وقت التذكير اليومي -->
+              <div class="col-12 col-sm-6">
+                <label class="form-label small fw-bold text-dark">
+                  <i class="bi bi-clock-fill text-emerald me-1"></i> وقت التذكير المفضل: <span class="text-danger">*</span>
+                </label>
+                <input type="time" class="form-control form-control-luxury" id="accountReminderTimeInput" value="06:00" required>
+                <small class="text-muted">التوقيت المفضل لوصول الإشعار (افتراضياً 06:00 ص بعد الفجر).</small>
+              </div>
+
+              <!-- 5. الصفحة الحالية -->
+              <div class="col-12 col-sm-6">
+                <label class="form-label small fw-bold text-dark">
+                  <i class="bi bi-book-half text-emerald me-1"></i> صفحتك الحالية في المصحف:
+                </label>
+                <input type="number" class="form-control form-control-luxury" id="accountPageInput" min="1" max="604" value="1" required>
+                <small class="text-muted">من الصفحة 1 إلى 604.</small>
+              </div>
+            </div>
+
+            <!-- 6. خطة الورد القرآني -->
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-dark">
+                <i class="bi bi-calendar2-check-fill text-emerald me-1"></i> خطة الورد القرآني:
+              </label>
+              <select class="form-select form-select-luxury" id="accountPlanSelect">
+                <option value="safa">خطة الصفا (صفحتان يومياً - ختمة في ~10 أشهر)</option>
+                <option value="noor">خطة النور (4 صفحات / ربع حزب يومياً - ختمة في 5 أشهر)</option>
+                <option value="furqan" selected>خطة الفرقان (10 صفحات / نصف حزب يومياً - ختمة في شهرين)</option>
+                <option value="hidayah">خطة الهداية (20 صفحة / جزء كامل يومياً - ختمة شهرية)</option>
+                <option value="custom">خطة مخصصة (تحديد عدد الصفحات)</option>
+              </select>
+            </div>
+
+            <div class="mb-3 d-none" id="accountCustomPagesBox">
+              <label class="form-label small fw-bold text-dark">عدد الصفحات اليومية المخصصة:</label>
+              <input type="number" class="form-control form-control-luxury" id="accountCustomPagesInput" min="1" max="604" value="5">
+            </div>
+
+            <!-- رسائل الحالة والأخطاء -->
+            <div id="accountModalAlert" class="alert d-none small mb-0 rounded-3"></div>
+
+          </div>
+
+          <div class="modal-footer border-top bg-light rounded-bottom-4 d-flex justify-content-between flex-wrap gap-2">
+            <div>
+              <button type="button" class="btn btn-outline-info btn-sm rounded-pill px-3 d-none" id="accountTestSendBtn" onclick="window.sendTestNotification()">
+                <i class="bi bi-send-fill me-1"></i> إرسال إشعار تجريبي الآن 📲
+              </button>
+            </div>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">إلغاء</button>
+              <button type="submit" class="btn btn-emerald-action rounded-pill px-4 fw-bold shadow-sm" id="accountSubmitBtn">
+                <i class="bi bi-check-circle-fill me-1"></i> <span id="accountSubmitBtnText">إنشاء الحساب وتفعيل الإشعارات 🔔</span>
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>

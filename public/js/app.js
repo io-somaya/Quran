@@ -426,6 +426,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (navigator.vibrate) navigator.vibrate([100, 50, 200]);
     playClickTone(880, 0.25);
 
+    const heroCard = document.getElementById('heroWirdCard');
+    if (heroCard) {
+      heroCard.classList.remove('hero-card-completed-celebrate');
+      void heroCard.offsetWidth; // Reflow to restart animation
+      heroCard.classList.add('hero-card-completed-celebrate');
+    }
+
     if (window.confetti) {
       window.confetti({
         particleCount: 100,
@@ -1514,6 +1521,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (elements.btnMarkWirdDone) {
     elements.btnMarkWirdDone.addEventListener('click', () => {
       window.QuraniWirdEngine.markTodayWirdCompleted();
+      const updatedUser = window.QuraniWirdEngine.getActiveUser();
+      if (updatedUser && typeof syncPageWithBackend === 'function') {
+        syncPageWithBackend(updatedUser.currentPage);
+      }
       updateDashboardUI();
       triggerCelebration();
     });
@@ -1880,6 +1891,20 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPage: currentPage ? parseInt(currentPage, 10) : undefined
       });
 
+      const savedAcc = (typeof getSavedUserAccount === 'function') ? getSavedUserAccount() : null;
+      if (savedAcc) {
+        savedAcc.name = name;
+        if (phone) savedAcc.phone = phone;
+        if (planId) savedAcc.planId = planId;
+        if (currentPage) savedAcc.currentPage = parseInt(currentPage, 10);
+        if (customPages) savedAcc.customPagesPerDay = parseInt(customPages, 10);
+        saveUserAccount(savedAcc);
+        if (typeof updateNotificationUIState === 'function') updateNotificationUIState();
+      }
+      if (typeof syncPageWithBackend === 'function' && currentPage) {
+        syncPageWithBackend(parseInt(currentPage, 10));
+      }
+
       const modalInstance = bootstrap.Modal.getInstance(document.getElementById('ownerSettingsModal'));
       if (modalInstance) modalInstance.hide();
 
@@ -1935,6 +1960,354 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // =========================================================================
+  // إدارة حساب المستخدم والإشعارات اليومية (Push Notifications & Accounts)
+  // =========================================================================
+  const USER_ACCOUNT_STORAGE_KEY = 'qurani_user_account_v1';
+
+  function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+
+  function getSavedUserAccount() {
+    try {
+      const data = localStorage.getItem(USER_ACCOUNT_STORAGE_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveUserAccount(account) {
+    try {
+      localStorage.setItem(USER_ACCOUNT_STORAGE_KEY, JSON.stringify(account));
+    } catch (e) {}
+  }
+
+  async function registerServiceWorkerAndGetSubscription() {
+    if (!('serviceWorker' in navigator)) {
+      throw new Error('متصفحك لا يدعم Service Worker المطلوب لتشغيل الإشعارات.');
+    }
+    if (!('PushManager' in window)) {
+      throw new Error('متصفحك لا يدعم إشعارات الويب المباشرة (Web Push). يرجى استخدام متصفح حديث مثل Chrome أو Edge أو Safari.');
+    }
+
+    const reg = await navigator.serviceWorker.register('/sw.js');
+    await navigator.serviceWorker.ready;
+
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+      throw new Error('لم يتم السماح بالإشعارات. يرجى تفعيل الإشعارات لهذا الموقع من إعدادات المتصفح.');
+    }
+
+    const res = await fetch('/api/notifications/vapid-public-key');
+    if (!res.ok) {
+      throw new Error('تعذر الاتصال بالخادم لجلب مفتاح الإشعارات.');
+    }
+    const keyData = await res.json();
+    if (!keyData.publicKey) {
+      throw new Error('مفتاح الإشعارات غير صالح.');
+    }
+
+    const appServerKey = urlBase64ToUint8Array(keyData.publicKey);
+
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) {
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: appServerKey
+      });
+    }
+
+    return sub;
+  }
+
+  function updateNotificationUIState() {
+    const account = getSavedUserAccount();
+    const navBtnText = document.getElementById('navNotificationBtnText');
+    const navIcon = document.getElementById('navNotificationIcon');
+    const promoBannerTitle = document.getElementById('promoBannerTitle');
+    const promoBannerSubtitle = document.getElementById('promoBannerSubtitle');
+    const promoRegisterBtnText = document.getElementById('promoRegisterBtnText');
+    const promoTestBtn = document.getElementById('promoTestBtn');
+    const accountTestSendBtn = document.getElementById('accountTestSendBtn');
+    const accountSubmitBtnText = document.getElementById('accountSubmitBtnText');
+
+    if (account && account.name) {
+      if (navBtnText) navBtnText.textContent = `🔔 إشعارات الورد: ${account.name}`;
+      if (navIcon) navIcon.className = 'bi bi-bell-fill text-gold';
+
+      if (promoBannerTitle) {
+        promoBannerTitle.innerHTML = `إشعارات الورد اليومي مفعلة بنجاح يا ${account.name} 🌸 🔔`;
+      }
+      if (promoBannerSubtitle) {
+        promoBannerSubtitle.innerHTML = `تصلك يومياً في تمام الساعة <strong>${account.reminderTime || '06:00'}</strong> على هذا الجهاز. تقبل الله طاعتكم وبارك في وردكم.`;
+      }
+      if (promoRegisterBtnText) promoRegisterBtnText.textContent = 'تعديل بيانات الحساب والوقت';
+      if (promoTestBtn) promoTestBtn.classList.remove('d-none');
+      if (accountTestSendBtn) accountTestSendBtn.classList.remove('d-none');
+      if (accountSubmitBtnText) accountSubmitBtnText.textContent = 'تحديث بيانات الحساب 🔔';
+    } else {
+      if (navBtnText) navBtnText.textContent = 'إشعارات الورد 🔔';
+      if (navIcon) navIcon.className = 'bi bi-bell text-gold';
+
+      if (promoBannerTitle) {
+        promoBannerTitle.textContent = 'هل ترغب في تلقي إشعار يومي بوردك القرآني على جهازك؟ 🔔';
+      }
+      if (promoBannerSubtitle) {
+        promoBannerSubtitle.textContent = 'أنشئ حسابك الكريم (الاسم + الهاتف + الإيميل) لنرسل لك صفحات وردك يومياً في موعدك المفضل بنقرة واحدة.';
+      }
+      if (promoRegisterBtnText) promoRegisterBtnText.textContent = 'إنشاء حساب وتفعيل الإشعارات';
+      if (promoTestBtn) promoTestBtn.classList.add('d-none');
+      if (accountTestSendBtn) accountTestSendBtn.classList.add('d-none');
+      if (accountSubmitBtnText) accountSubmitBtnText.textContent = 'إنشاء الحساب وتفعيل الإشعارات 🔔';
+    }
+  }
+
+  window.openNotificationAccountModal = () => {
+    const account = getSavedUserAccount();
+    const owner = window.QuraniWirdEngine ? window.QuraniWirdEngine.getActiveUser() : null;
+
+    const nameInput = document.getElementById('accountNameInput');
+    const phoneInput = document.getElementById('accountPhoneInput');
+    const emailInput = document.getElementById('accountEmailInput');
+    const reminderTimeInput = document.getElementById('accountReminderTimeInput');
+    const pageInput = document.getElementById('accountPageInput');
+    const planSelect = document.getElementById('accountPlanSelect');
+    const customPagesBox = document.getElementById('accountCustomPagesBox');
+    const customPagesInput = document.getElementById('accountCustomPagesInput');
+    const alertBox = document.getElementById('accountModalAlert');
+
+    if (alertBox) {
+      alertBox.className = 'alert d-none small mb-0 rounded-3';
+      alertBox.textContent = '';
+    }
+
+    if (nameInput) nameInput.value = (account && account.name) || (owner && owner.name && owner.name !== 'أخي / أختي' ? owner.name : '');
+    if (phoneInput) phoneInput.value = (account && account.phone) || (owner && owner.phone ? owner.phone : '');
+    if (emailInput) emailInput.value = (account && account.email) || '';
+    if (reminderTimeInput) reminderTimeInput.value = (account && account.reminderTime) || '06:00';
+    if (planSelect) planSelect.value = (account && account.planId) || (owner && owner.planId) || 'furqan';
+    if (pageInput) pageInput.value = (account && account.currentPage) || (owner && owner.currentPage) || 1;
+    if (customPagesInput) customPagesInput.value = (account && account.customPagesPerDay) || (owner && owner.customPagesPerDay) || 5;
+
+    if (customPagesBox && planSelect) {
+      customPagesBox.classList.toggle('d-none', planSelect.value !== 'custom');
+    }
+
+    updateNotificationUIState();
+
+    const modalEl = document.getElementById('notificationAccountModal');
+    if (modalEl) {
+      const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+      modal.show();
+    }
+  };
+
+  window.sendTestNotification = async () => {
+    const alertBox = document.getElementById('accountModalAlert');
+    try {
+      if (!('Notification' in window) || Notification.permission !== 'granted') {
+        await registerServiceWorkerAndGetSubscription();
+      }
+
+      if (!('serviceWorker' in navigator)) {
+        throw new Error('الخدمة غير مدعومة في هذا المتصفح');
+      }
+
+      const reg = await navigator.serviceWorker.ready;
+      let sub = await reg.pushManager.getSubscription();
+      if (!sub) {
+        sub = await registerServiceWorkerAndGetSubscription();
+      }
+
+      const account = getSavedUserAccount();
+      const res = await fetch('/api/notifications/test-send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subscription: sub,
+          name: (account && account.name) || 'أخي / أختي'
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.status !== 'success') {
+        throw new Error(data.message || 'فشل إرسال الإشعار');
+      }
+
+      showToast('تم إرسال إشعار تجريبي 🔔', data.message || 'تفقد شريط إشعارات جهازك الآن!');
+      if (alertBox) {
+        alertBox.className = 'alert alert-success small mb-0 rounded-3 mt-3';
+        alertBox.textContent = data.message || 'تم إرسال إشعار تجريبي لجهازك بنجاح!';
+        alertBox.classList.remove('d-none');
+      }
+    } catch (err) {
+      console.error('خطأ في إرسال الإشعار التجريبي:', err);
+      showToast('تعذر إرسال الإشعار التجريبي', err.message);
+      if (alertBox) {
+        alertBox.className = 'alert alert-danger small mb-0 rounded-3 mt-3';
+        alertBox.textContent = err.message || 'تعذر إرسال الإشعار التجريبي.';
+        alertBox.classList.remove('d-none');
+      }
+    }
+  };
+
+  // معالجات أحداث نموذج إنشاء الحساب والإشعارات
+  const notifForm = document.getElementById('notificationAccountForm');
+  const accountPlanSelect = document.getElementById('accountPlanSelect');
+  const accountCustomPagesBox = document.getElementById('accountCustomPagesBox');
+
+  if (accountPlanSelect && accountCustomPagesBox) {
+    accountPlanSelect.addEventListener('change', () => {
+      accountCustomPagesBox.classList.toggle('d-none', accountPlanSelect.value !== 'custom');
+    });
+  }
+
+  if (notifForm) {
+    notifForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const alertBox = document.getElementById('accountModalAlert');
+      const submitBtn = document.getElementById('accountSubmitBtn');
+
+      const name = document.getElementById('accountNameInput')?.value.trim();
+      const phone = document.getElementById('accountPhoneInput')?.value.trim();
+      const email = document.getElementById('accountEmailInput')?.value.trim();
+      const reminderTime = document.getElementById('accountReminderTimeInput')?.value || '06:00';
+      const planId = document.getElementById('accountPlanSelect')?.value || 'furqan';
+      const customPages = document.getElementById('accountCustomPagesInput')?.value || 5;
+      const currentPage = document.getElementById('accountPageInput')?.value || 1;
+
+      if (!name || !phone || !email) {
+        if (alertBox) {
+          alertBox.className = 'alert alert-danger small mb-0 rounded-3';
+          alertBox.textContent = 'الرجاء ملء كافة الحقول الإلزامية (الاسم، الهاتف، والبريد الإلكتروني).';
+          alertBox.classList.remove('d-none');
+        }
+        return;
+      }
+
+      try {
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span> جاري تفعيل الإشعارات...';
+        }
+        if (alertBox) {
+          alertBox.className = 'alert alert-info small mb-0 rounded-3';
+          alertBox.textContent = 'جاري طلب إذن الإشعارات من المتصفح والاشتراك...';
+          alertBox.classList.remove('d-none');
+        }
+
+        const subscription = await registerServiceWorkerAndGetSubscription();
+
+        if (alertBox) {
+          alertBox.textContent = 'جاري حفظ الحساب على الخادم وتأكيد الاشتراك...';
+        }
+
+        const res = await fetch('/api/notifications/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            phone,
+            email,
+            reminderTime,
+            planId,
+            customPagesPerDay: parseInt(customPages, 10),
+            currentPage: parseInt(currentPage, 10),
+            subscription
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok || data.status !== 'success') {
+          throw new Error(data.message || 'فشل حفظ الحساب وتفعيل الإشعارات.');
+        }
+
+        // حفظ بيانات الحساب محلياً
+        const savedAccount = {
+          id: data.user.id,
+          name,
+          phone,
+          email,
+          reminderTime,
+          planId,
+          customPagesPerDay: parseInt(customPages, 10),
+          currentPage: parseInt(currentPage, 10)
+        };
+        saveUserAccount(savedAccount);
+
+        // مزامنة المالك في محرك الورد
+        if (window.QuraniWirdEngine) {
+          window.QuraniWirdEngine.updateOwner({
+            name,
+            phone,
+            planId,
+            customPagesPerDay: parseInt(customPages, 10),
+            currentPage: parseInt(currentPage, 10)
+          });
+        }
+
+        updateDashboardUI();
+        updateNotificationUIState();
+        triggerCelebration();
+
+        if (alertBox) {
+          alertBox.className = 'alert alert-success small mb-0 rounded-3';
+          alertBox.textContent = data.message || 'تم إنشاء الحساب وتفعيل الإشعارات بنجاح! 🌸';
+        }
+
+        showToast('تم تفعيل إشعارات الورد بنجاح 🔔', `مرحباً بك يا ${name}! سيصلك تذكيرك يومياً في تمام ${reminderTime}.`);
+
+        setTimeout(() => {
+          const modalEl = document.getElementById('notificationAccountModal');
+          if (modalEl) {
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) modalInstance.hide();
+          }
+        }, 1800);
+
+      } catch (err) {
+        console.error('خطأ في تفعيل الإشعارات:', err);
+        if (alertBox) {
+          alertBox.className = 'alert alert-danger small mb-0 rounded-3';
+          alertBox.textContent = err.message || 'حدث خطأ أثناء تفعيل الإشعارات.';
+          alertBox.classList.remove('d-none');
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> <span id="accountSubmitBtnText">تحديث الحساب وتفعيل الإشعارات 🔔</span>';
+        }
+      }
+    });
+  }
+
+  // مزامنة تغيير الصفحة مع الخادم إن وجد حساب مشترك
+  function syncPageWithBackend(newPage) {
+    const account = getSavedUserAccount();
+    if (account && (account.email || account.phone)) {
+      account.currentPage = newPage;
+      saveUserAccount(account);
+      fetch('/api/notifications/update-page', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: account.email,
+          phone: account.phone,
+          currentPage: newPage
+        })
+      }).catch(err => console.log('Sync page with backend:', err));
+    }
+  }
+
   // --- تشغيل التطبيق الأولي ---
   initTheme();
   initMushafSelectors();
@@ -1943,6 +2316,16 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAdhkarCategory('morning');
   renderFamilyMembers();
   renderPlans();
+  updateNotificationUIState();
+
+  // تسجيل Service Worker في الخلفية إن كان مدعوماً
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then((reg) => {
+      console.log('✅ تم تهيئة Service Worker لنظام الإشعارات:', reg.scope);
+    }).catch((err) => {
+      console.log('ملاحظة حول Service Worker:', err.message);
+    });
+  }
 
   // ملء قائمة مستلمي الواتساب مصنفة
   updateWhatsAppRecipientDropdown();

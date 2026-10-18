@@ -882,21 +882,59 @@ p, span, div {
 .hero-wird-card {
   background: linear-gradient(135deg, #022018 0%, #063c2e 35%, #0a4f3d 70%, #021a14 100%);
   border-radius: 28px;
-  box-shadow: var(--shadow-lg), 0 0 38px var(--qur-emerald-glow);
-  border: 1.5px solid rgba(212, 175, 55, 0.5);
+  box-shadow: 0 10px 32px rgba(2, 32, 24, 0.45), 0 0 20px rgba(5, 150, 105, 0.2);
+  border: 1.5px solid rgba(212, 175, 55, 0.45);
   position: relative;
   overflow: hidden;
   color: #ffffff;
   padding: 2.3rem 2.5rem;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  animation: heroCardEntrance 0.75s cubic-bezier(0.16, 1, 0.3, 1) both,
+             heroCardSubtlePulse 5.5s ease-in-out 0.75s infinite alternate;
 }
 
-/* طبقات الإضاءة الذهبية والزمردية المشعة في خلفية بطاقة الورد */
+/* نبض هادئ وخافت حول الكارد */
+@keyframes heroCardSubtlePulse {
+  0% {
+    box-shadow: 0 10px 32px rgba(2, 32, 24, 0.45),
+                0 0 16px rgba(5, 150, 105, 0.16),
+                0 0 8px rgba(212, 175, 55, 0.12);
+    border-color: rgba(212, 175, 55, 0.4);
+  }
+  100% {
+    box-shadow: 0 12px 38px rgba(2, 32, 24, 0.52),
+                0 0 28px rgba(16, 185, 129, 0.28),
+                0 0 18px rgba(250, 204, 21, 0.25);
+    border-color: rgba(250, 204, 21, 0.7);
+  }
+}
+
+.hero-wird-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 45px rgba(2, 32, 24, 0.6),
+              0 0 35px rgba(16, 185, 129, 0.35),
+              0 0 22px rgba(250, 204, 21, 0.3);
+  border-color: rgba(250, 204, 21, 0.85);
+}
+
+@keyframes heroCardEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* طبقات إضاءة خافتة جداً في عمق الكارد */
 .hero-wird-card::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 85% 15%, rgba(212, 175, 55, 0.22) 0%, transparent 60%),
-              radial-gradient(circle at 12% 88%, rgba(5, 150, 105, 0.25) 0%, transparent 55%);
+  background: radial-gradient(ellipse at 85% 15%, rgba(212, 175, 55, 0.15) 0%, transparent 60%),
+              radial-gradient(circle at 12% 88%, rgba(5, 150, 105, 0.2) 0%, transparent 55%);
   pointer-events: none;
   z-index: 0;
 }
@@ -913,27 +951,139 @@ p, span, div {
   color: rgba(255, 255, 255, 0.88) !important;
 }
 
-/* خلفية الزخارف الإسلامية المتكررة بنعومة حركية هادئة */
+/* خلفية الزخارف الهندسية الهادئة والمريحة للعين */
 .hero-islamic-pattern {
   position: absolute;
   inset: 0;
   background-image: url('../assets/patterns/islamic-geometric.svg');
   background-repeat: repeat;
-  background-size: 100px 100px;
-  opacity: 0.08;
+  background-size: 110px 110px;
+  opacity: 0.05;
   pointer-events: none;
   z-index: 0;
-  animation: heroPatternFloat 14s infinite ease-in-out;
 }
 
-@keyframes heroPatternFloat {
+/* ==========================================================================
+   أشكال إسلامية صغيرة وهادئة تطفو بنعومة في الخلفية (Subtle Floating Shapes)
+   ========================================================================== */
+.hero-floating-shapes {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-shape {
+  position: absolute;
+  color: #fde047;
+  pointer-events: none;
+  opacity: 0.14;
+  filter: drop-shadow(0 0 4px rgba(250, 204, 21, 0.25));
+  transition: opacity 0.5s ease;
+}
+
+.hero-wird-card:hover .hero-shape {
+  opacity: 0.25;
+}
+
+/* تموضع وحركة كل شكل من الأشكال الإسلامية الستة */
+.hero-shape-1 {
+  width: 22px;
+  height: 22px;
+  top: 14%;
+  right: 14%;
+  animation: gentleFloat1 18s ease-in-out infinite;
+}
+
+.hero-shape-2 {
+  width: 17px;
+  height: 17px;
+  top: 22%;
+  left: 36%;
+  animation: gentleFloat2 22s ease-in-out infinite;
+}
+
+.hero-shape-3 {
+  width: 20px;
+  height: 20px;
+  bottom: 22%;
+  right: 32%;
+  animation: gentleFloat3 24s ease-in-out infinite;
+}
+
+.hero-shape-4 {
+  width: 16px;
+  height: 16px;
+  bottom: 18%;
+  left: 14%;
+  animation: gentleFloat1 20s ease-in-out infinite reverse;
+}
+
+.hero-shape-5 {
+  width: 15px;
+  height: 15px;
+  top: 45%;
+  left: 6%;
+  animation: gentleFloat2 26s ease-in-out infinite reverse;
+}
+
+.hero-shape-6 {
+  width: 18px;
+  height: 18px;
+  bottom: 12%;
+  right: 18%;
+  animation: gentleFloat3 19s ease-in-out infinite;
+}
+
+/* حركة الطفو الهادئة والبطيئة جداً المريحة للعين */
+@keyframes gentleFloat1 {
   0%, 100% {
-    opacity: 0.07;
-    transform: scale(1);
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(6px, -10px) rotate(6deg);
+  }
+  66% {
+    transform: translate(-5px, -18px) rotate(-6deg);
+  }
+}
+
+@keyframes gentleFloat2 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
   }
   50% {
-    opacity: 0.11;
-    transform: scale(1.025);
+    transform: translate(-8px, -14px) rotate(-8deg);
+  }
+}
+
+@keyframes gentleFloat3 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(8px, -12px) rotate(8deg);
+  }
+}
+
+/* وميض الاحتفال عند إتمام الورد */
+.hero-card-completed-celebrate {
+  animation: heroCelebrateRipple 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes heroCelebrateRipple {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.8), 0 0 32px var(--qur-emerald-glow);
+  }
+  40% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 18px rgba(250, 204, 21, 0), 0 0 50px rgba(16, 185, 129, 0.6);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 10px 32px rgba(2, 32, 24, 0.45), 0 0 20px rgba(5, 150, 105, 0.2);
   }
 }
 
@@ -983,7 +1133,7 @@ p, span, div {
 }
 
 .btn-gold-action:hover {
-  transform: translateY(-2.5px) scale(1.02);
+  transform: translateY(-2px) scale(1.02);
   box-shadow: 0 10px 30px rgba(180, 131, 37, 0.65), 0 0 25px rgba(250, 204, 21, 0.45);
   color: #000000 !important;
 }
@@ -1126,6 +1276,11 @@ p, span, div {
   height: 152px;
   position: relative;
   margin: 0 auto;
+  transition: transform 0.3s ease;
+}
+
+.circular-progress-box:hover {
+  transform: scale(1.04);
 }
 
 .circular-progress-svg {
@@ -1186,6 +1341,17 @@ p, span, div {
   align-items: center;
   gap: 0.4rem;
   backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+}
+
+.streak-pill:hover {
+  background: rgba(245, 158, 11, 0.32);
+  border-color: rgba(252, 211, 77, 0.75);
+}
+
+.streak-pill i.bi-stars {
+  display: inline-block;
+  color: #fbbf24;
 }
 
 /* شارة تدبر اليوم الإيمانية */
@@ -2680,4 +2846,17 @@ p, span, div {
   box-shadow: 0 3px 10px rgba(212, 175, 55, 0.25);
   flex-shrink: 0;
 }
+
+/* ==========================================================================
+   دعم تقليل الحركة لذوي الاحتياجات (Reduced Motion Accessibility)
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .hero-wird-card,
+  .hero-wird-card::before,
+  .hero-shape {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 
