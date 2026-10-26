@@ -304,6 +304,10 @@ document.addEventListener('DOMContentLoaded', () => {
       renderPlans();
     } else if (tabId === 'waqf') {
       if (window.renderWaqfHub) window.renderWaqfHub();
+    } else if (tabId === 'portal') {
+      if (window.QuraniPortal && window.QuraniPortal.updateBookmark) {
+        window.QuraniPortal.updateBookmark();
+      }
     }
 
     // إغلاق القائمة المنسدلة في الجوال إن كانت مفتوحة
@@ -2350,9 +2354,21 @@ document.addEventListener('DOMContentLoaded', () => {
     updateWhatsAppPreview();
   });
 
-  // فحص عنوان الرابط أو الوسم لفتح قسم الوقف مباشرة إن طلب
+  // فحص عنوان الرابط أو الوسم لفتح قسم معين إن طلب، وإلا فالبداية تكون من البوابة الرئيسية
   if (window.location.hash === '#section-waqf' || window.location.search.includes('tab=waqf') || window.location.pathname.includes('/waqf')) {
     switchTab('waqf');
+  } else if (window.location.hash === '#section-mushaf' || window.location.search.includes('tab=mushaf')) {
+    switchTab('mushaf');
+  } else if (window.location.hash === '#section-adhkar' || window.location.search.includes('tab=adhkar')) {
+    switchTab('adhkar');
+  } else if (window.location.hash === '#section-plans' || window.location.search.includes('tab=plans')) {
+    switchTab('plans');
+  } else if (window.location.hash === '#section-members' || window.location.search.includes('tab=members')) {
+    switchTab('members');
+  } else if (window.location.hash === '#section-home' || window.location.search.includes('tab=home')) {
+    switchTab('home');
+  } else {
+    switchTab('portal');
   }
 
   console.log('✨ تم تشغيل منصة «الأنس بالقرآن» بنجاح بنظام التصميم الملكي الحديث والأنماط الثلاثة — تقبل الله طاعتكم');
