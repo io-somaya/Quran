@@ -134,15 +134,15 @@
       id: 'owner',
       name: 'أخي / أختي',
       phone: '',
-      planId: 'hidayah',
-      customPagesPerDay: 20,
-      currentPage: 122,
-      completedToday: true,
-      streak: 21,
-      longestStreak: 45,
-      khatmahCount: 3,
-      startDate: '2026-07-01',
-      lastCompletedDate: todayStr,
+      planId: 'furqan',
+      customPagesPerDay: 10,
+      currentPage: 1,
+      completedToday: false,
+      streak: 0,
+      longestStreak: 0,
+      khatmahCount: 0,
+      startDate: todayStr,
+      lastCompletedDate: null,
       avatar: '📖',
       color: '#d97706',
       relation: 'صاحب الحساب'
@@ -150,33 +150,33 @@
   }
 
   /**
-   * جهات الاتصال النموذجية الأولية (مقرأة الأصدقاء فقط — مهندسة سمية)
+   * المقرأة تبدأ فارغة — كل مستخدم يضيف أهله وأصدقاءه بنفسه
    */
   function getInitialSampleContacts() {
-    const todayStr = getTodayString();
+    return [];
+  }
 
-    return [
-      // --- مقرأة الأصدقاء (Friends) ---
-      {
-        id: 'contact_somaya',
-        name: 'مهندسة سمية',
-        phone: '+201068156517',
-        relation: 'صديقة',
-        groupType: 'friends',
-        planId: 'furqan',
-        customPagesPerDay: 10,
-        currentPage: 1,
-        completedToday: false,
-        streak: 1,
-        longestStreak: 1,
-        khatmahCount: 0,
-        startDate: todayStr,
-        lastCompletedDate: null,
-        avatar: '🧕',
-        color: '#0d9488',
-        notes: 'صديقة المقرأة القرآنية المباركة'
-      }
+  /** معرّفات/أسماء العينات القديمة التي تُزال من المقرأة */
+  function isLegacySampleContact(c) {
+    if (!c) return false;
+    const legacyIds = [
+      'contact_father', 'contact_mother', 'contact_fatima', 'contact_omar',
+      'contact_khalid', 'contact_tariq', 'contact_anas', 'contact_somaya'
     ];
+    const legacyNames = [
+      'الوالد', 'الوالدة', 'فاطمة', 'عمر',
+      'خالد بن سعد', 'طارق المحمدي', 'المهندس أنس', 'مهندسة سمية'
+    ];
+    return legacyIds.includes(c.id) || legacyNames.includes(c.name);
+  }
+
+  /** هل بيانات المالك ما زالت بيانات العرض التجريبية القديمة؟ */
+  function isDemoOwnerFingerprint(owner) {
+    if (!owner || typeof owner !== 'object') return false;
+    const placeholderName = !owner.name || owner.name === 'أخي / أختي' || owner.name === 'أحمد';
+    const exactDemoStats = owner.currentPage === 122 && owner.streak === 21 && owner.khatmahCount === 3;
+    const demoStartOnPage122 = placeholderName && owner.startDate === '2026-07-01' && owner.currentPage === 122;
+    return exactDemoStats || demoStartOnPage122;
   }
 
   // =========================================================================
@@ -196,6 +196,19 @@
           const owner = JSON.parse(storedOwner);
           if (owner && typeof owner === 'object') {
             owner.id = 'owner';
+            // إعادة تهيئة بيانات العرض التجريبية لتبدأ الختمة من الصفحة 1
+            if (isDemoOwnerFingerprint(owner)) {
+              const fresh = getDefaultOwner();
+              fresh.name = (owner.name && owner.name !== 'أحمد') ? owner.name : fresh.name;
+              fresh.phone = owner.phone || '';
+              fresh.avatar = (owner.avatar && owner.avatar !== '🧔') ? owner.avatar : fresh.avatar;
+              if (owner.planId) {
+                fresh.planId = owner.planId;
+                fresh.customPagesPerDay = owner.customPagesPerDay || fresh.customPagesPerDay;
+              }
+              saveOwner(fresh);
+              return fresh;
+            }
             owner.completedToday = (owner.lastCompletedDate === todayStr);
             // ترقية وتعديل الاسم التلقائي القديم إن وجد
             if (owner.name === 'أحمد' || !owner.name) {
@@ -229,15 +242,15 @@
               id: 'owner',
               name: (ownerCandidate.name && ownerCandidate.name !== 'أحمد') ? ownerCandidate.name : 'أخي / أختي',
               phone: ownerCandidate.phone || '',
-              planId: ownerCandidate.planId || 'hidayah',
-              customPagesPerDay: ownerCandidate.customPagesPerDay || 20,
-              currentPage: ownerCandidate.currentPage || 122,
-              completedToday: (ownerCandidate.lastCompletedDate === todayStr),
-              streak: ownerCandidate.streak || 21,
-              longestStreak: ownerCandidate.longestStreak || 45,
-              khatmahCount: ownerCandidate.khatmahCount || 3,
-              startDate: ownerCandidate.startDate || '2026-07-01',
-              lastCompletedDate: ownerCandidate.lastCompletedDate || todayStr,
+              planId: ownerCandidate.planId || 'furqan',
+              customPagesPerDay: ownerCandidate.customPagesPerDay || 10,
+              currentPage: 1,
+              completedToday: false,
+              streak: 0,
+              longestStreak: 0,
+              khatmahCount: 0,
+              startDate: todayStr,
+              lastCompletedDate: null,
               avatar: (ownerCandidate.avatar && ownerCandidate.avatar !== '🧔') ? ownerCandidate.avatar : '📖',
               color: ownerCandidate.color || '#d97706',
               relation: 'صاحب الحساب'
@@ -319,63 +332,31 @@
         if (stored) {
           const parsed = JSON.parse(stored);
           if (Array.isArray(parsed)) {
-            // التحقق من وجود البيانات النموذجية القديمة أو خلو القائمة من مهندسة سمية
-            const hasLegacySample = parsed.some(c => 
-              c.id === 'contact_father' || c.id === 'contact_mother' || c.id === 'contact_fatima' || 
-              c.id === 'contact_omar' || c.id === 'contact_khalid' || c.id === 'contact_tariq' || c.id === 'contact_anas' ||
-              c.name === 'الوالد' || c.name === 'الوالدة' || c.name === 'فاطمة' || c.name === 'عمر'
-            );
-            const hasSomaya = parsed.some(c => c.name === 'مهندسة سمية' || c.phone === '+201068156517' || c.phone === '201068156517');
-
-            if (hasLegacySample || !hasSomaya) {
-              // مسح بيانات الأهل والأصدقاء القدامى والإبقاء على مهندسة سمية فقط في الأصدقاء
-              const remainingCustom = parsed.filter(c => 
-                c.id !== 'contact_father' && c.id !== 'contact_mother' && c.id !== 'contact_fatima' && 
-                c.id !== 'contact_omar' && c.id !== 'contact_khalid' && c.id !== 'contact_tariq' && c.id !== 'contact_anas' &&
-                c.groupType !== 'family' &&
-                c.name !== 'الوالد' && c.name !== 'الوالدة' && c.name !== 'فاطمة' && c.name !== 'عمر' &&
-                c.name !== 'خالد بن سعد' && c.name !== 'طارق المحمدي' && c.name !== 'المهندس أنس' &&
-                c.name !== 'مهندسة سمية'
-              );
-
-              const somayaContact = {
-                id: 'contact_somaya',
-                name: 'مهندسة سمية',
-                phone: '+201068156517',
-                relation: 'صديقة',
-                groupType: 'friends',
-                planId: 'furqan',
-                customPagesPerDay: 10,
-                currentPage: 1,
-                completedToday: false,
-                streak: 1,
-                longestStreak: 1,
-                khatmahCount: 0,
-                startDate: todayStr,
-                lastCompletedDate: null,
-                avatar: '🧕',
-                color: '#0d9488',
-                notes: 'صديقة المقرأة القرآنية المباركة'
-              };
-
-              contactsList = [somayaContact, ...remainingCustom];
-              saveContacts(contactsList);
-            } else {
-              contactsList = parsed.map(c => ({
+            const cleaned = parsed
+              .filter(c => !isLegacySampleContact(c))
+              .map(c => ({
                 ...c,
                 completedToday: (c.lastCompletedDate === todayStr)
               }));
+
+            if (cleaned.length !== parsed.length) {
+              saveContacts(cleaned);
             }
+            contactsList = cleaned;
           }
         } else {
-          // هجرة جهات الاتصال من مصفوفة المستخدمين السابقة إن وجدت
+          // هجرة جهات الاتصال من مصفوفة المستخدمين السابقة إن وجدت (بدون العينات القديمة)
           const legacyUsersStr = localStorage.getItem(LEGACY_STORAGE_USERS_KEY);
           if (legacyUsersStr) {
             const legacyUsers = JSON.parse(legacyUsersStr);
             if (Array.isArray(legacyUsers) && legacyUsers.length > 0) {
-              // استبعاد حساب المالك من جهات الاتصال
               contactsList = legacyUsers
-                .filter(u => u.id !== 'user_ahmed' && u.id !== 'owner' && !(u.relation || '').includes('صاحب'))
+                .filter(u =>
+                  u.id !== 'user_ahmed' &&
+                  u.id !== 'owner' &&
+                  !(u.relation || '').includes('صاحب') &&
+                  !isLegacySampleContact(u)
+                )
                 .map(u => ({
                   id: u.id.startsWith('contact_') ? u.id : 'contact_' + u.id.replace('user_', ''),
                   name: u.name,
@@ -402,12 +383,12 @@
         }
       }
     } catch (e) {
-      console.warn("خطأ في قراءة جهات الاتصال، سيتم تهيئة العينة:", e);
+      console.warn("خطأ في قراءة جهات الاتصال:", e);
+      contactsList = [];
     }
 
-    if (!contactsList || contactsList.length === 0) {
-      contactsList = getInitialSampleContacts();
-      saveContacts(contactsList);
+    if (!contactsList) {
+      contactsList = [];
     }
 
     if (!groupType || groupType === 'all') {

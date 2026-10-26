@@ -135,14 +135,14 @@
             <span class="d-none d-sm-inline small fw-bold" id="navNotificationBtnText">إشعارات الورد 🔔</span>
           </button>
 
-          <!-- بطاقة حساب القارئ وإعدادات الورد والملف الشخصي -->
-          <button class="owner-profile-chip" id="ownerProfileBtn" onclick="window.openOwnerSettingsModal()" title="إعدادات الحساب وتخصيص الورد">
+          <!-- بطاقة حساب القارئ: إنشاء حساب أو تعديل البيانات -->
+          <button class="owner-profile-chip" id="ownerProfileBtn" onclick="window.openNotificationAccountModal()" title="إنشاء حساب أو تعديل بياناتك">
             <span class="owner-avatar-glow" id="navUserAvatar">📖</span>
             <div class="d-flex flex-column text-end justify-content-center">
-              <span class="fw-bold owner-name-text" id="navUserName">أخي / أختي</span>
-              <span class="owner-streak-sub" id="navUserStreak"><i class="bi bi-fire text-warning"></i> 21 يوماً</span>
+              <span class="fw-bold owner-name-text" id="navUserName">إنشاء حساب</span>
+              <span class="owner-streak-sub" id="navUserStreak">اضغط للتسجيل</span>
             </div>
-            <i class="bi bi-gear-fill owner-gear-icon ms-1"></i>
+            <i class="bi bi-person-plus-fill owner-gear-icon ms-1"></i>
           </button>
         </div>
       </div>
@@ -1900,7 +1900,7 @@
               <label class="form-label small fw-bold text-dark">
                 <i class="bi bi-person-fill text-emerald me-1"></i> الاسم الكريم: <span class="text-danger">*</span>
               </label>
-              <input type="text" class="form-control form-control-luxury" id="accountNameInput" placeholder="أدخل اسمك الكريم (مثلاً: مهندسة سمية)" required>
+              <input type="text" class="form-control form-control-luxury" id="accountNameInput" placeholder="أدخل اسمك الكريم" required>
               <small class="text-muted">يُستخدم في الترحيب وإشعارات التذكير اليومية.</small>
             </div>
 
@@ -1909,7 +1909,7 @@
               <label class="form-label small fw-bold text-dark">
                 <i class="bi bi-phone-fill text-emerald me-1"></i> رقم الهاتف المحمول: <span class="text-danger">*</span>
               </label>
-              <input type="tel" class="form-control form-control-luxury" id="accountPhoneInput" placeholder="مثلاً: +201068156517 أو 01068156517" dir="ltr" required>
+              <input type="tel" class="form-control form-control-luxury" id="accountPhoneInput" placeholder="مثلاً: 01012345678" dir="ltr" required>
               <small class="text-muted">للتواصل وتأكيد الحساب ومشاركات الورد.</small>
             </div>
 

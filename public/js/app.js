@@ -327,9 +327,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const progress = window.QuraniWirdEngine.calculateProgress(user);
     const plan = window.QuraniWirdEngine.plans[user.planId] || window.QuraniWirdEngine.plans['safa'];
 
-    // اسم المستخدم في التحية والناف بار
+    // اسم المستخدم في التحية (الناف بار يُحدَّث عبر updateOwnerProfileBadge)
     if (elements.greetingName) elements.greetingName.textContent = user.name;
-    if (elements.navUserName) elements.navUserName.textContent = user.name;
     if (elements.navUserAvatar) elements.navUserAvatar.textContent = user.avatar || '👤';
 
     // بيانات الورد اليومي
@@ -418,10 +417,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!window.QuraniWirdEngine) return;
     const owner = window.QuraniWirdEngine.getOwner();
     if (!owner) return;
-    if (elements.navUserName) elements.navUserName.textContent = owner.name;
+
+    const account = (typeof getSavedUserAccount === 'function') ? getSavedUserAccount() : null;
+    const hasAccount = !!(account && account.name);
+    const displayName = hasAccount ? account.name : 'إنشاء حساب';
+    const gearIcon = document.querySelector('#ownerProfileBtn .owner-gear-icon');
+    const profileBtn = elements.ownerProfileBtn || document.getElementById('ownerProfileBtn');
+
+    if (elements.navUserName) elements.navUserName.textContent = displayName;
     if (elements.navUserAvatar) elements.navUserAvatar.textContent = owner.avatar || '📖';
+
     if (elements.navUserStreak) {
-      elements.navUserStreak.innerHTML = `<i class="bi bi-fire text-warning"></i> ${owner.streak || 1} يوماً`;
+      if (hasAccount) {
+        elements.navUserStreak.innerHTML = `<i class="bi bi-fire text-warning"></i> ${owner.streak || 1} يوماً`;
+      } else {
+        elements.navUserStreak.textContent = 'اضغط للتسجيل';
+      }
+    }
+
+    if (gearIcon) {
+      gearIcon.className = hasAccount
+        ? 'bi bi-pencil-square owner-gear-icon ms-1'
+        : 'bi bi-person-plus-fill owner-gear-icon ms-1';
+    }
+    if (profileBtn) {
+      profileBtn.title = hasAccount ? 'تعديل بيانات حسابك' : 'إنشاء حساب جديد';
     }
   }
 
@@ -2082,6 +2102,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.openNotificationAccountModal = () => {
     const account = getSavedUserAccount();
     const owner = window.QuraniWirdEngine ? window.QuraniWirdEngine.getActiveUser() : null;
+    const hasAccount = !!(account && account.name);
 
     const nameInput = document.getElementById('accountNameInput');
     const phoneInput = document.getElementById('accountPhoneInput');
@@ -2092,10 +2113,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const customPagesBox = document.getElementById('accountCustomPagesBox');
     const customPagesInput = document.getElementById('accountCustomPagesInput');
     const alertBox = document.getElementById('accountModalAlert');
+    const modalTitle = document.getElementById('notificationAccountModalLabel');
 
     if (alertBox) {
       alertBox.className = 'alert d-none small mb-0 rounded-3';
       alertBox.textContent = '';
+    }
+
+    if (modalTitle) {
+      modalTitle.textContent = hasAccount
+        ? 'تعديل بيانات الحساب ✏️'
+        : 'إنشاء حساب وتفعيل إشعارات الورد 🔔';
     }
 
     if (nameInput) nameInput.value = (account && account.name) || (owner && owner.name && owner.name !== 'أخي / أختي' ? owner.name : '');
